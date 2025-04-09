@@ -122,6 +122,36 @@ bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
     return true;
 }
 
+bool ParseVertexNormalElement(std::string_view element,
+                              glm::vec3& vectorNormalElement) {
+    std::cout << "[VERTEX NORMAL] " << element << '\n';
+    float x;
+    float y;
+    float z;
+
+    auto words = SplitElementString(std::string(element));
+    if ((words.size() == 4) || (words.size() == 5)) {
+
+        try {
+            x = std::stof(words[1]);
+            y = std::stof(words[2]);
+            z = std::stof(words[3]);
+        }
+        catch (std::invalid_argument) {
+            return false;
+        }
+        catch (std::out_of_range) {
+            return false;
+        }
+
+        vectorNormalElement = glm::vec3(x, y, z);
+    }
+    else {
+        return false;
+    }
+
+}
+
 bool ParseObjFile(std::vector<std::string> lines)
 {
     std::vector<glm::vec4> vertexPositions;
@@ -134,18 +164,27 @@ bool ParseObjFile(std::vector<std::string> lines)
             // Vertex position
             std::cout << "Found polygonal face: " << view << '\n';
         }
+
+        // Vertex position
         else if (view.starts_with(VECTOR_ELEMENT)) {
-            // Vertex position
             glm::vec4 vertexPosition;
 
-            if (!ParseVectorElement(view, vertexPosition)) return false;
-
+            if (!ParseVectorElement(view, vertexPosition)) {
+                return false;
+            }
             vertexPositions.push_back(vertexPosition);
         }
+
+        // Vertex normal
         else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
-            // Vertex normal
-            std::cout << "Found vertex normal: " << view << '\n';
+            glm::vec3 vertexNormalPosition;
+
+            if (!ParseVertexNormalElement(view,
+                                          vertexNormalPosition)) {
+                return false;
+            }
         }
+
         else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
             // Vertex normal
             std::cout << "Found texture coordinate: " << view << '\n';
