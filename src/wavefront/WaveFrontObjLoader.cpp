@@ -32,12 +32,6 @@ const char USE_MATERIAL_ELEMENT[] = "usemtl ";
 const char VECTOR_ELEMENT[] = "v ";
 const char VECTOR_NORMAL_ELEMENT[] = "vn ";
 
-std::vector<std::string> ReadObjFile(const std::string& filename);
-bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement);
-bool ParseVertexNormalElement(std::string_view element,
-                              glm::vec3& vectorNormalElement);
-bool ParseObjFile(std::vector<std::string> lines);
-
 struct PolygonalFaceElement {
     PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
 
@@ -49,6 +43,14 @@ struct PolygonalFaceElement {
 struct PolygonalFace {
     PolygonalFaceElement elements[3];
 };
+
+std::vector<std::string> ReadObjFile(const std::string& filename);
+bool ParseVectorElement(std::string_view element, glm::vec4* vectorElement);
+bool ParseVertexNormalElement(std::string_view element,
+    glm::vec3* vectorNormalElement);
+bool ParsePolygonalFaceElement(std::string_view element,
+    PolygonalFace* face);
+bool ParseObjFile(std::vector<std::string> lines);
 
 std::vector<std::string> SplitElementString(const std::string& str) {
     std::vector<std::string> tokens;
@@ -99,7 +101,7 @@ std::vector<std::string> ReadObjFile(const std::string& filename) {
     return lines;
 }
 
-bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
+bool ParseVectorElement(std::string_view element, glm::vec4* vectorElement) {
     auto words = SplitElementString(std::string(element));
     if ((words.size() == 4) || (words.size() == 5)) {
         float x;
@@ -123,7 +125,7 @@ bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
             return false;
         }
 
-        vectorElement = glm::vec4(x, y, z, w);
+        *vectorElement = glm::vec4(x, y, z, w);
     } else {
         return false;
     }
@@ -132,7 +134,7 @@ bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
 }
 
 bool ParseVertexNormalElement(std::string_view element,
-                              glm::vec3& vectorNormalElement) {
+                              glm::vec3* vectorNormalElement) {
     float x;
     float y;
     float z;
@@ -151,7 +153,7 @@ bool ParseVertexNormalElement(std::string_view element,
             return false;
         }
 
-        vectorNormalElement = glm::vec3(x, y, z);
+        *vectorNormalElement = glm::vec3(x, y, z);
     } else {
         return false;
     }
@@ -160,7 +162,7 @@ bool ParseVertexNormalElement(std::string_view element,
 }
 
 bool ParsePolygonalFaceElement(std::string_view element,
-                               PolygonalFace& face) {
+                               PolygonalFace* face) {
     auto words = SplitElementString(std::string(element));
     if (words.size() != 4) {
         return false;
@@ -203,7 +205,7 @@ bool ParsePolygonalFaceElement(std::string_view element,
                 secondSlash + 1));
         }
 
-        face.elements[i] = faceElement;
+        face->elements[i] = faceElement;
     }
 
     return true;
@@ -220,7 +222,7 @@ bool ParseObjFile(std::vector<std::string> lines) {
         // Polygonal face
         if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
             PolygonalFace face;
-            if (!ParsePolygonalFaceElement(view, face)) {
+            if (!ParsePolygonalFaceElement(view, &face)) {
                 return false;
             }
 
@@ -242,7 +244,7 @@ bool ParseObjFile(std::vector<std::string> lines) {
         } else if (view.starts_with(VECTOR_ELEMENT)) {
             glm::vec4 vertexPosition;
 
-            if (!ParseVectorElement(view, vertexPosition)) {
+            if (!ParseVectorElement(view, &vertexPosition)) {
                 return false;
             }
 
@@ -257,7 +259,7 @@ bool ParseObjFile(std::vector<std::string> lines) {
         } else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
             glm::vec3 vertexNormal;
 
-            if (!ParseVertexNormalElement(view, vertexNormal)) {
+            if (!ParseVertexNormalElement(view, &vertexNormal)) {
                 return false;
             }
 
