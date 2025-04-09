@@ -15,17 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef WAVEFRONT_WAVEFRONTOBJLOADER_H_
-#define WAVEFRONT_WAVEFRONTOBJLOADER_H_
-#include <string>
-#include <vector>
+#ifndef LOGGER_H_
+#define LOGGER_H_
 
 namespace Meshborn {
-namespace WaveFront {
-
-void LoadFromFile(std::string filename);
+namespace Logger {
 
 }   // namespace WaveFront
 }   // namespace Meshborn
 
-#endif  // WAVEFRONT_WAVEFRONTOBJLOADER_H_
+#endif  // LOGGER_H_

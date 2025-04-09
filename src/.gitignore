@@ -1,4 +1,5 @@
 ####################
 # Visual Studio intermediate files
 ####################
+.vs
 Meshborn.vcxproj.user
