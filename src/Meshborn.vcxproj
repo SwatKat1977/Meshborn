@@ -129,6 +129,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="wavefront\WaveFrontObjLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="wavefront\WaveFrontObjLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

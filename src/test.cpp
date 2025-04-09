@@ -94,12 +94,22 @@ void parse(std::vector<std::string> lines)
 }
 
 
+#include "wavefront/WaveFrontObjLoader.h"
+
 int main(int argc, char** argv)
 {
+    Meshborn::WaveFront::LoadFromFile("crate.obj");
+
+    return 0;
+
     try
     {
+
+        /*
         auto lines = readLines("crate.obj");
         parse(lines);
+        */
+
         /*
         for (const auto& line : lines) {
             std::cout << line << '\n';

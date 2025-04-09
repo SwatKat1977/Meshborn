@@ -11,5 +11,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="wavefront\WaveFrontObjLoader.cpp">
+      <Filter>Wavefront</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="wavefront\WaveFrontObjLoader.h">
+      <Filter>Wavefront</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
