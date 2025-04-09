@@ -25,12 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
-const std::string MATERIAL_LIBRARY_FACE_ELEMENT = "mtllib ";
-const std::string POLYGONAL_FACE_ELEMENT = "f ";
-const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
-const std::string USE_MATERIAL_ELEMENT = "usemtl ";
-const std::string VECTOR_ELEMENT = "v ";
-const std::string VECTOR_NORMAL_ELEMENT = "vn ";
+const char MATERIAL_LIBRARY_FACE_ELEMENT[] = "mtllib ";
+const char POLYGONAL_FACE_ELEMENT[] = "f ";
+const char TEXTURE_COORDINATE_ELEMENT[] = "vt ";
+const char USE_MATERIAL_ELEMENT[] = "usemtl ";
+const char VECTOR_ELEMENT[] = "v ";
+const char VECTOR_NORMAL_ELEMENT[] = "vn ";
 
 std::vector<std::string> ReadObjFile(const std::string& filename);
 bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement);
@@ -209,8 +209,7 @@ bool ParsePolygonalFaceElement(std::string_view element,
     return true;
 }
 
-bool ParseObjFile(std::vector<std::string> lines)
-{
+bool ParseObjFile(std::vector<std::string> lines) {
     std::vector<glm::vec4> vertexPositions;
     std::vector<glm::vec3> vertexNormals;
     std::vector<PolygonalFace> faces;
@@ -280,9 +279,8 @@ bool ParseObjFile(std::vector<std::string> lines)
         // Material library [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
             std::cout << "MATERIAL LIBRARY] " << view << '\n';
-        }
 
-        else {
+        } else {
             std::cout << line << '\n';
         }
     }
