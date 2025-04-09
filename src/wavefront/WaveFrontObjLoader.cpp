@@ -31,7 +31,9 @@ const std::string VECTOR_NORMAL_ELEMENT = "vn ";
 const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
 
 std::vector<std::string> ReadObjFile(const std::string& filename);
-bool ParseVectorElement(std::string_view element, glm::vec3& vectorElement);
+bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement);
+bool ParseVertexNormalElement(std::string_view element,
+                              glm::vec3& vectorNormalElement);
 bool ParseObjFile(std::vector<std::string> lines);
 
 std::vector<std::string> SplitElementString(const std::string& str) {
@@ -87,9 +89,6 @@ std::vector<std::string> ReadObjFile(const std::string& filename) {
 }
 
 bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
-    // The vec4 layout is x, y, z, w
-    std::cout << "[VERTEX] " << element << '\n';
-
     auto words = SplitElementString(std::string(element));
     if ((words.size() == 4) || (words.size() == 5)) {
         float x;
@@ -124,7 +123,6 @@ bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
 
 bool ParseVertexNormalElement(std::string_view element,
                               glm::vec3& vectorNormalElement) {
-    std::cout << "[VERTEX NORMAL] " << element << '\n';
     float x;
     float y;
     float z;
@@ -150,11 +148,13 @@ bool ParseVertexNormalElement(std::string_view element,
         return false;
     }
 
+    return true;
 }
 
 bool ParseObjFile(std::vector<std::string> lines)
 {
     std::vector<glm::vec4> vertexPositions;
+    std::vector<glm::vec3> vertexNormals;
 
     for (const auto& line : lines) {
 
@@ -172,17 +172,29 @@ bool ParseObjFile(std::vector<std::string> lines)
             if (!ParseVectorElement(view, vertexPosition)) {
                 return false;
             }
+
+            std::cout << "[VERTEX] "
+                      << "X: " << vertexPosition.x << " | "
+                      << "Y: " << vertexPosition.y << " | "
+                      << "Z: " << vertexPosition.z << " | "
+                      << "W: " << vertexPosition.w << "\n";
             vertexPositions.push_back(vertexPosition);
         }
 
         // Vertex normal
         else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
-            glm::vec3 vertexNormalPosition;
+            glm::vec3 vertexNormal;
 
-            if (!ParseVertexNormalElement(view,
-                                          vertexNormalPosition)) {
+            if (!ParseVertexNormalElement(view, vertexNormal)) {
                 return false;
             }
+
+            std::cout << "[VERTEX NORMAL] "
+                << "X: " << vertexNormal.x << " | "
+                << "Y: " << vertexNormal.y << " | "
+                << "Z: " << vertexNormal.z << "\n";
+
+            vertexNormals.push_back(vertexNormal);
         }
 
         else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
