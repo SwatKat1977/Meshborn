@@ -36,6 +36,18 @@ bool ParseVertexNormalElement(std::string_view element,
                               glm::vec3& vectorNormalElement);
 bool ParseObjFile(std::vector<std::string> lines);
 
+struct PolygonalFaceElement {
+    PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
+
+    int vertex;
+    int texture;
+    int normal;
+};
+
+struct PolygonalFace {
+    PolygonalFaceElement elements[3];
+};
+
 std::vector<std::string> SplitElementString(const std::string& str) {
     std::vector<std::string> tokens;
     std::istringstream iss(str);
@@ -129,7 +141,6 @@ bool ParseVertexNormalElement(std::string_view element,
 
     auto words = SplitElementString(std::string(element));
     if ((words.size() == 4) || (words.size() == 5)) {
-
         try {
             x = std::stof(words[1]);
             y = std::stof(words[2]);
@@ -151,18 +162,77 @@ bool ParseVertexNormalElement(std::string_view element,
     return true;
 }
 
+bool ParsePolygonalFaceElement(std::string_view element,
+                               PolygonalFace& face) {
+    auto words = SplitElementString(std::string(element));
+    if (words.size() != 4) {
+        return false;
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        PolygonalFaceElement faceElement;
+
+        std::string rawFaceelement = words[i + 1];
+        //std::string rawFaceelement = "1//3";
+
+        size_t firstSlash = rawFaceelement.find('/');
+        size_t secondSlash = rawFaceelement.find('/', firstSlash + 1);
+
+        // Format: v
+        if (firstSlash == std::string::npos) {
+            faceElement.vertex = std::stoi(rawFaceelement);
+        }
+
+        // Format: v/vt
+        else if (secondSlash == std::string::npos) {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
+            faceElement.texture = std::stoi(rawFaceelement.substr(firstSlash + 1));
+        }
+
+        // Format: v//vn
+        else if (secondSlash == firstSlash + 1) {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
+            faceElement.normal = std::stoi(rawFaceelement.substr(secondSlash + 1));
+        }
+
+        // Format: v/vt/vn
+        else {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
+            faceElement.texture = std::stoi(rawFaceelement.substr(firstSlash + 1, secondSlash - firstSlash - 1));
+            faceElement.normal = std::stoi(rawFaceelement.substr(secondSlash + 1));
+        }
+
+        face.elements[i] = faceElement;
+    }
+
+    return true;
+}
+
 bool ParseObjFile(std::vector<std::string> lines)
 {
     std::vector<glm::vec4> vertexPositions;
     std::vector<glm::vec3> vertexNormals;
+    std::vector<PolygonalFace> faces;
 
     for (const auto& line : lines) {
 
         std::string_view view(line);
 
+        // Polygonal face
         if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
-            // Vertex position
-            std::cout << "Found polygonal face: " << view << '\n';
+
+            PolygonalFace face;
+            if (!ParsePolygonalFaceElement(view, face)) {
+                return false;
+            }
+
+            std::cout << "[POLYGONAL FACE]"
+                      << " 1 = " << face.elements[0].vertex << "/" << face.elements[0].texture << "/" << face.elements[0].normal
+                      << " | 2 = " << face.elements[1].vertex << "/" << face.elements[1].texture << "/" << face.elements[1].normal
+                      << " | 3 = " << face.elements[2].vertex << "/" << face.elements[2].texture << "/" << face.elements[2].normal
+                      << "\n";
+
+            faces.push_back(face);
         }
 
         // Vertex position
@@ -197,10 +267,11 @@ bool ParseObjFile(std::vector<std::string> lines)
             vertexNormals.push_back(vertexNormal);
         }
 
+        // Texture coordinate
         else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
-            // Vertex normal
             std::cout << "Found texture coordinate: " << view << '\n';
         }
+
         else
         {
             std::cout << line << '\n';
