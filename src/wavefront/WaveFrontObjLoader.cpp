@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
 #include <sstream>
 #include <utility>
-#include "glm/glm/glm.hpp"
+#include "glm/glm.hpp"
 #include "WaveFrontObjLoader.h"
 
 namespace Meshborn {
@@ -124,8 +124,7 @@ bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
         }
 
         vectorElement = glm::vec4(x, y, z, w);
-    }
-    else {
+    } else {
         return false;
     }
 
@@ -153,8 +152,7 @@ bool ParseVertexNormalElement(std::string_view element,
         }
 
         vectorNormalElement = glm::vec3(x, y, z);
-    }
-    else {
+    } else {
         return false;
     }
 
@@ -172,7 +170,7 @@ bool ParsePolygonalFaceElement(std::string_view element,
         PolygonalFaceElement faceElement;
 
         std::string rawFaceelement = words[i + 1];
-        //std::string rawFaceelement = "1//3";
+        // std::string rawFaceelement = "1//3";
 
         size_t firstSlash = rawFaceelement.find('/');
         size_t secondSlash = rawFaceelement.find('/', firstSlash + 1);
@@ -180,25 +178,29 @@ bool ParsePolygonalFaceElement(std::string_view element,
         // Format: v
         if (firstSlash == std::string::npos) {
             faceElement.vertex = std::stoi(rawFaceelement);
-        }
 
         // Format: v/vt
-        else if (secondSlash == std::string::npos) {
-            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
-            faceElement.texture = std::stoi(rawFaceelement.substr(firstSlash + 1));
-        }
+        } else if (secondSlash == std::string::npos) {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(
+                0, firstSlash));
+            faceElement.texture = std::stoi(rawFaceelement.substr(
+                firstSlash + 1));
 
         // Format: v//vn
-        else if (secondSlash == firstSlash + 1) {
-            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
-            faceElement.normal = std::stoi(rawFaceelement.substr(secondSlash + 1));
-        }
+        } else if (secondSlash == firstSlash + 1) {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(
+                0, firstSlash));
+            faceElement.normal = std::stoi(rawFaceelement.substr(
+                secondSlash + 1));
 
         // Format: v/vt/vn
-        else {
-            faceElement.vertex = std::stoi(rawFaceelement.substr(0, firstSlash));
-            faceElement.texture = std::stoi(rawFaceelement.substr(firstSlash + 1, secondSlash - firstSlash - 1));
-            faceElement.normal = std::stoi(rawFaceelement.substr(secondSlash + 1));
+        } else {
+            faceElement.vertex = std::stoi(rawFaceelement.substr(
+                0, firstSlash));
+            faceElement.texture = std::stoi(rawFaceelement.substr(
+                firstSlash + 1, secondSlash - firstSlash - 1));
+            faceElement.normal = std::stoi(rawFaceelement.substr(
+                secondSlash + 1));
         }
 
         face.elements[i] = faceElement;
@@ -214,28 +216,31 @@ bool ParseObjFile(std::vector<std::string> lines)
     std::vector<PolygonalFace> faces;
 
     for (const auto& line : lines) {
-
         std::string_view view(line);
 
         // Polygonal face
         if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
-
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, face)) {
                 return false;
             }
 
             std::cout << "[POLYGONAL FACE]"
-                      << " 1 = " << face.elements[0].vertex << "/" << face.elements[0].texture << "/" << face.elements[0].normal
-                      << " | 2 = " << face.elements[1].vertex << "/" << face.elements[1].texture << "/" << face.elements[1].normal
-                      << " | 3 = " << face.elements[2].vertex << "/" << face.elements[2].texture << "/" << face.elements[2].normal
+                      << " 1 = " << face.elements[0].vertex << "/"
+                                 << face.elements[0].texture << "/"
+                                 << face.elements[0].normal
+                      << " | 2 = " << face.elements[1].vertex << "/"
+                                   << face.elements[1].texture << "/"
+                                   << face.elements[1].normal
+                      << " | 3 = " << face.elements[2].vertex << "/"
+                                   << face.elements[2].texture << "/"
+                                   << face.elements[2].normal
                       << "\n";
 
             faces.push_back(face);
-        }
 
         // Vertex position
-        else if (view.starts_with(VECTOR_ELEMENT)) {
+        } else if (view.starts_with(VECTOR_ELEMENT)) {
             glm::vec4 vertexPosition;
 
             if (!ParseVectorElement(view, vertexPosition)) {
@@ -248,10 +253,9 @@ bool ParseObjFile(std::vector<std::string> lines)
                       << "Z: " << vertexPosition.z << " | "
                       << "W: " << vertexPosition.w << "\n";
             vertexPositions.push_back(vertexPosition);
-        }
 
         // Vertex normal
-        else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
+        } else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
             glm::vec3 vertexNormal;
 
             if (!ParseVertexNormalElement(view, vertexNormal)) {
@@ -264,25 +268,21 @@ bool ParseObjFile(std::vector<std::string> lines)
                 << "Z: " << vertexNormal.z << "\n";
 
             vertexNormals.push_back(vertexNormal);
-        }
 
         // Texture coordinate [NOT IMPLEMENTED YET!]
-        else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
+        } else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
             std::cout << "Found texture coordinate: " << view << '\n';
-        }
 
         // Use material [NOT IMPLEMENTED YET!]
-        else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
+        } else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
             std::cout << "[USE_MATERIAL_ELEMENT] " << view << '\n';
-        }
 
         // Material library [NOT IMPLEMENTED YET!]
-        else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
+        } else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
             std::cout << "MATERIAL LIBRARY] " << view << '\n';
         }
 
-        else
-        {
+        else {
             std::cout << line << '\n';
         }
     }
