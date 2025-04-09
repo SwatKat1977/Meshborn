@@ -30,10 +30,6 @@ std::vector<std::string> readLines(const std::string& filename) {
     return lines;
 }
 
-const std::string POLYGONAL_FACE_ELEMENT = "f ";
-const std::string VECTOR_ELEMENT = "v ";
-const std::string VECTOR_NORMAL_ELEMENT = "vn ";
-const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
 
 #include <iostream>
 
@@ -63,58 +59,13 @@ private:
     float w_;
 };
 
-
-void parse(std::vector<std::string> lines)
-{
-    for (const auto& line : lines) {
-        
-        std::string_view view(line);
-
-        if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
-            // Vertex position
-            std::cout << "Found polygonal face: " << view << '\n';
-        }
-        else if (view.starts_with(VECTOR_ELEMENT)) {
-            // Vertex position
-            std::cout << "Found vertex: " << view << '\n';
-        }
-        else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
-            // Vertex normal
-            std::cout << "Found vertex normal: " << view << '\n';
-        }
-        else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
-            // Vertex normal
-            std::cout << "Found texture coordinate: " << view << '\n';
-        }
-        else
-        {
-            std::cout << line << '\n';
-        }
-    }
-}
-
-
 #include "wavefront/WaveFrontObjLoader.h"
 
 int main(int argc, char** argv)
 {
-    Meshborn::WaveFront::LoadFromFile("crate.obj");
-
-    return 0;
-
     try
     {
-
-        /*
-        auto lines = readLines("crate.obj");
-        parse(lines);
-        */
-
-        /*
-        for (const auto& line : lines) {
-            std::cout << line << '\n';
-        }
-        */
+        Meshborn::WaveFront::LoadFromFile("crate.obj");
     }
     catch (std::runtime_error ex)
     {

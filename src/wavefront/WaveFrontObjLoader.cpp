@@ -17,19 +17,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <fstream>
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
+#include <sstream>
 #include <utility>
+#include "glm/glm/glm.hpp"
 #include "WaveFrontObjLoader.h"
 
 namespace Meshborn {
 namespace WaveFront {
 
+const std::string POLYGONAL_FACE_ELEMENT = "f ";
+const std::string VECTOR_ELEMENT = "v ";
+const std::string VECTOR_NORMAL_ELEMENT = "vn ";
+const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
+
 std::vector<std::string> ReadObjFile(const std::string& filename);
+bool ParseVectorElement(std::string_view element, glm::vec3& vectorElement);
+bool ParseObjFile(std::vector<std::string> lines);
+
+std::vector<std::string> SplitElementString(const std::string& str) {
+    std::vector<std::string> tokens;
+    std::istringstream iss(str);
+    std::string token;
+
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
 
 void LoadFromFile(std::string filename) {
-    auto lines = ReadObjFile(filename);
-    for (const auto& line : lines) {
-        std::cout << line << '\n';
+    std::vector<std::string> rawLines;
+
+    try {
+        rawLines = ReadObjFile(filename);
     }
+    catch (std::runtime_error ex) {
+        throw std::runtime_error(ex.what());
+    }
+
+    ParseObjFile(rawLines);
+    //for (const auto& line : rawLines) {
+    //    std::cout << line << '\n';
+    //}
 }
 
 std::vector<std::string> ReadObjFile(const std::string& filename) {
@@ -54,6 +84,79 @@ std::vector<std::string> ReadObjFile(const std::string& filename) {
     }
 
     return lines;
+}
+
+bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement) {
+    // The vec4 layout is x, y, z, w
+    std::cout << "[VERTEX] " << element << '\n';
+
+    auto words = SplitElementString(std::string(element));
+    if ((words.size() == 4) || (words.size() == 5)) {
+        float x;
+        float y;
+        float z;
+        float w = 1.0f;
+
+        try {
+            x = std::stof(words[1]);
+            y = std::stof(words[2]);
+            z = std::stof(words[3]);
+
+            if (words.size() == 5) {
+                w = std::stof(words[4]);
+            }
+        }
+        catch (std::invalid_argument) {
+            return false;
+        }
+        catch (std::out_of_range) {
+            return false;
+        }
+
+        vectorElement = glm::vec4(x, y, z, w);
+    }
+    else {
+        return false;
+    }
+
+    return true;
+}
+
+bool ParseObjFile(std::vector<std::string> lines)
+{
+    std::vector<glm::vec4> vertexPositions;
+
+    for (const auto& line : lines) {
+
+        std::string_view view(line);
+
+        if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
+            // Vertex position
+            std::cout << "Found polygonal face: " << view << '\n';
+        }
+        else if (view.starts_with(VECTOR_ELEMENT)) {
+            // Vertex position
+            glm::vec4 vertexPosition;
+
+            if (!ParseVectorElement(view, vertexPosition)) return false;
+
+            vertexPositions.push_back(vertexPosition);
+        }
+        else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
+            // Vertex normal
+            std::cout << "Found vertex normal: " << view << '\n';
+        }
+        else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
+            // Vertex normal
+            std::cout << "Found texture coordinate: " << view << '\n';
+        }
+        else
+        {
+            std::cout << line << '\n';
+        }
+    }
+
+    return true;
 }
 
 }   // namespace WaveFront
