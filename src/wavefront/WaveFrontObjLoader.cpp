@@ -25,10 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
+const std::string MATERIAL_LIBRARY_FACE_ELEMENT = "mtllib ";
 const std::string POLYGONAL_FACE_ELEMENT = "f ";
+const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
+const std::string USE_MATERIAL_ELEMENT = "usemtl ";
 const std::string VECTOR_ELEMENT = "v ";
 const std::string VECTOR_NORMAL_ELEMENT = "vn ";
-const std::string TEXTURE_COORDINATE_ELEMENT = "vt ";
 
 std::vector<std::string> ReadObjFile(const std::string& filename);
 bool ParseVectorElement(std::string_view element, glm::vec4& vectorElement);
@@ -71,9 +73,6 @@ void LoadFromFile(std::string filename) {
     }
 
     ParseObjFile(rawLines);
-    //for (const auto& line : rawLines) {
-    //    std::cout << line << '\n';
-    //}
 }
 
 std::vector<std::string> ReadObjFile(const std::string& filename) {
@@ -267,9 +266,19 @@ bool ParseObjFile(std::vector<std::string> lines)
             vertexNormals.push_back(vertexNormal);
         }
 
-        // Texture coordinate
+        // Texture coordinate [NOT IMPLEMENTED YET!]
         else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
             std::cout << "Found texture coordinate: " << view << '\n';
+        }
+
+        // Use material [NOT IMPLEMENTED YET!]
+        else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
+            std::cout << "[USE_MATERIAL_ELEMENT] " << view << '\n';
+        }
+
+        // Material library [NOT IMPLEMENTED YET!]
+        else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
+            std::cout << "MATERIAL LIBRARY] " << view << '\n';
         }
 
         else
