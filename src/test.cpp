@@ -16,45 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <fstream>
+#include <iostream>         /// TEMP
 #include <string>
 #include <string_view>
 #include <vector>
 #include "Logger.h"
 
-std::vector<std::string> readLines(const std::string& filename) {
-    std::vector<std::string> lines;
-    std::ifstream file(filename);
-
-    if (!file.is_open())
-    {
-        throw std::runtime_error("Failed to open file: " + filename);
-    }
-
-    std::string line;
-    while (std::getline(file, line))
-    {
-        if (!line.empty())
-        {
-            // Strip Windows carriage return
-            if (line.back() == '\r')
-            {
-                line.pop_back();
-            }
-
-            lines.push_back(std::move(line));
-        }
-    }
-
-    return lines;
-}
-
-
-#include <iostream>
-
-class Vertex
-{
-public:
-
+class Vertex {
+ public:
     Vertex(float x, float y, float z) :
         x_(x), y_(y), z_(z), w_(DEFAULT_W_VALUE) {}
 
@@ -66,8 +35,8 @@ public:
     float Z() const { return z_; }
     float W() const { return w_; }
 
-private:
-    Vertex() = delete; // No default construction allowed
+ private:
+    Vertex() = delete;  // No default construction allowed
 
     const float DEFAULT_W_VALUE = 1.0f;
 
@@ -78,15 +47,28 @@ private:
 };
 
 #include "wavefront/WaveFrontObjLoader.h"
+#include "Meshborn.h"
+#include "Logger.h"
 
-int main(int argc, char** argv)
-{
-    try
-    {
+class ConsoleLogger: public Meshborn::Logger::ILogger {
+public:
+    ConsoleLogger() = default;
+
+    void Log(Meshborn::Logger::LogLevel level,
+             const std::string& message){
+        std::cout << message << std::endl;
+    }
+};
+
+
+int main(int argc, char** argv) {
+    ConsoleLogger logger;
+    Meshborn::SetLogger(std::make_unique<ConsoleLogger>());
+
+    try {
         Meshborn::WaveFront::LoadFromFile("crate.obj");
     }
-    catch (std::runtime_error ex)
-    {
+    catch (std::runtime_error ex) {
         std::cout << "[EXCEPTION] " << ex.what() << "\n";
     }
 

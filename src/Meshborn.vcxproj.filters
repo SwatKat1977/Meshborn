@@ -22,5 +22,6 @@
     </ClInclude>
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Meshborn.h" />
+    <ClInclude Include="LoggerManager.h" />
   </ItemGroup>
 </Project>

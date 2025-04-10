@@ -17,5 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef MESHBORN_H_
 #define MESHBORN_H_
+#include <memory>
+#include <utility>
+#include "Logger.h"
+
+namespace Meshborn {
+
+void SetLogger(std::unique_ptr<Logger::ILogger> logger);
+
+}   // namespace Meshborn
 
 #endif  //  MESHBORN_H_

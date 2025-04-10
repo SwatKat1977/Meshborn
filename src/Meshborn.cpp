@@ -16,3 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Meshborn.h"
+#include "LoggerManager.h"
+
+namespace Meshborn {
+
+void SetLogger(std::unique_ptr<Logger::ILogger> logger) {
+    Logger::LoggerManager::Instance().SetLogger(std::move(logger));
+}
+
+}   // namespace Meshborn
