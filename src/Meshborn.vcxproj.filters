@@ -14,11 +14,13 @@
     <ClCompile Include="wavefront\WaveFrontObjLoader.cpp">
       <Filter>Wavefront</Filter>
     </ClCompile>
+    <ClCompile Include="Meshborn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="wavefront\WaveFrontObjLoader.h">
       <Filter>Wavefront</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Meshborn.h" />
   </ItemGroup>
 </Project>

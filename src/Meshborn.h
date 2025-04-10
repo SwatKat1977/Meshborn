@@ -15,29 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef LOGGER_H_
-#define LOGGER_H_
-#include <string>
-#include <functional>
+#ifndef MESHBORN_H_
+#define MESHBORN_H_
 
-namespace Meshborn {
-namespace Logger {
-
-enum class LogLevel {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Critical
-};
-
-class ILogger {
- public:
-    virtual ~ILogger() = default;
-    virtual void Log(LogLevel level, const std::string& message) = 0;
-};
-
-}   // namespace Logger
-}   // namespace Meshborn
-
-#endif  // LOGGER_H_
+#endif  //  MESHBORN_H_
