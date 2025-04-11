@@ -21,7 +21,7 @@ AC_SUBST(AM_CPPFLAGS, "-I. -I\$(MESHBORN_GLM)")
 AC_CHECK_HEADERS([stdio.h stdlib.h])
 
 # Output Makefile in root and subdirectories
-AC_CONFIG_FILES([Makefile src/Makefile src/WebLoom/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 
 # Generate the configuration script
 AC_OUTPUT

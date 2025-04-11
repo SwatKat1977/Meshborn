@@ -13,7 +13,16 @@ src/x64
 /compile
 /config.guess
 /config.log
+/config.status
 /config.sub
 /configure
+/configure~
+/depcomp
 /install-sh
+/libtool
+/ltmain.sh
 /missing
+Makefile
+Makefile.in
+m4
+src/.deps/
