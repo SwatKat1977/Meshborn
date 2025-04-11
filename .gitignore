@@ -26,3 +26,7 @@ Makefile
 Makefile.in
 m4
 src/.deps/
+src/.libs/
+src/wavefront/.deps/
+src/wavefront/.dirstamp
+*.o
