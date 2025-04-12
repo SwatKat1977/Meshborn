@@ -17,10 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <fstream>
 #include <iostream>         /// TEMP
+#include <map>
 #include <string>
 #include <string_view>
 #include <vector>
 #include "Logger.h"
+
+const std::map<Meshborn::Logger::LogLevel, std::string> LogLevelToString {
+    { Meshborn::Logger::LogLevel::Debug,    "DEBUG" },
+    { Meshborn::Logger::LogLevel::Info,     "INFO" },
+    { Meshborn::Logger::LogLevel::Warning,  "WARNING" },
+    { Meshborn::Logger::LogLevel::Error,    "ERROR" },
+    { Meshborn::Logger::LogLevel::Critical, "CRITICAL" }
+};
 
 class Vertex {
  public:
@@ -56,7 +65,8 @@ public:
 
     void Log(Meshborn::Logger::LogLevel level,
              const std::string& message){
-        std::cout << message << std::endl;
+        std::cout << "[" << LogLevelToString.at(level) << "] "
+                  << message << std::endl;
     }
 };
 

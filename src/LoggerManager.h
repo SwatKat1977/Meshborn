@@ -53,6 +53,25 @@ class LoggerManager {
     mutable std::mutex mutex_;
 };
 
+#ifndef DISABLE_LOGGING
+  #ifdef MESHBORN_LOG_DEBUG
+    #define SHOULD_LOG_DEBUG true
+  #else
+    #define SHOULD_LOG_DEBUG false
+  #endif
+
+  #define LOG(level, message)                                                             \
+    do {                                                                                  \
+      if (Logger::LoggerManager::Instance().HasLogger()) {                                \
+        if ((level) != Logger::LogLevel::Debug || SHOULD_LOG_DEBUG) {                             \
+          Logger::LoggerManager::Instance().GetLogger().Log((level), (message));          \
+        }                                                                                 \
+      }                                                                                   \
+    } while (0)
+#else
+  #define LOG(level, message) do {} while (0)
+#endif
+
 }   // namespace Logger
 }   // namespace Meshborn
 

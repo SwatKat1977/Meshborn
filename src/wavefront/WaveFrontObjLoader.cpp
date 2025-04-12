@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 #include <utility>
 #include "glm/glm.hpp"
+#include "LoggerManager.h"
 #include "WaveFrontObjLoader.h"
 
 namespace Meshborn {
@@ -226,18 +227,17 @@ bool ParseObjFile(std::vector<std::string> lines) {
                 return false;
             }
 
-            std::cout << "[POLYGONAL FACE]"
-                      << " 1 = " << face.elements[0].vertex << "/"
-                                 << face.elements[0].texture << "/"
-                                 << face.elements[0].normal
-                      << " | 2 = " << face.elements[1].vertex << "/"
-                                   << face.elements[1].texture << "/"
-                                   << face.elements[1].normal
-                      << " | 3 = " << face.elements[2].vertex << "/"
-                                   << face.elements[2].texture << "/"
-                                   << face.elements[2].normal
-                      << "\n";
-
+            LOG(Logger::LogLevel::Debug, std::format(
+                "POLYGONAL FACE => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}",
+                face.elements[0].vertex,
+                face.elements[0].texture,
+                face.elements[0].normal,
+                face.elements[1].vertex,
+                face.elements[1].texture,
+                face.elements[1].normal,
+                face.elements[2].vertex,
+                face.elements[2].texture,
+                face.elements[2].normal));
             faces.push_back(face);
 
         // Vertex position
@@ -248,11 +248,12 @@ bool ParseObjFile(std::vector<std::string> lines) {
                 return false;
             }
 
-            std::cout << "[VERTEX] "
-                      << "X: " << vertexPosition.x << " | "
-                      << "Y: " << vertexPosition.y << " | "
-                      << "Z: " << vertexPosition.z << " | "
-                      << "W: " << vertexPosition.w << "\n";
+            LOG(Logger::LogLevel::Debug, std::format(
+                "VERTEX => X: {} | Y: {} | Z: {} | W: {}",
+                vertexPosition.x,
+                vertexPosition.y,
+                vertexPosition.z,
+                vertexPosition.w));
             vertexPositions.push_back(vertexPosition);
 
         // Vertex normal
@@ -263,24 +264,28 @@ bool ParseObjFile(std::vector<std::string> lines) {
                 return false;
             }
 
-            std::cout << "[VERTEX NORMAL] "
-                << "X: " << vertexNormal.x << " | "
-                << "Y: " << vertexNormal.y << " | "
-                << "Z: " << vertexNormal.z << "\n";
-
+            LOG(Logger::LogLevel::Debug, std::format(
+                "VERTEX NORMAL => X: {} | Y: {} | Z: {}",
+                vertexNormal.x,
+                vertexNormal.y,
+                vertexNormal.z));
             vertexNormals.push_back(vertexNormal);
 
         // Texture coordinate [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
-            std::cout << "Found texture coordinate: " << view << '\n';
+            //std::cout << "Found texture coordinate: " << view << '\n';
+            LOG(Logger::LogLevel::Debug, std::format(
+                "Found texture coordinate: {}", view));
 
         // Use material [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
-            std::cout << "[USE_MATERIAL_ELEMENT] " << view << '\n';
+            LOG(Logger::LogLevel::Debug, std::format(
+                "Use material element: {}", view));
 
         // Material library [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
-            std::cout << "MATERIAL LIBRARY] " << view << '\n';
+            LOG(Logger::LogLevel::Debug, std::format(
+                "Material library: {}", view));
 
         } else {
             std::cout << line << '\n';
