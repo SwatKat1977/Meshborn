@@ -75,6 +75,8 @@ int main(int argc, char** argv) {
     ConsoleLogger logger;
     Meshborn::SetLogger(std::make_unique<ConsoleLogger>());
 
+    std::cout << "Loading 'crate.obj'\n";
+
     try {
         Meshborn::WaveFront::LoadFromFile("crate.obj");
     }
