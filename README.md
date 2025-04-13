@@ -25,8 +25,8 @@ The following Wavefront obj tags are currently supported:
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Tag                  | Status             | Notes                |
-|:---------------------|:-------------------|:---------------------|
-| Basic object Read    | :construction:     | Currently working on |
+| Tag                  | Status             | Notes                   |
+|:---------------------|:-------------------|:------------------------|
+| Basic object Read    | :construction:     | Currently working on    |
 | Basic material read  | :x:                | Needs mtllib and usemtl |
-| Logging              | :white_check_mark: | |
+| Logging              | :white_check_mark: |                         |
