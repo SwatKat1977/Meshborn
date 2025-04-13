@@ -29,3 +29,4 @@ The following functionality is currently supported:
 |:---------------------|:-------------------|:---------------------|
 | Basic object Read    | :construction:     | Currently working on |
 | Basic material read  | :x:                | Needs mtllib and usemtl |
+| Logging              | :white_check_mark: | |
