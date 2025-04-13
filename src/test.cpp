@@ -72,13 +72,29 @@ public:
 
 
 int main(int argc, char** argv) {
+
+    std::string filename;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+
+        if ((arg == "-f" || arg == "--file") && i + 1 < argc) {
+            filename = argv[++i];
+        }
+    }
+
+    if (filename.empty()) {
+        std::cerr << "Usage: " << argv[0] << " -f <filename>\n";
+        return 1;
+    }
+
     ConsoleLogger logger;
     Meshborn::SetLogger(std::make_unique<ConsoleLogger>());
 
-    std::cout << "Loading 'crate.obj'\n";
+    std::cout << "Loading '" << filename << "'\n";
 
     try {
-        Meshborn::WaveFront::LoadFromFile("crate.obj");
+        Meshborn::WaveFront::LoadFromFile(filename);
     }
     catch (std::runtime_error ex) {
         std::cout << "[EXCEPTION] " << ex.what() << "\n";
