@@ -262,7 +262,15 @@ bool ParseMaterials(std::string_view element, std::string &materialLibrary) {
         return false;
     }
 
-    materialLibrary = words[1];
+    std::ifstream file(words[1]);
+
+    if (!file.good()) {
+        LOG(Logger::LogLevel::Warning, std::format(
+            "Materials library '{}' is missing/inaccessible",
+            words[1]));
+    } else {
+        materialLibrary = words[1];
+    }
 
     return true;
 }
