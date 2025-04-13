@@ -6,6 +6,11 @@ Meshborn.vcxproj.user
 src/x64
 
 ####################
+# Mac specific
+####################
+.DS_Store
+
+####################
 # Automake intermediate files
 ####################
 /aclocal.m4
@@ -30,3 +35,5 @@ src/.libs/
 src/wavefront/.deps/
 src/wavefront/.dirstamp
 *.o
+*.lo
+*.la
