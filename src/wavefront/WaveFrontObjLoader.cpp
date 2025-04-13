@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
-const char MATERIAL_LIBRARY_FACE_ELEMENT[] = "mtllib ";
+const char MATERIAL_LIBRARY_ELEMENT[] = "mtllib ";
 const char POLYGONAL_FACE_ELEMENT[] = "f ";
 const char TEXTURE_COORDINATE_ELEMENT[] = "vt ";
 const char USE_MATERIAL_ELEMENT[] = "usemtl ";
@@ -162,6 +162,32 @@ bool ParseVertexNormalElement(std::string_view element,
     return true;
 }
 
+/**
+ * @brief Parses a polygonal face element from a string.
+ *
+ * This function processes a face definition from an input string, typically
+ * formatted according to the Wavefront OBJ specification. It supports face
+ * element formats such as:
+ *
+ * - v          (vertex only)
+ *
+ * - v/vt       (vertex and texture)
+ *
+ * - v//vn      (vertex and normal)
+ *
+ * - v/vt/vn    (vertex, texture, and normal)
+ *
+ * The function extracts up to three face elements and assigns them to the
+ * provided PolygonalFace object.
+ *
+ * @param element The input string representing a polygonal face element,
+ *                usually in the format: "f v1 v2 v3".
+ * @param face    Pointer to a PolygonalFace struct where the parsed elements
+ *                will be stored.
+ *
+ * @return true if the face string is valid and was successfully parsed;
+ *         false otherwise.
+ */
 bool ParsePolygonalFaceElement(std::string_view element,
                                PolygonalFace* face) {
     auto words = SplitElementString(std::string(element));
@@ -208,6 +234,35 @@ bool ParsePolygonalFaceElement(std::string_view element,
 
         face->elements[i] = faceElement;
     }
+
+    return true;
+}
+
+/**
+ * @brief Parses a material library reference from a given element string.
+ *
+ * This function expects an input string that represents a material reference
+ * in the format: `keyword material_file`. It splits the string into parts
+ * and, if exactly two parts are found, assigns the second part to the
+ * output parameter `materialLibrary`.
+ *
+ * @param element The input string view representing a single line or element
+ *                that includes a material keyword and the material file name.
+ * @param materialLibrary A reference to a string where the parsed material
+ *                        file name will be stored if parsing is successful.
+ *
+ * @return true if the input string is correctly formatted and parsing
+ *         succeeds; false otherwise.
+ */
+bool ParseMaterials(std::string_view element, std::string &materialLibrary) {
+    auto words = SplitElementString(std::string(element));
+
+    // Requires 2 works (keyword and material_file)
+    if (words.size() != 2) {
+        return false;
+    }
+
+    materialLibrary = words[1];
 
     return true;
 }
@@ -283,9 +338,18 @@ bool ParseObjFile(std::vector<std::string> lines) {
                 "Use material element: {}", view));
 
         // Material library [NOT IMPLEMENTED YET!]
-        } else if (view.starts_with(MATERIAL_LIBRARY_FACE_ELEMENT)) {
+        } else if (view.starts_with(MATERIAL_LIBRARY_ELEMENT)) {
+            std::string materialLibrary;
+
+            if (!ParseMaterials(view, materialLibrary)) {
+                LOG(Logger::LogLevel::Critical, std::format(
+                    "Materials library line '{}' is invalid",
+                    view));
+                return false;
+            }
+
             LOG(Logger::LogLevel::Debug, std::format(
-                "Material library: {}", view));
+                "MATERIALS LIBRARY => {}", view));
 
         } else {
             std::cout << line << '\n';
