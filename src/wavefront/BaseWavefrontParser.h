@@ -25,7 +25,7 @@ namespace WaveFront {
 
 class BaseWebfrontParser {
  protected:
-    std::vector<std::string> ReadObjFile(const std::string& filename);
+    std::vector<std::string> ReadFile(const std::string& filename);
 
     std::vector<std::string> SplitElementString(const std::string& str);
 };

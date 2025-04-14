@@ -23,7 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
-std::vector<std::string> SplitElementString(const std::string& str) {
+std::vector<std::string> BaseWebfrontParser::SplitElementString(
+    const std::string& str) {
     std::vector<std::string> tokens;
     std::istringstream iss(str);
     std::string token;
@@ -35,7 +36,7 @@ std::vector<std::string> SplitElementString(const std::string& str) {
     return tokens;
 }
 
-std::vector<std::string> ReadObjFile(const std::string& filename) {
+std::vector<std::string> BaseWebfrontParser::ReadFile(const std::string& filename) {
     std::vector<std::string> lines;
     std::ifstream file(filename);
 
