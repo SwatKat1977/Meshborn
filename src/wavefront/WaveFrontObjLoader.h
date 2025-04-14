@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WAVEFRONT_WAVEFRONTOBJLOADER_H_
 #include <string>
 #include <vector>
+#include "BaseWavefrontParser.h"
 
 namespace Meshborn {
 namespace WaveFront {
