@@ -19,11 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WAVEFRONT_MATERIALLIBRARYPARSER_H_
 #include <string>
 
+namespace Meshborn {
+namespace WaveFront {
+
 class MaterialLibraryParser {
  public:
     MaterialLibraryParser();
 
     void ParseLibrary(std::string materialFile);
 }
+
+
+}   // namespace WaveFront
+}   // namespace Meshborn
 
 #endif  // WAVEFRONT_MATERIALLIBRARYPARSER_H_

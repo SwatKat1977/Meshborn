@@ -20,6 +20,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
+const char KEYWORD_NEW_MATERIAL[] = "newmtl ";
+const char KEYWORD_AMBIENT[] = "Ka ";
+const char KEYWORD_DIFFUSE[] = "Kd ";
+const char KEYWORD_EMISSIVE[] = "Ke ";
+const char KEYWORD_SPECULAR[] = "Ks ";
+const char KEYWORD_SPECULAR_EXPONENT[] = "Ns ";
+const char KEYWORD_TRANSPARENT_DISOLVE[] = "d ";
+const char KEYWORD_OPTICAL_DENSITY[] = "Ni ";
+const char KEYWORD_ILLUMINATION_MODEL[] = "illum ";
+
+const char KEYWORD_AMBIENT_TEXTURE_MAP[] = "map_Ka ";
+const char KEYWORD_DIFFUSE_TEXTURE_MAP[] = "map_Kd ";
+const char KEYWORD_SPECULAR_COLOR_TEXTURE_MAP[] = "map_Ks ";
+const char KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT[] = "map_Ns ";
+const char KEYWORD_ALPHA_TEXTURE_MAP[] = "map_d ";
+
+// map_bump and bump are one and the same.
+const char KEYWORD_MAP_BUMP[] = "map_bump ";
+const char KEYWORD_BUMP_MAP[] = "bump ";
+
+const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
+
+// defaults to 'matte' channel of the image)
+const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
+
+/*
+Illumination model (illum tag)
+illum	Description
+0	Color on, ambient off
+1	Color on, ambient on
+2	Highlight on
+3	Reflection on and ray trace on
+4	Transparency: Glass on, Reflection: Ray trace on
+5	Reflection: Fresnel on and ray trace on
+6	Transparency: Refraction on, Reflection: Fresnel off and ray trace on
+7	Transparency: Refraction on, Reflection: Fresnel on and ray trace on
+8	Reflection on and ray trace off
+9	Transparency: Glass on, Reflection: Ray trace off
+10	Casts shadows onto invisible surfaces
+*/
+
 MaterialLibraryParser::MaterialLibraryParser() {
 }
 
