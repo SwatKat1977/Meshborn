@@ -17,8 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef WAVEFRONT_BASEWAVEFRONTPARSER_H_
 #define WAVEFRONT_BASEWAVEFRONTPARSER_H_
+#include <string>
+#include <vector>
+
+namespace Meshborn {
+namespace WaveFront {
 
 class BaseWebfrontParser {
+ protected:
+    std::vector<std::string> ReadObjFile(const std::string& filename);
+
+    std::vector<std::string> SplitElementString(const std::string& str);
 };
+
+}   // namespace WaveFront
+}   // namespace Meshborn
 
 #endif  //  WAVEFRONT_BASEWAVEFRONTPARSER_H_

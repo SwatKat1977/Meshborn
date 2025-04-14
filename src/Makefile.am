@@ -18,8 +18,10 @@ includedir = $(prefix)/include/meshborn
 
 # Specify sources and output shared library
 lib_LTLIBRARIES = libMeshborn.la
-libMeshborn_la_SOURCES = Meshborn.cpp \
-                         wavefront/WavefrontObjLoader.cpp
+libMeshborn_la_SOURCES = Meshborn.cpp                        \
+                         wavefront/WavefrontObjLoader.cpp    \
+                         wavefront/BaseWavefrontParser.cpp   \
+                         wavefront/MaterialLibraryParser.cpp
 
 # Set the libtool versioning
 #libWebLoom_la_LDFLAGS = -version-info $(LT_VERSION)

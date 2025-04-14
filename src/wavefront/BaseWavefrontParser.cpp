@@ -15,4 +15,49 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <fstream>
+#include <sstream>
+#include <utility>
 #include "BaseWavefrontParser.h"
+
+namespace Meshborn {
+namespace WaveFront {
+
+std::vector<std::string> SplitElementString(const std::string& str) {
+    std::vector<std::string> tokens;
+    std::istringstream iss(str);
+    std::string token;
+
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+std::vector<std::string> ReadObjFile(const std::string& filename) {
+    std::vector<std::string> lines;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filename);
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        // Only keep the line if it's not empty or not a comment.
+        if (!line.empty() && !line.starts_with("#")) {
+            // Strip Windows carriage return
+            if (line.back() == '\r') {
+                line.pop_back();
+            }
+
+            lines.push_back(std::move(line));
+        }
+    }
+
+    return lines;
+}
+
+}   // namespace WaveFront
+}   // namespace Meshborn
