@@ -49,22 +49,6 @@ const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
 // defaults to 'matte' channel of the image)
 const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
 
-/*
-Illumination model (illum tag)
-illum	Description
-0	Color on, ambient off
-1	Color on, ambient on
-2	Highlight on
-3	Reflection on and ray trace on
-4	Transparency: Glass on, Reflection: Ray trace on
-5	Reflection: Fresnel on and ray trace on
-6	Transparency: Refraction on, Reflection: Fresnel off and ray trace on
-7	Transparency: Refraction on, Reflection: Fresnel on and ray trace on
-8	Reflection on and ray trace off
-9	Transparency: Glass on, Reflection: Ray trace off
-10	Casts shadows onto invisible surfaces
-*/
-
 MaterialLibraryParser::MaterialLibraryParser() {
 }
 
@@ -428,6 +412,25 @@ bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
                                                           float *transparency) {
 }
 
+/**
+ * @brief Parses the optical density (index of refraction) from a line.
+ *
+ * This function extracts the optical density value (Ni) from a given line
+ * and stores it in the provided `density` pointer. Optical density affects
+ * how much light bends as it enters a material, commonly used for transparent
+ * materials like glass or water.
+ *
+ * Valid values range from 0.001 to 10.0. Typical real-world values fall
+ * between 1.0 and 2.0. Examples include:
+ *   - Air: 1.0
+ *   - Water: 1.33
+ *   - Glass: 1.5
+ *   - Diamond: 2.42
+ *
+ * @param line The input line containing the optical density value.
+ * @param density Pointer to a float where the parsed value will be stored.
+ * @return true if parsing and validation succeed, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
                                                      float *density) {
     auto words = SplitElementString(std::string(line));
@@ -448,6 +451,32 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
     return true;
 }
 
+/*
+ * Parses the illumination model from a line in a material library file.
+ *
+ * The "illum" tag specifies how the surface is illuminated. The model is
+ * defined by an integer value ranging from 0 to 10, each representing a
+ * specific shading/lighting mode:
+ *
+ *   0  - Color on, ambient off
+ *   1  - Color on, ambient on
+ *   2  - Highlight on
+ *   3  - Reflection on and ray trace on
+ *   4  - Transparency: Glass on, Reflection: Ray trace on
+ *   5  - Reflection: Fresnel on and ray trace on
+ *   6  - Transparency: Refraction on, Reflection: Fresnel off and ray trace on
+ *   7  - Transparency: Refraction on, Reflection: Fresnel on and ray trace on
+ *   8  - Reflection on and ray trace off
+ *   9  - Transparency: Glass on, Reflection: Ray trace off
+ *  10  - Casts shadows onto invisible surfaces
+ *
+ * Parameters:
+ *   line    - The input line containing the "illum" tag and its value.
+ *   density - Pointer to store the parsed illumination model index.
+ *
+ * Returns:
+ *   true if the illumination model is parsed and valid; false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
                                                         int *density) {
     auto words = SplitElementString(std::string(line));
