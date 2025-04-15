@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 
 class Material {
-public:
+ public:
     Material(std::string name);
 
     void SetAmbientColour(glm::vec3 colour);
@@ -32,7 +32,10 @@ public:
     void SetDiffuseColour(glm::vec3 colour);
     bool GetDiffuseColour(glm::vec3 &colour);
 
-private:
+    void SetSpecularColour(glm::vec3 colour);
+    bool GetSpecularColour(glm::vec3 &colour);
+
+ private:
     std::string name_;
 
     // Ambient colour
@@ -43,6 +46,9 @@ private:
     glm::vec3 diffuseColour_;
     bool diffuseColourSet_;
 
+    // Specular colour
+    glm::vec3 specularColour_;
+    bool specularColourSet_;
 };
 
 }   // namespace Meshborn

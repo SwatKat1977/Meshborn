@@ -27,8 +27,14 @@ namespace Meshborn {
  * @param name The name of the material.
  */
 Material::Material(std::string name) : name_(name) {
-    glm::vec3 ambientColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    ambientColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
     ambientColourSet_ = false;
+
+    diffuseColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    diffuseColourSet_ = false;
+
+    specularColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    specularColourSet_ = false;
 }
 
 /**
@@ -81,5 +87,36 @@ bool Material::GetDiffuseColour(glm::vec3 &colour) {
     return true;
 }
 
+/**
+ * @brief Sets the specular colour of the material.
+ *
+ * This method assigns the given RGB colour vector to the material's specular
+ * colour and marks it as explicitly set.
+ *
+ * @param colour The RGB colour value to use as the material's specular colour.
+ */
+void Material::SetSpecularColour(glm::vec3 colour) {
+    specularColour_ = colour;
+    specularColourSet_ = true;
+}
+
+/**
+ * @brief Retrieves the specular colour of the material, if set.
+ *
+ * If the specular colour has been set previously, this method copies the stored
+ * colour into the provided reference and returns true. If not, it returns false
+ * without modifying the reference.
+ *
+ * @param[out] colour Reference to a glm::vec3 to receive the specular colour.
+ * @return true if the specular colour has been set, false otherwise.
+ */
+bool Material::GetSpecularColour(glm::vec3 &colour) {
+    if (!specularColourSet_) {
+        return false;
+    }
+
+    colour = specularColour_;
+    return true;
+}
+
 }   // namespace Meshborn
-    
