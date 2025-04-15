@@ -19,22 +19,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
+    /**
+ * @brief Constructs a new Material with the given name.
+ * 
+ * Initializes the ambient colour to black (0, 0, 0) and marks it as unset.
+ * 
+ * @param name The name of the material.
+ */
 Material::Material(std::string name) : name_(name) {
     glm::vec3 ambientColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
     ambientColourSet_ = false;
 }
 
+/**
+ * @brief Sets the ambient colour of the material.
+ * 
+ * @param colour A glm::vec3 representing the ambient RGB colour values.
+ */
 void Material::SetAmbientColour(glm::vec3 colour) {
     ambientColour_ = colour;
     ambientColourSet_ = true;
 }
 
+/**
+ * @brief Retrieves the ambient colour of the material.
+ * 
+ * @param[out] colour The ambient colour will be stored here if set.
+ * @return true if the ambient colour was set and returned; false otherwise.
+ */
 bool Material::GetAmbientColour(glm::vec3 &colour) {
     if (!ambientColourSet_) {
         return false;
     }
 
     colour = ambientColour_;
+    return true;
+}
+
+/**
+ * @brief Sets the diffuse colour of the material.
+ * 
+ * @param colour A glm::vec3 representing the diffuse RGB colour values.
+ */
+void Material::SetDiffuseColour(glm::vec3 colour) {
+    diffuseColour_ = colour;
+    diffuseColourSet_ = true;
+}
+
+/**
+ * @brief Retrieves the diffuse colour of the material.
+ * 
+ * @param[out] colour The diffuse colour will be stored here if set.
+ * @return true if the diffuse colour was set and returned; false otherwise.
+ */
+bool Material::GetDiffuseColour(glm::vec3 &colour) {
+    if (!diffuseColourSet_) {
+        return false;
+    }
+
+    colour = diffuseColour_;
     return true;
 }
 

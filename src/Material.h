@@ -29,10 +29,20 @@ public:
     void SetAmbientColour(glm::vec3 colour);
     bool GetAmbientColour(glm::vec3 &colour);
 
+    void SetDiffuseColour(glm::vec3 colour);
+    bool GetDiffuseColour(glm::vec3 &colour);
+
 private:
     std::string name_;
+
+    // Ambient colour
     glm::vec3 ambientColour_;
     bool ambientColourSet_;
+
+    // Diffuse colour
+    glm::vec3 diffuseColour_;
+    bool diffuseColourSet_;
+
 };
 
 }   // namespace Meshborn
