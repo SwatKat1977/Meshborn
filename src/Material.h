@@ -32,6 +32,9 @@ class Material {
     void SetDiffuseColour(glm::vec3 colour);
     bool GetDiffuseColour(glm::vec3 *colour);
 
+    void SetEmissiveColour(glm::vec3 colour);
+    bool GetEmissiveColour(glm::vec3 *colour);
+
     void SetSpecularColour(glm::vec3 colour);
     bool GetSpecularColour(glm::vec3 *colour);
 
@@ -45,6 +48,10 @@ class Material {
     // Diffuse colour
     glm::vec3 diffuseColour_;
     bool diffuseColourSet_;
+
+    // Emissive colour
+    glm::vec3 emissiveColour_;
+    bool emissiveColourSet_;
 
     // Specular colour
     glm::vec3 specularColour_;

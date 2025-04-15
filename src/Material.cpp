@@ -87,6 +87,20 @@ bool Material::GetDiffuseColour(glm::vec3 *colour) {
     return true;
 }
 
+void Material::SetEmissiveColour(glm::vec3 colour) {
+    emissiveColour_ = colour;
+    emissiveColourSet_ = true;
+}
+
+bool Material::GetEmissiveColour(glm::vec3 *colour) {
+    if (!emissiveColourSet_) {
+        return false;
+    }
+
+    *colour = emissiveColour_;
+    return true;
+}
+
 /**
  * @brief Sets the specular colour of the material.
  *
