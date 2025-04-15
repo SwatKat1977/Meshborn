@@ -114,14 +114,29 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
             materials[currentMaterial].SetAmbientColour(ambientColour);
             glm::vec3 colour;
-            materials[currentMaterial].GetAmbientColour(colour);
+            materials[currentMaterial].GetAmbientColour(&colour);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|AMBIENT COLOUR => R: {} G: {} B: {}",
                 colour.x, colour.y, colour.z));
 
         // Diffuse colour
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
-            std::cout << "Diffuse colour: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'Kd' keyword");
+                return;
+            }
+
+            glm::vec3 diffuseColour;
+            if (!ProcessTagDiffuseColour(view, diffuseColour)) {
+                return;
+            }
+
+            materials[currentMaterial].SetDiffuseColour(diffuseColour);
+            glm::vec3 colour;
+            materials[currentMaterial].GetDiffuseColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|DIFFUSE COLOUR => R: {} G: {} B: {}",
+                colour.x, colour.y, colour.z));
 
         // Emissive colour
         } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
@@ -129,7 +144,22 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
         // Specular colour
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
-            std::cout << "Specular colour: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
+                return;
+            }
+
+            glm::vec3 specularColour;
+            if (!ProcessTagSpecularColour(view, specularColour)) {
+                return;
+            }
+
+            materials[currentMaterial].SetSpecularColour(specularColour);
+            glm::vec3 colour;
+            materials[currentMaterial].GetSpecularColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR COLOUR => R: {} G: {} B: {}",
+                colour.x, colour.y, colour.z));
 
         // Specular exponent
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR_EXPONENT)) {
@@ -234,15 +264,66 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
 }
 
 bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
-                                                    std::string &material) {
+                                                    glm::vec3 &colour) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 4) {
+        return false;
+    }
+
+    float red;
+    float green;
+    float blue;
+
+    if (!ParseFloat(words[1].c_str(), red)) return false;
+    if (!ParseFloat(words[2].c_str(), green)) return false;
+    if (!ParseFloat(words[3].c_str(), blue)) return false;
+
+    colour = glm::vec3(red, green, blue);
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
-                                                     std::string &material) {
+                                                     glm::vec3 &colour) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 4) {
+        return false;
+    }
+
+    float red;
+    float green;
+    float blue;
+
+    if (!ParseFloat(words[1].c_str(), red)) return false;
+    if (!ParseFloat(words[2].c_str(), green)) return false;
+    if (!ParseFloat(words[3].c_str(), blue)) return false;
+
+    colour = glm::vec3(red, green, blue);
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
-                                                     std::string &material) {
+                                                     glm::vec3 &colour) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 4) {
+        return false;
+    }
+
+    float red;
+    float green;
+    float blue;
+
+    if (!ParseFloat(words[1].c_str(), red)) return false;
+    if (!ParseFloat(words[2].c_str(), green)) return false;
+    if (!ParseFloat(words[3].c_str(), blue)) return false;
+
+    colour = glm::vec3(red, green, blue);
+
+    return true;
 }
 
 
