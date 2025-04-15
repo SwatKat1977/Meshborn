@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glm/glm.hpp"
 #include "LoggerManager.h"
 #include "WaveFrontObjLoader.h"
+#include "MaterialLibraryParser.h"
 
 namespace Meshborn {
 namespace WaveFront {
@@ -336,7 +337,6 @@ bool ParseObjFile(std::vector<std::string> lines) {
 
         // Texture coordinate [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
-            //std::cout << "Found texture coordinate: " << view << '\n';
             LOG(Logger::LogLevel::Debug, std::format(
                 "Found texture coordinate: {}", view));
 
@@ -354,6 +354,11 @@ bool ParseObjFile(std::vector<std::string> lines) {
                     "Materials library line '{}' is invalid",
                     view));
                 return false;
+            }
+
+            if (!materialLibrary.empty()) {
+                printf("Parsing material library....\n");
+                MaterialLibraryParser().ParseLibrary(materialLibrary);
             }
 
             LOG(Logger::LogLevel::Debug, std::format(

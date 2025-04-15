@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAVEFRONT_MATERIALLIBRARYPARSER_H_
 #define WAVEFRONT_MATERIALLIBRARYPARSER_H_
 #include <string>
+#include "glm/glm.hpp"
 #include "BaseWavefrontParser.h"
 
 namespace Meshborn {
@@ -28,6 +29,14 @@ class MaterialLibraryParser : public BaseWavefrontParser {
     MaterialLibraryParser();
 
     void ParseLibrary(std::string materialFile);
+
+private:
+    bool ProcessTagNewMaterial(std::string_view line, std::string &material);
+
+    bool ProcessTagAmbientColour(std::string_view line, glm::vec3 &colour);
+    bool ProcessTagDiffuseColour(std::string_view line, std::string &material);
+    bool ProcessTagEmissiveColour(std::string_view line, std::string &material);
+    bool ProcessTagSpecularColour(std::string_view line, std::string &material);
 };
 
 

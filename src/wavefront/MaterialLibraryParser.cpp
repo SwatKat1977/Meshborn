@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>     // TEMP
 #include <vector>
 #include "MaterialLibraryParser.h"
+#include "Material.h"
+#include "LoggerManager.h"
 
 namespace Meshborn {
 namespace WaveFront {
@@ -76,18 +78,46 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         throw std::runtime_error(ex.what());
     }
 
+    std::vector<Material> materials;
+    int currentMaterial = -1;
+
     for (const auto& line : rawLines) {
         std::string_view view(line);
 
         // New material
         if (StartsWith(std::string(view), KEYWORD_NEW_MATERIAL)) {
-            std::cout << "New Material: " << view << std::endl;
+            std::string materialName;
+
+            if (!ProcessTagNewMaterial(view, materialName)) {
+                return;
+            }
+
+            LOG(Logger::LogLevel::Debug, std::format(
+                "New Material => {}", materialName));
+
+            Material newMaterial(materialName);
+            materials.push_back(newMaterial);
+            currentMaterial = materials.size() -1;
+            std::cout << "Current material index = " << currentMaterial << "\n";
 
         // Ambient colour
         } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
-            std::cout << "Ambient colour: " << view << std::endl;
-            //  auto a = SplitElementString(std::string(view));
-            //  printf("=> Count : %d\n", a.size());
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ka' keyword");
+                return;
+            }
+
+            glm::vec3 ambientColour;
+            if (!ProcessTagAmbientColour(view, ambientColour)) {
+                return;
+            }
+
+            materials[currentMaterial].SetAmbientColour(ambientColour);
+            glm::vec3 colour;
+            materials[currentMaterial].GetAmbientColour(colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|AMBIENT COLOUR => R: {} G: {} B: {}",
+                colour.x, colour.y, colour.z));
 
         // Diffuse colour
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
@@ -166,6 +196,55 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         }
     }
 }
+
+bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
+                                                  std::string &material) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "New material line is invalid: '{}'", line));
+        return false;
+    }
+
+    material = words[1];
+
+    return true;
+}
+
+bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
+                                                    glm::vec3 &colour) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 4) {
+        return false;
+    }
+
+    float red;
+    float green;
+    float blue;
+
+    if (!ParseFloat(words[1].c_str(), red)) return false;
+    if (!ParseFloat(words[2].c_str(), green)) return false;
+    if (!ParseFloat(words[3].c_str(), blue)) return false;
+
+    colour = glm::vec3(red, green, blue);
+
+    return true;
+}
+
+bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
+                                                    std::string &material) {
+}
+
+bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
+                                                     std::string &material) {
+}
+
+bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
+                                                     std::string &material) {
+}
+
 
 }   // namespace WaveFront
 }   // namespace Meshborn
