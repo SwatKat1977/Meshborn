@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream> // TEMP
 #include "MaterialLibraryParser.h"
 
 namespace Meshborn {
@@ -65,6 +66,20 @@ MaterialLibraryParser::MaterialLibraryParser() {
 }
 
 void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
+    std::vector<std::string> rawLines;
+
+    try {
+        rawLines = ReadFile(materialFile);
+    }
+    catch (std::runtime_error ex) {
+        throw std::runtime_error(ex.what());
+    }
+
+    for (const auto& line : rawLines) {
+        std::string_view view(line);
+        std::cout << "[MATLIB] " << view << std::endl;
+    }
+
 }
 
 }   // namespace WaveFront

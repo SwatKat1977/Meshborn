@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
-class MaterialLibraryParser {
+class MaterialLibraryParser : public BaseWavefrontParser {
  public:
     MaterialLibraryParser();
 
