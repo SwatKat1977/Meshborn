@@ -78,7 +78,67 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
     for (const auto& line : rawLines) {
         std::string_view view(line);
-        std::cout << "[MATLIB] " << view << std::endl;
+
+        // New material
+        if (StartsWith(std::string(view), KEYWORD_NEW_MATERIAL)) {
+            std::cout << "New Material: " << view << std::endl;
+
+        // Ambient colour
+        } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
+            std::cout << "Ambient colour: " << view << std::endl;
+            //  auto a = SplitElementString(std::string(view));
+            //  printf("=> Count : %d\n", a.size());
+
+        // Diffuse colour
+        } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
+            std::cout << "Diffuse colour: " << view << std::endl;
+
+        // Emissive colour
+        } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
+            std::cout << "Emissive colour: " << view << std::endl;
+
+        // Specular colour
+        } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
+            std::cout << "Specular colour: " << view << std::endl;
+
+        // Specular exponent
+        } else if (StartsWith(std::string(view), KEYWORD_SPECULAR_EXPONENT)) {
+            std::cout << "Specular exponent: " << view << std::endl;
+
+        // Transparent dissolve
+        } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
+            std::cout << "Transparent dissolve: " << view << std::endl;
+
+        // Optical density
+        } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
+            std::cout << "Optical density: " << view << std::endl;
+
+        // Illumination model
+        } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
+            std::cout << "Illumination model: " << view << std::endl;
+        }
+
+        else {
+            std::cout << "Unknown: " << view << std::endl;
+        }
+
+        /*
+const char KEYWORD_AMBIENT_TEXTURE_MAP[] = "map_Ka ";
+const char KEYWORD_DIFFUSE_TEXTURE_MAP[] = "map_Kd ";
+const char KEYWORD_SPECULAR_COLOR_TEXTURE_MAP[] = "map_Ks ";
+const char KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT[] = "map_Ns ";
+const char KEYWORD_ALPHA_TEXTURE_MAP[] = "map_d ";
+
+// map_bump and bump are one and the same.
+const char KEYWORD_MAP_BUMP[] = "map_bump ";
+const char KEYWORD_BUMP_MAP[] = "bump ";
+
+const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
+
+// defaults to 'matte' channel of the image)
+const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
+
+        */
     }
 }
 
