@@ -36,7 +36,8 @@ std::vector<std::string> BaseWavefrontParser::SplitElementString(
     return tokens;
 }
 
-std::vector<std::string> BaseWavefrontParser::ReadFile(const std::string& filename) {
+std::vector<std::string> BaseWavefrontParser::ReadFile(
+    const std::string& filename) {
     std::vector<std::string> lines;
     std::ifstream file(filename);
 

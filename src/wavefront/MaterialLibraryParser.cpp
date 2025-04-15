@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <iostream> // TEMP
+#include <vector>
 #include "MaterialLibraryParser.h"
 
 namespace Meshborn {
@@ -79,7 +80,6 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         std::string_view view(line);
         std::cout << "[MATLIB] " << view << std::endl;
     }
-
 }
 
 }   // namespace WaveFront
