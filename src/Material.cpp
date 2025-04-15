@@ -147,4 +147,19 @@ bool Material::GetIlluminationModel(int *model) {
     return true;
 }
 
+void Material::SetOpticalDensity(float density) {
+    opticalDensity_ = density;
+    opticalDensitySet_ = true;
+}
+
+bool Material::GetOpticalDensity(float *density) {
+    if (!opticalDensitySet_) {
+        return false;
+    }
+
+    *density = opticalDensity_;
+    return true;
+}
+
+
 }   // namespace Meshborn

@@ -41,6 +41,9 @@ class Material {
     void SetIlluminationModel(int model);
     bool GetIlluminationModel(int *model);
 
+    void SetOpticalDensity(float density);
+    bool GetOpticalDensity(float *density);
+
  private:
     std::string name_;
 
@@ -63,6 +66,10 @@ class Material {
     // Illumination model
     int illuminationModel_;
     bool illuminationModelSet_;
+
+    // Optical density
+    float opticalDensity_;
+    bool opticalDensitySet_;
 };
 
 }   // namespace Meshborn
