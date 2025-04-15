@@ -24,11 +24,15 @@ namespace Meshborn {
 
 class Material {
 public:
-    Material();
+    Material(std::string name);
+
+    void SetAmbientColour(glm::vec3 colour);
+    bool GetAmbientColour(glm::vec3 &colour);
 
 private:
     std::string name_;
     glm::vec3 ambientColour_;
+    bool ambientColourSet_;
 };
 
 }   // namespace Meshborn

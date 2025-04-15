@@ -19,8 +19,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
-    class Material {
-    };
-    
+Material::Material(std::string name) : name_(name) {
+    glm::vec3 ambientColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    ambientColourSet_ = false;
+}
+
+void Material::SetAmbientColour(glm::vec3 colour) {
+    ambientColour_ = colour;
+    ambientColourSet_ = true;
+}
+
+bool Material::GetAmbientColour(glm::vec3 &colour) {
+    if (!ambientColourSet_) {
+        return false;
+    }
+
+    colour = ambientColour_;
+    return true;
+}
+
 }   // namespace Meshborn
     

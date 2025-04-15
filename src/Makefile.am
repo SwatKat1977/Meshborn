@@ -21,7 +21,8 @@ lib_LTLIBRARIES = libMeshborn.la
 libMeshborn_la_SOURCES = Meshborn.cpp                        \
                          wavefront/WavefrontObjLoader.cpp    \
                          wavefront/BaseWavefrontParser.cpp   \
-                         wavefront/MaterialLibraryParser.cpp
+                         wavefront/MaterialLibraryParser.cpp  \
+                         Material.cpp
 
 # Set the libtool versioning
 #libWebLoom_la_LDFLAGS = -version-info $(LT_VERSION)
