@@ -15,8 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <cctype>   // for std::isspace
 #include <fstream>
 #include <sstream>
+#include <string>
 #include <utility>
 #include "BaseWavefrontParser.h"
 
@@ -59,6 +61,15 @@ std::vector<std::string> BaseWavefrontParser::ReadFile(
     }
 
     return lines;
+}
+
+bool BaseWavefrontParser::StartsWith(const std::string& line,
+                                     const std::string& prefix) {
+    size_t i = 0;
+    while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) {
+        ++i;
+    }
+    return line.compare(i, prefix.length(), prefix) == 0;
 }
 
 }   // namespace WaveFront
