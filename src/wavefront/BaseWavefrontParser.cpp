@@ -73,7 +73,6 @@ bool BaseWavefrontParser::StartsWith(const std::string& line,
     return line.compare(i, prefix.length(), prefix) == 0;
 }
 
-
 bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
     errno = 0;
     char* end;
@@ -86,7 +85,9 @@ bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
 bool BaseWavefrontParser::ParseInt(const char* str, int* out) {
     errno = 0;
     char* end;
-    long value = strtol(str, &end, 10); // base 10 for decimal
+
+    // Base 10 for decimal
+    int64_t value = std::strtoll(str, &end, 10);
 
     if (errno == ERANGE || *end != '\0' || value < INT_MIN || value > INT_MAX) {
         return false;
