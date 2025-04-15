@@ -108,7 +108,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             }
 
             glm::vec3 ambientColour;
-            if (!ProcessTagAmbientColour(view, ambientColour)) {
+            if (!ProcessTagAmbientColour(view, &ambientColour)) {
                 return;
             }
 
@@ -127,7 +127,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             }
 
             glm::vec3 diffuseColour;
-            if (!ProcessTagDiffuseColour(view, diffuseColour)) {
+            if (!ProcessTagDiffuseColour(view, &diffuseColour)) {
                 return;
             }
 
@@ -150,7 +150,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             }
 
             glm::vec3 specularColour;
-            if (!ProcessTagSpecularColour(view, specularColour)) {
+            if (!ProcessTagSpecularColour(view, &specularColour)) {
                 return;
             }
 
@@ -243,7 +243,7 @@ bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
 }
 
 bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
-                                                    glm::vec3 &colour) {
+                                                    glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -258,13 +258,13 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
     if (!ParseFloat(words[2].c_str(), green)) return false;
     if (!ParseFloat(words[3].c_str(), blue)) return false;
 
-    colour = glm::vec3(red, green, blue);
+    *colour = glm::vec3(red, green, blue);
 
     return true;
 }
 
 bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
-                                                    glm::vec3 &colour) {
+                                                    glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -279,13 +279,13 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
     if (!ParseFloat(words[2].c_str(), green)) return false;
     if (!ParseFloat(words[3].c_str(), blue)) return false;
 
-    colour = glm::vec3(red, green, blue);
+    *colour = glm::vec3(red, green, blue);
 
     return true;
 }
 
 bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
-                                                     glm::vec3 &colour) {
+                                                     glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -300,13 +300,13 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
     if (!ParseFloat(words[2].c_str(), green)) return false;
     if (!ParseFloat(words[3].c_str(), blue)) return false;
 
-    colour = glm::vec3(red, green, blue);
+    *colour = glm::vec3(red, green, blue);
 
     return true;
 }
 
 bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
-                                                     glm::vec3 &colour) {
+                                                     glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -321,7 +321,7 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
     if (!ParseFloat(words[2].c_str(), green)) return false;
     if (!ParseFloat(words[3].c_str(), blue)) return false;
 
-    colour = glm::vec3(red, green, blue);
+    *colour = glm::vec3(red, green, blue);
 
     return true;
 }
