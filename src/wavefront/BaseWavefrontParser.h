@@ -31,7 +31,7 @@ class BaseWavefrontParser {
 
     bool StartsWith(const std::string& line, const std::string& prefix);
 
-    bool ParseFloat(const char* str, float& out);
+    bool ParseFloat(const char* str, float *out);
 };
 
 }   // namespace WaveFront

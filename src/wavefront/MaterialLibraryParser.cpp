@@ -254,9 +254,9 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), red)) return false;
-    if (!ParseFloat(words[2].c_str(), green)) return false;
-    if (!ParseFloat(words[3].c_str(), blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return false;
+    if (!ParseFloat(words[2].c_str(), &green)) return false;
+    if (!ParseFloat(words[3].c_str(), &blue)) return false;
 
     *colour = glm::vec3(red, green, blue);
 
@@ -275,9 +275,9 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), red)) return false;
-    if (!ParseFloat(words[2].c_str(), green)) return false;
-    if (!ParseFloat(words[3].c_str(), blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return false;
+    if (!ParseFloat(words[2].c_str(), &green)) return false;
+    if (!ParseFloat(words[3].c_str(), &blue)) return false;
 
     *colour = glm::vec3(red, green, blue);
 
@@ -296,9 +296,9 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), red)) return false;
-    if (!ParseFloat(words[2].c_str(), green)) return false;
-    if (!ParseFloat(words[3].c_str(), blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return false;
+    if (!ParseFloat(words[2].c_str(), &green)) return false;
+    if (!ParseFloat(words[3].c_str(), &blue)) return false;
 
     *colour = glm::vec3(red, green, blue);
 
@@ -317,9 +317,9 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), red)) return false;
-    if (!ParseFloat(words[2].c_str(), green)) return false;
-    if (!ParseFloat(words[3].c_str(), blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return false;
+    if (!ParseFloat(words[2].c_str(), &green)) return false;
+    if (!ParseFloat(words[3].c_str(), &blue)) return false;
 
     *colour = glm::vec3(red, green, blue);
 

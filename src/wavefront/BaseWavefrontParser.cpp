@@ -74,12 +74,12 @@ bool BaseWavefrontParser::StartsWith(const std::string& line,
 }
 
 
-bool BaseWavefrontParser::ParseFloat(const char* str, float& out) {
+bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
     errno = 0;
     char* end;
     float value = strtof(str, &end);
     if (errno == ERANGE || *end != '\0') return false;
-    out = value;
+    *out = value;
     return true;
 }
 
