@@ -38,6 +38,9 @@ class Material {
     void SetSpecularColour(glm::vec3 colour);
     bool GetSpecularColour(glm::vec3 *colour);
 
+    void SetIlluminationModel(int model);
+    bool GetIlluminationModel(int *model);
+
  private:
     std::string name_;
 
@@ -56,6 +59,10 @@ class Material {
     // Specular colour
     glm::vec3 specularColour_;
     bool specularColourSet_;
+
+    // Illumination model
+    int illuminationModel_;
+    bool illuminationModelSet_;
 };
 
 }   // namespace Meshborn

@@ -133,4 +133,18 @@ bool Material::GetSpecularColour(glm::vec3 *colour) {
     return true;
 }
 
+void Material::SetIlluminationModel(int model) {
+    illuminationModel_ = model;
+    illuminationModelSet_ = true;
+}
+
+bool Material::GetIlluminationModel(int *model) {
+    if (!illuminationModelSet_) {
+        return false;
+    }
+
+    *model = illuminationModel_;
+    return true;
+}
+
 }   // namespace Meshborn
