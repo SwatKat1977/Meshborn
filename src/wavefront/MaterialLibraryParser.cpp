@@ -116,29 +116,54 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         // Illumination model
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
             std::cout << "Illumination model: " << view << std::endl;
-        }
 
-        else {
+        // Ambient texture map
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_AMBIENT_TEXTURE_MAP)) {
+            std::cout << "Ambient texture map: " << view << std::endl;
+
+        // Diffuse texture map
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_DIFFUSE_TEXTURE_MAP)) {
+            std::cout << "Diffuse texture map: " << view << std::endl;
+
+        // Specular color texture map
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_SPECULAR_COLOR_TEXTURE_MAP)) {
+            std::cout << "Specular color texture map: " << view << std::endl;
+
+        // Specular highlight component
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT)) {
+            std::cout << "Specular highlight component: " << view << std::endl;
+
+        // Alpha texture map
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_ALPHA_TEXTURE_MAP)) {
+            std::cout << "Alpha texture map: " << view << std::endl;
+
+        // Bump map
+        } else if ((StartsWith(std::string(view),
+                               KEYWORD_MAP_BUMP)) ||
+                   (StartsWith(std::string(view),
+                               KEYWORD_BUMP_MAP))) {
+            std::cout << "Bump map: " << view << std::endl;
+
+        // Displacement map
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_DISPLACEMENT_MAP)) {
+        std::cout << "Displacement map: " << view << std::endl;
+
+       // Stencil decal texture
+        } else if (StartsWith(std::string(view),
+                              KEYWORD_STENCIL_DECAL_TEXTURE)) {
+            std::cout << "Stencil decal texture: " << view << std::endl;
+
+        // Unknown tag : Doesn't mean it's invalid, it could be a tag that
+        //               currently isn't parsed.
+        } else {
             std::cout << "Unknown: " << view << std::endl;
         }
-
-        /*
-const char KEYWORD_AMBIENT_TEXTURE_MAP[] = "map_Ka ";
-const char KEYWORD_DIFFUSE_TEXTURE_MAP[] = "map_Kd ";
-const char KEYWORD_SPECULAR_COLOR_TEXTURE_MAP[] = "map_Ks ";
-const char KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT[] = "map_Ns ";
-const char KEYWORD_ALPHA_TEXTURE_MAP[] = "map_d ";
-
-// map_bump and bump are one and the same.
-const char KEYWORD_MAP_BUMP[] = "map_bump ";
-const char KEYWORD_BUMP_MAP[] = "bump ";
-
-const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
-
-// defaults to 'matte' channel of the image)
-const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
-
-        */
     }
 }
 
