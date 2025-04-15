@@ -83,5 +83,18 @@ bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
     return true;
 }
 
+bool BaseWavefrontParser::ParseInt(const char* str, int* out) {
+    errno = 0;
+    char* end;
+    long value = strtol(str, &end, 10); // base 10 for decimal
+
+    if (errno == ERANGE || *end != '\0' || value < INT_MIN || value > INT_MAX) {
+        return false;
+    }
+
+    *out = static_cast<int>(value);
+    return true;
+}
+
 }   // namespace WaveFront
 }   // namespace Meshborn
