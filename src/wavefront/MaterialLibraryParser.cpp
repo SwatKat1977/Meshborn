@@ -227,6 +227,13 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
     }
 }
 
+/**
+ * @brief Parses a new material tag line and extracts the material name.
+ *
+ * @param line The input line containing the new material definition.
+ * @param material Reference to a string to store the parsed material name.
+ * @return true if parsing was successful, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
                                                   std::string &material) {
     auto words = SplitElementString(std::string(line));
@@ -242,6 +249,13 @@ bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
     return true;
 }
 
+/**
+ * @brief Parses an ambient colour tag line and extracts the RGB values.
+ *
+ * @param line The input line containing the ambient colour definition.
+ * @param colour Pointer to glm::vec3 to store the parsed RGB values.
+ * @return true if parsing was successful, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
                                                     glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
@@ -263,6 +277,13 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
     return true;
 }
 
+/**
+ * @brief Parses a diffuse colour tag line and extracts the RGB values.
+ *
+ * @param line The input line containing the diffuse colour definition.
+ * @param colour Pointer to glm::vec3 to store the parsed RGB values.
+ * @return true if parsing was successful, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
                                                     glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
@@ -284,6 +305,13 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
     return true;
 }
 
+/**
+ * @brief Parses an emissive colour tag line and extracts the RGB values.
+ *
+ * @param line The input line containing the emissive colour definition.
+ * @param colour Pointer to glm::vec3 to store the parsed RGB values.
+ * @return true if parsing was successful, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
                                                      glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
@@ -305,6 +333,13 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
     return true;
 }
 
+/**
+ * @brief Parses a specular colour tag line and extracts the RGB values.
+ *
+ * @param line The input line containing the specular colour definition.
+ * @param colour Pointer to glm::vec3 to store the parsed RGB values.
+ * @return true if parsing was successful, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
                                                      glm::vec3 *colour) {
     auto words = SplitElementString(std::string(line));
