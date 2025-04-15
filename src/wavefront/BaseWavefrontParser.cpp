@@ -72,5 +72,15 @@ bool BaseWavefrontParser::StartsWith(const std::string& line,
     return line.compare(i, prefix.length(), prefix) == 0;
 }
 
+
+bool BaseWavefrontParser::ParseFloat(const char* str, float& out) {
+    errno = 0;
+    char* end;
+    float value = strtof(str, &end);
+    if (errno == ERANGE || *end != '\0') return false;
+    out = value;
+    return true;
+}
+
 }   // namespace WaveFront
 }   // namespace Meshborn

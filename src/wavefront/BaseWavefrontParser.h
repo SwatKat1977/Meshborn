@@ -30,6 +30,8 @@ class BaseWavefrontParser {
     std::vector<std::string> SplitElementString(const std::string& str);
 
     bool StartsWith(const std::string& line, const std::string& prefix);
+
+    bool ParseFloat(const char* str, float& out);
 };
 
 }   // namespace WaveFront
