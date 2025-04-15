@@ -66,7 +66,8 @@ std::vector<std::string> BaseWavefrontParser::ReadFile(
 bool BaseWavefrontParser::StartsWith(const std::string& line,
                                      const std::string& prefix) {
     size_t i = 0;
-    while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) {
+    while (i < line.size() &&
+           std::isspace(static_cast<unsigned char>(line[i]))) {
         ++i;
     }
     return line.compare(i, prefix.length(), prefix) == 0;
