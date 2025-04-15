@@ -140,7 +140,22 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
         // Emissive colour
         } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
-            std::cout << "Emissive colour: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ke' keyword");
+                return;
+            }
+
+            glm::vec3 emissiveColour;
+            if (!ProcessTagEmissiveColour(view, &emissiveColour)) {
+                return;
+            }
+
+            materials[currentMaterial].SetEmissiveColour(emissiveColour);
+            glm::vec3 colour;
+            materials[currentMaterial].GetEmissiveColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|EMISSIVE COLOUR => R: {} G: {} B: {}",
+                colour.x, colour.y, colour.z));
 
         // Specular colour
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
@@ -163,7 +178,13 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
         // Specular exponent
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR_EXPONENT)) {
-            std::cout << "Specular exponent: " << view << std::endl;
+            float specularExponent;
+            if (!ProcessTagSpecularExponent(line, &specularExponent)) {
+                return;
+            }
+
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR EXPONENT => {}", specularExponent));
 
         // Transparent dissolve
         } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
@@ -173,9 +194,37 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
             std::cout << "Optical density: " << view << std::endl;
 
+            float opticalDensity;
+            if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
+                return;
+            }
+
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
+
+            materials[currentMaterial].SetOpticalDensity(opticalDensity);
+            float density;
+            materials[currentMaterial].GetOpticalDensity(&density);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|OPTICAL DENSITY => {}", density));
+
         // Illumination model
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
-            std::cout << "Illumination model: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'illum' keyword");
+                return;
+            }
+
+            int illuminationModel;
+            if (!ProcessTagIlluminationModel(line, &illuminationModel)) {
+                return;
+            }
+
+            materials[currentMaterial].SetIlluminationModel(illuminationModel);
+            int model;
+            materials[currentMaterial].GetIlluminationModel(&model);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|ILLUMINATION MODEL => {}", model));
 
         // Ambient texture map
         } else if (StartsWith(std::string(view),
@@ -361,6 +410,63 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
     return true;
 }
 
+bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
+                                                       float *shininess) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Material specular exponent invalid");
+        return false;
+    }
+
+    if (!ParseFloat(words[1].c_str(), shininess)) return false;
+
+    return true;
+}
+
+bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
+                                                          float *transparency) {
+}
+
+bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
+                                                     float *density) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Material optical density invalid");
+        return false;
+    }
+
+    if (!ParseFloat(words[1].c_str(), density)) return false;
+
+    if ((*density < 0.001f) || (*density > 10.0f)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material optical density invalid value");
+        return false;
+    }
+
+    return true;
+}
+
+bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
+                                                        int *density) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Material illumination model invalid");
+        return false;
+    }
+
+    if (!ParseInt(words[1].c_str(), density)) return false;
+
+    if ((*density < 0) || (*density > 10)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material illumination model invalid value (range 0-10)");
+        return false;
+    }
+
+    return true;
+}
 
 }   // namespace WaveFront
 }   // namespace Meshborn

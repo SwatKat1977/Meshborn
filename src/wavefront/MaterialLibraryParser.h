@@ -37,8 +37,15 @@ class MaterialLibraryParser : public BaseWavefrontParser {
     bool ProcessTagDiffuseColour(std::string_view line, glm::vec3 *colour);
     bool ProcessTagEmissiveColour(std::string_view line, glm::vec3 *colour);
     bool ProcessTagSpecularColour(std::string_view line, glm::vec3 *colour);
-};
 
+    bool ProcessTagSpecularExponent(std::string_view line, float *shininess);
+
+    bool ProcessTagTransparentDissolve(std::string_view line, float *transparency);
+
+    bool ProcessTagOpticalDensity(std::string_view line, float *density);
+
+    bool ProcessTagIlluminationModel(std::string_view line, int *density);
+};
 
 }   // namespace WaveFront
 }   // namespace Meshborn
