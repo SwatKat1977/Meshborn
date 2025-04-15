@@ -27,13 +27,13 @@ class Material {
     Material(std::string name);
 
     void SetAmbientColour(glm::vec3 colour);
-    bool GetAmbientColour(glm::vec3 &colour);
+    bool GetAmbientColour(glm::vec3 *colour);
 
     void SetDiffuseColour(glm::vec3 colour);
-    bool GetDiffuseColour(glm::vec3 &colour);
+    bool GetDiffuseColour(glm::vec3 *colour);
 
     void SetSpecularColour(glm::vec3 colour);
-    bool GetSpecularColour(glm::vec3 &colour);
+    bool GetSpecularColour(glm::vec3 *colour);
 
  private:
     std::string name_;

@@ -53,12 +53,12 @@ void Material::SetAmbientColour(glm::vec3 colour) {
  * @param[out] colour The ambient colour will be stored here if set.
  * @return true if the ambient colour was set and returned; false otherwise.
  */
-bool Material::GetAmbientColour(glm::vec3 &colour) {
+bool Material::GetAmbientColour(glm::vec3 *colour) {
     if (!ambientColourSet_) {
         return false;
     }
 
-    colour = ambientColour_;
+    *colour = ambientColour_;
     return true;
 }
 
@@ -78,12 +78,12 @@ void Material::SetDiffuseColour(glm::vec3 colour) {
  * @param[out] colour The diffuse colour will be stored here if set.
  * @return true if the diffuse colour was set and returned; false otherwise.
  */
-bool Material::GetDiffuseColour(glm::vec3 &colour) {
+bool Material::GetDiffuseColour(glm::vec3 *colour) {
     if (!diffuseColourSet_) {
         return false;
     }
 
-    colour = diffuseColour_;
+    *colour = diffuseColour_;
     return true;
 }
 
@@ -110,12 +110,12 @@ void Material::SetSpecularColour(glm::vec3 colour) {
  * @param[out] colour Reference to a glm::vec3 to receive the specular colour.
  * @return true if the specular colour has been set, false otherwise.
  */
-bool Material::GetSpecularColour(glm::vec3 &colour) {
+bool Material::GetSpecularColour(glm::vec3 *colour) {
     if (!specularColourSet_) {
         return false;
     }
 
-    colour = specularColour_;
+    *colour = specularColour_;
     return true;
 }
 
