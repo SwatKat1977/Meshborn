@@ -72,12 +72,12 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         if (StartsWith(std::string(view), KEYWORD_NEW_MATERIAL)) {
             std::string materialName;
 
-            if (!ProcessTagNewMaterial(view, materialName)) {
+            if (!ProcessTagNewMaterial(view, &materialName)) {
                 return;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
-                "New Material => {}", materialName));
+                "NEW MATERIAL => {}", materialName));
 
             Material newMaterial(materialName);
             materials.push_back(newMaterial);
@@ -221,49 +221,167 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         // Ambient texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_AMBIENT_TEXTURE_MAP)) {
-            std::cout << "Ambient texture map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ka' keyword");
+                return;
+            }
+
+            std::string ambientTextureMap;
+            if (!ProcessTagAmbientTextureMap(line, &ambientTextureMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetAmbientTextureMap(ambientTextureMap);
+            std::string textureMap;
+            materials[currentMaterial].GetAmbientTextureMap(&textureMap);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|AMBIENT TEXTURE MAP => {}", textureMap));
 
         // Diffuse texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_DIFFUSE_TEXTURE_MAP)) {
-            std::cout << "Diffuse texture map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Kd' keyword");
+                return;
+            }
+
+            std::string diffuseTextureMap;
+            if (!ProcessTagDiffuseTextureMap(line, &diffuseTextureMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetDiffuseTextureMap(diffuseTextureMap);
+            std::string textureMap;
+            materials[currentMaterial].GetDiffuseTextureMap(&textureMap);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|DIFFUSE TEXTURE MAP => {}", textureMap));
 
         // Specular color texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_SPECULAR_COLOR_TEXTURE_MAP)) {
-            std::cout << "Specular color texture map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ks' keyword");
+                return;
+            }
+
+            std::string colourTextureMap;
+            if (!ProcessTagSpecularColorTextureMap(line, &colourTextureMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetSpecularColourTextureMap(
+                colourTextureMap);
+            std::string textureMap;
+            materials[currentMaterial].GetSpecularColourTextureMap(&textureMap);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR COLOUR TEXTURE MAP => {}", textureMap));
 
         // Specular highlight component
         } else if (StartsWith(std::string(view),
                               KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT)) {
-            std::cout << "Specular highlight component: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ns' keyword");
+                return;
+            }
+
+            std::string highlightComponent;
+            if (!ProcessTagSpecularHighlightConponent(line,
+                                                       &highlightComponent)) {
+                return;
+            }
+
+            materials[currentMaterial].SetSpecularHighlightComponent(
+                highlightComponent);
+            std::string component;
+            materials[currentMaterial].GetSpecularHighlightComponent(
+                &component);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR HIGHLIGHT COMPONENT => {}", component));
 
         // Alpha texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_ALPHA_TEXTURE_MAP)) {
-            std::cout << "Alpha texture map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_d' keyword");
+                return;
+            }
+
+            std::string alphaTextureMap;
+            if (!ProcessTagAlphaTextureMap(line, &alphaTextureMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetAlphaTextureMap(alphaTextureMap);
+            std::string textureMap;
+            materials[currentMaterial].GetAlphaTextureMap(&textureMap);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|ALPHA TEXTURE MAP => {}", textureMap));
 
         // Bump map
         } else if ((StartsWith(std::string(view),
                                KEYWORD_MAP_BUMP)) ||
                    (StartsWith(std::string(view),
                                KEYWORD_BUMP_MAP))) {
-            std::cout << "Bump map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical,
+                    "Mis-ordered 'bump/map_bump' keyword");
+                return;
+            }
+
+            std::string bumpMap;
+            if (!ProcessTagBumpMap(line, &bumpMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetBumpMap(bumpMap);
+            std::string textureMap;
+            materials[currentMaterial].GetBumpMap(&textureMap);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|BUMP MAP => {}", textureMap));
 
         // Displacement map
         } else if (StartsWith(std::string(view),
                               KEYWORD_DISPLACEMENT_MAP)) {
-        std::cout << "Displacement map: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'disp' keyword");
+                return;
+            }
+
+            std::string displacementMap;
+            if (!ProcessTagDisplacementMap(line, &displacementMap)) {
+                return;
+            }
+
+            materials[currentMaterial].SetDisplacementMap(displacementMap);
+            std::string map;
+            materials[currentMaterial].GetDisplacementMap(&map);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|DISPLACEMENT MAP => {}", map));
 
        // Stencil decal texture
         } else if (StartsWith(std::string(view),
                               KEYWORD_STENCIL_DECAL_TEXTURE)) {
-            std::cout << "Stencil decal texture: " << view << std::endl;
+            if (currentMaterial == -1) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'decal' keyword");
+                return;
+            }
+
+            std::string decalTexture;
+            if (!ProcessTagStencilDecalTexture(line, &decalTexture)) {
+                return;
+            }
+
+            materials[currentMaterial].SetStencilDecalTexture(decalTexture);
+            std::string texture;
+            materials[currentMaterial].GetStencilDecalTexture(&texture);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|STENCIL DECAL TEXTURE => {}", texture));
 
         // Unknown tag : Doesn't mean it's invalid, it could be a tag that
         //               currently isn't parsed.
         } else {
-            std::cout << "Unknown: " << view << std::endl;
+            LOG(Logger::LogLevel::Debug, std::format(
+                "Unknown material tag '{}'", view));
         }
     }
 }
@@ -276,7 +394,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
  * @return true if parsing was successful, false otherwise.
  */
 bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
-                                                  std::string &material) {
+                                                  std::string *material) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -285,7 +403,7 @@ bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
         return false;
     }
 
-    material = words[1];
+    *material = words[1];
 
     return true;
 }
