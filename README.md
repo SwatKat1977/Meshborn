@@ -25,17 +25,25 @@ The following Wavefront obj tags are currently supported:
 ### Supported Wavefront tags : material
 The following Wavefront material tags are currently supported:
 
-| Tag                        | Status             | Notes                |
-|:---------------------------|:-------------------|:---------------------|
-| newmtl (new material)      | :white_check_mark: |                      |
-| Ka (ambient colour)        | :white_check_mark: |                      |
-| Kd (diffuse colour)        | :white_check_mark: |                      |
-| Ke (emissive colour)       | :white_check_mark: |                      |
-| Ks (specular colour)       | :white_check_mark: |                      |
-| Ns (specular exponent)     | :white_check_mark: |                      |
-| d (transparent disolve)    | :white_check_mark: |                      |
-| Ni (optical density)       | :white_check_mark: |                      |
-| illum (illumination_model) | :white_check_mark: |                      |
+| Tag                                 | Status             | Notes                |
+|:------------------------------------|:-------------------|:---------------------|
+| newmtl (new material)                 | :white_check_mark: |                      |
+| Ka (ambient colour)                   | :white_check_mark: |                      |
+| Kd (diffuse colour)                   | :white_check_mark: |                      |
+| Ke (emissive colour)                  | :white_check_mark: |                      |
+| Ks (specular colour)                  | :white_check_mark: |                      |
+| Ns (specular exponent)                | :white_check_mark: |                      |
+| d (transparent disolve)               | :white_check_mark: |                      |
+| Ni (optical density)                  | :white_check_mark: |                      |
+| illum (illumination model)            | :white_check_mark: |                      |
+| map_Ka (ambient texture map)          | :x:                |                      |
+| map_Kd (diffuse texture map)          | :x:                |                      |
+| map_Ks (specular color texture map)   | :x:                |                      |
+| map_Ns (specular highlight component) | :x:                |                      |
+| map_d (alpha texture map)             | :x:                |                      |
+| map_bump/bump (bump map)              | :x:                |                      |
+| disp (displacement map)               | :x:                |                      |
+| decal (stencil decal texture)         | :x:                |                      |
 
 ### Functionality implemented 
 The following functionality is currently supported:
