@@ -40,7 +40,8 @@ class MaterialLibraryParser : public BaseWavefrontParser {
 
     bool ProcessTagSpecularExponent(std::string_view line, float *shininess);
 
-    bool ProcessTagTransparentDissolve(std::string_view line, float *transparency);
+    bool ProcessTagTransparentDissolve(std::string_view line,
+                                       float *transparency);
 
     bool ProcessTagOpticalDensity(std::string_view line, float *density);
 
