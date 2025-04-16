@@ -175,4 +175,116 @@ bool Material::GetTransparentDissolve(float *transparency) {
     return true;
 }
 
+void Material::SetAmbientTextureMap(std::string map) {
+    ambientTextureMap_ = map;
+    ambientTextureMapSet_ = true;
+}
+
+bool Material::GetAmbientTextureMap(std::string &map) {
+    if (!ambientTextureMapSet_) {
+        return false;
+    }
+
+    map = ambientTextureMap_;
+    return true;
+}
+
+void Material::SetDiffuseTextureMap(std::string map) {
+    diffuseTextureMap_ = map;
+    diffuseTextureMapSet_ = true;
+}
+
+bool Material::GetDiffuseTextureMap(std::string &map) {
+    if (!diffuseTextureMapSet_) {
+        return false;
+    }
+
+    map = diffuseTextureMap_;
+    return true;
+}
+
+void Material::SetSpecularColourTextureMap(std::string map) {
+    specularColourTextureMap_ = map;
+    specularColourTextureMapSet_ = true;
+}
+
+bool Material::GetSpecularColourTextureMap(std::string &map) {
+    if (!specularColourTextureMapSet_) {
+        return false;
+    }
+
+    map = specularColourTextureMap_;
+    return true;
+}
+
+void Material::SetSpecularHighlightComponent(std::string map) {
+    specularHighlightComponent_ = map;
+    specularHighlightComponentSet_ = true;
+}
+
+bool Material::GetSpecularHighlightComponent(std::string &map) {
+    if (!specularHighlightComponentSet_) {
+        return false;
+    }
+
+    map = specularHighlightComponent_;
+    return true;
+}
+
+void Material::SetAlphaTextureMap(std::string map) {
+    alphaTextureMap_ = map;
+    alphaTextureMapSet_ = true;
+}
+
+bool Material::GetAlphaTextureMap(std::string &map) {
+    if (!alphaTextureMapSet_) {
+        return false;
+    }
+
+    map = alphaTextureMap_;
+    return true;
+}
+
+void Material::SetBumpMap(std::string map) {
+    bumpMap_ = map;
+    bumpMapSet_ = true;
+}
+
+bool Material::GetBumpMap(std::string &map) {
+    if (!bumpMapSet_) {
+        return false;
+    }
+
+    map = bumpMap_;
+    return true;
+}
+
+void Material::SetDisplacementMap(std::string map) {
+    displacementMap_ = map;
+    displacementMapSet_ = true;
+}
+
+bool Material::GetDisplacementMap(std::string &map) {
+    if (!displacementMapSet_) {
+        return false;
+    }
+
+    map = displacementMap_;
+    return true;
+}
+
+void Material::SetStencilDecalTexture(std::string map) {
+    stencilDecalTexture_ = map;
+    stencilDecalTextureSet_ = true;
+}
+
+bool Material::GetStencilDecalTexture(std::string &map) {
+    if (!stencilDecalTextureSet_) {
+        return false;
+    }
+
+    map = stencilDecalTexture_;
+    return true;
+}
+
 }   // namespace Meshborn

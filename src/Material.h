@@ -47,6 +47,30 @@ class Material {
     void SetTransparentDissolve(float transparency);
     bool GetTransparentDissolve(float *transparency);
 
+    void SetAmbientTextureMap(std::string map);
+    bool GetAmbientTextureMap(std::string &map);
+
+    void SetDiffuseTextureMap(std::string map);
+    bool GetDiffuseTextureMap(std::string &map);
+
+    void SetSpecularColourTextureMap(std::string map);
+    bool GetSpecularColourTextureMap(std::string &map);
+
+    void SetSpecularHighlightComponent(std::string map);
+    bool GetSpecularHighlightComponent(std::string &map);
+
+    void SetAlphaTextureMap(std::string map);
+    bool GetAlphaTextureMap(std::string &map);
+
+    void SetBumpMap(std::string map);
+    bool GetBumpMap(std::string &map);
+
+    void SetDisplacementMap(std::string map);
+    bool GetDisplacementMap(std::string &map);
+
+    void SetStencilDecalTexture(std::string map);
+    bool GetStencilDecalTexture(std::string &map);
+
  private:
     std::string name_;
 
@@ -77,6 +101,38 @@ class Material {
     // Transparent dissolve
     float transparentDissolve_;
     bool transparentDissolveSet_;
+
+    // Ambient texture map
+    std::string ambientTextureMap_;
+    bool ambientTextureMapSet_;
+
+    // Diffuse texture map
+    std::string diffuseTextureMap_;
+    bool diffuseTextureMapSet_;
+
+    // Specular colour texture map
+    std::string specularColourTextureMap_;
+    bool specularColourTextureMapSet_;
+
+    // Specular highlight component
+    std::string specularHighlightComponent_;
+    bool specularHighlightComponentSet_;
+
+    // Alpha texture map
+    std::string alphaTextureMap_;
+    bool alphaTextureMapSet_;
+
+    // Bump map
+    std::string bumpMap_;
+    bool bumpMapSet_;
+
+    // Displacement map
+    std::string displacementMap_;
+    bool displacementMapSet_;
+
+    // Stencil decal texture
+    std::string stencilDecalTexture_;
+    bool stencilDecalTextureSet_;
 };
 
 }   // namespace Meshborn
