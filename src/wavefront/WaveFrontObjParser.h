@@ -49,6 +49,9 @@ class WaveFrontObjParser : public BaseWavefrontParser {
 
     bool ParsePolygonalFaceElement(std::string_view element,
                                    PolygonalFace* face);
+
+    bool ParseVertexNormalElement(std::string_view element,
+                                  Point3D* vectorNormalElement);
 };
 
 }   // namespace WaveFront

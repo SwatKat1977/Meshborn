@@ -38,10 +38,6 @@ WaveFrontObjParser::WaveFrontObjParser() {
 }
 
 std::vector<std::string> ReadObjFile(const std::string& filename);
-bool ParseVertexNormalElement(std::string_view element,
-    glm::vec3* vectorNormalElement);
-bool ParsePolygonalFaceElement(std::string_view element,
-    PolygonalFace* face);
 bool ParseMaterials(std::string_view element, std::string &materialLibrary);
 
 std::vector<std::string> SplitElementString(const std::string& str) {
@@ -67,7 +63,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
     }
 
     std::vector<Point4D> vertexPositions;
-    std::vector<glm::vec3> vertexNormals;
+    std::vector<Point3D> vertexNormals;
     std::vector<PolygonalFace> faces;
 
     for (const auto& line : rawLines) {
@@ -111,7 +107,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
         // Vertex normal
         } else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
-            glm::vec3 vertexNormal;
+            Point3D vertexNormal;
 
             if (!ParseVertexNormalElement(view, &vertexNormal)) {
                 return false;
@@ -188,7 +184,6 @@ std::vector<std::string> ReadObjFile(const std::string& filename) {
 
     return lines;
 }
-
 
 /**
  * @brief Parses a polygonal face element from a string.
@@ -299,8 +294,8 @@ bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
     return true;
 }
 
-bool ParseVertexNormalElement(std::string_view element,
-                              glm::vec3* vectorNormalElement) {
+bool WaveFrontObjParser::ParseVertexNormalElement(
+    std::string_view element, Point3D* vectorNormalElement) {
     float x;
     float y;
     float z;
@@ -319,7 +314,7 @@ bool ParseVertexNormalElement(std::string_view element,
             return false;
         }
 
-        *vectorNormalElement = glm::vec3(x, y, z);
+        *vectorNormalElement = Point3D(x, y, z);
     } else {
         return false;
     }
