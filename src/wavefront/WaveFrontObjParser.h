@@ -20,12 +20,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 #include "BaseWavefrontParser.h"
+#include "../Structures.h"
 
 namespace Meshborn {
 namespace WaveFront {
 
+struct PolygonalFaceElement {
+    PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
 
-void LoadFromFile(std::string filename);
+    int vertex;
+    int texture;
+    int normal;
+};
+
+struct PolygonalFace {
+    PolygonalFaceElement elements[3];
+};
+
+class WaveFrontObjParser : public BaseWavefrontParser {
+ public:
+    WaveFrontObjParser();
+
+    bool ParseObj(std::string filename);
+
+ private:
+    bool ParseVectorElement(std::string_view element,
+                            Point4D* vectorElement);
+
+    bool ParsePolygonalFaceElement(std::string_view element,
+                                   PolygonalFace* face);
+};
 
 }   // namespace WaveFront
 }   // namespace Meshborn
