@@ -55,7 +55,7 @@ class Vertex {
     float w_;
 };
 
-#include "wavefront/WaveFrontObjLoader.h"
+#include "wavefront/WaveFrontObjParser.h"
 #include "Meshborn.h"
 #include "Logger.h"
 
