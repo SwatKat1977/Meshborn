@@ -177,7 +177,8 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetTransparentDissolve(transparentDissolve);
+            materials[currentMaterial].SetTransparentDissolve(
+                transparentDissolve);
             float transparency;
             materials[currentMaterial].GetTransparentDissolve(&transparency);
             LOG(Logger::LogLevel::Debug, std::format(
@@ -428,7 +429,8 @@ bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
  * Valid values range from 0.0 to 1.0.
  *
  * @param line The input line containing the transparency value.
- * @param transparency Pointer to a float where the parsed value will be stored.
+ * @param transparency Pointer to a float where the parsed value will be
+ *                     stored.
  * @return true if parsing and validation succeed, false otherwise.
  */
 bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
@@ -436,7 +438,8 @@ bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
-        LOG(Logger::LogLevel::Critical, "Material transparent dissolve invalid");
+        LOG(Logger::LogLevel::Critical,
+            "Material transparent dissolve invalid");
         return false;
     }
 
@@ -538,34 +541,122 @@ bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
 
 bool MaterialLibraryParser::ProcessTagAmbientTextureMap(std::string_view line,
                                                         std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Ambient texture map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagDiffuseTextureMap(std::string_view line,
                                                         std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Diffuse texture map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagSpecularColorTextureMap(
     std::string_view line, std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Specular texture map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagSpecularHighlightConponent(
     std::string_view line, std::string *component) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Specular highlight conponent is invalid: '{}'", line));
+        return false;
+    }
+
+    *component = words[1];
+
+    return true;
 }
 
-bool MaterialLibraryParser::ProcessTagAlphaåTextureMap(std::string_view line,
+bool MaterialLibraryParser::ProcessTagAlphaTextureMap(std::string_view line,
                                                        std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Alpha texture map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagBumpMap(std::string_view line,
                                               std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Bump map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
 bool MaterialLibraryParser::ProcessTagDisplacementMap(std::string_view line,
                                                       std::string *map) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Displacement map is invalid: '{}'", line));
+        return false;
+    }
+
+    *map = words[1];
+
+    return true;
 }
 
-bool MaterialLibraryParser::ProcessTagStencilDecalTexture(std::string_view line,
-                                                          std::string *texture) {
+bool MaterialLibraryParser::ProcessTagStencilDecalTexture(
+    std::string_view line, std::string *texture) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Stencil decal texture is invalid: '{}'", line));
+        return false;
+    }
+
+    *texture = words[1];
+
+    return true;
 }
 
 }   // namespace WaveFront

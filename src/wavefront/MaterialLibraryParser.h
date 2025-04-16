@@ -56,7 +56,7 @@ class MaterialLibraryParser : public BaseWavefrontParser {
     bool ProcessTagSpecularHighlightConponent(std::string_view line,
                                               std::string *component);
 
-    bool ProcessTagAlphaåTextureMap(std::string_view line, std::string *map);
+    bool ProcessTagAlphaTextureMap(std::string_view line, std::string *map);
 
     bool ProcessTagBumpMap(std::string_view line, std::string *map);
 
