@@ -358,7 +358,11 @@ bool ParseObjFile(std::vector<std::string> lines) {
 
             if (!materialLibrary.empty()) {
                 printf("Parsing material library....\n");
-                MaterialLibraryParser().ParseLibrary(materialLibrary);
+                MaterialMap materials;
+                if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
+                                                          &materials)) {
+                    return false;
+                }
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
