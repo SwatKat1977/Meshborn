@@ -180,12 +180,12 @@ void Material::SetAmbientTextureMap(std::string map) {
     ambientTextureMapSet_ = true;
 }
 
-bool Material::GetAmbientTextureMap(std::string &map) {
+bool Material::GetAmbientTextureMap(std::string *map) {
     if (!ambientTextureMapSet_) {
         return false;
     }
 
-    map = ambientTextureMap_;
+    *map = ambientTextureMap_;
     return true;
 }
 
@@ -194,12 +194,12 @@ void Material::SetDiffuseTextureMap(std::string map) {
     diffuseTextureMapSet_ = true;
 }
 
-bool Material::GetDiffuseTextureMap(std::string &map) {
+bool Material::GetDiffuseTextureMap(std::string *map) {
     if (!diffuseTextureMapSet_) {
         return false;
     }
 
-    map = diffuseTextureMap_;
+    *map = diffuseTextureMap_;
     return true;
 }
 
@@ -208,12 +208,12 @@ void Material::SetSpecularColourTextureMap(std::string map) {
     specularColourTextureMapSet_ = true;
 }
 
-bool Material::GetSpecularColourTextureMap(std::string &map) {
+bool Material::GetSpecularColourTextureMap(std::string *map) {
     if (!specularColourTextureMapSet_) {
         return false;
     }
 
-    map = specularColourTextureMap_;
+    *map = specularColourTextureMap_;
     return true;
 }
 
@@ -222,12 +222,12 @@ void Material::SetSpecularHighlightComponent(std::string map) {
     specularHighlightComponentSet_ = true;
 }
 
-bool Material::GetSpecularHighlightComponent(std::string &map) {
+bool Material::GetSpecularHighlightComponent(std::string *map) {
     if (!specularHighlightComponentSet_) {
         return false;
     }
 
-    map = specularHighlightComponent_;
+    *map = specularHighlightComponent_;
     return true;
 }
 
@@ -236,12 +236,12 @@ void Material::SetAlphaTextureMap(std::string map) {
     alphaTextureMapSet_ = true;
 }
 
-bool Material::GetAlphaTextureMap(std::string &map) {
+bool Material::GetAlphaTextureMap(std::string *map) {
     if (!alphaTextureMapSet_) {
         return false;
     }
 
-    map = alphaTextureMap_;
+    *map = alphaTextureMap_;
     return true;
 }
 
@@ -250,12 +250,12 @@ void Material::SetBumpMap(std::string map) {
     bumpMapSet_ = true;
 }
 
-bool Material::GetBumpMap(std::string &map) {
+bool Material::GetBumpMap(std::string *map) {
     if (!bumpMapSet_) {
         return false;
     }
 
-    map = bumpMap_;
+    *map = bumpMap_;
     return true;
 }
 
@@ -264,12 +264,12 @@ void Material::SetDisplacementMap(std::string map) {
     displacementMapSet_ = true;
 }
 
-bool Material::GetDisplacementMap(std::string &map) {
+bool Material::GetDisplacementMap(std::string *map) {
     if (!displacementMapSet_) {
         return false;
     }
 
-    map = displacementMap_;
+    *map = displacementMap_;
     return true;
 }
 
@@ -278,12 +278,12 @@ void Material::SetStencilDecalTexture(std::string map) {
     stencilDecalTextureSet_ = true;
 }
 
-bool Material::GetStencilDecalTexture(std::string &map) {
+bool Material::GetStencilDecalTexture(std::string *map) {
     if (!stencilDecalTextureSet_) {
         return false;
     }
 
-    map = stencilDecalTexture_;
+    *map = stencilDecalTexture_;
     return true;
 }
 
