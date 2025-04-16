@@ -319,11 +319,28 @@ bool Material::GetSpecularColourTextureMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the specular highlight component texture map path.
+ *
+ * This texture map controls the specular exponent or sharpness of specular
+ * highlights on the material surface.
+ *
+ * @param map The file path to the specular highlight component texture map.
+ */
 void Material::SetSpecularHighlightComponent(std::string map) {
     specularHighlightComponent_ = map;
     specularHighlightComponentSet_ = true;
 }
 
+/**
+ * @brief Retrieves the specular highlight component texture map path.
+ *
+ * Returns the stored specular highlight component map path if it has been
+ * set. Otherwise, returns false.
+ *
+ * @param map Pointer to a string where the map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetSpecularHighlightComponent(std::string *map) {
     if (!specularHighlightComponentSet_) {
         return false;
@@ -333,11 +350,28 @@ bool Material::GetSpecularHighlightComponent(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the alpha texture map path for the material.
+ *
+ * The alpha texture map defines transparency information for the material,
+ * typically used for masking or fading parts of the surface.
+ *
+ * @param map The file path to the alpha texture map.
+ */
 void Material::SetAlphaTextureMap(std::string map) {
     alphaTextureMap_ = map;
     alphaTextureMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the alpha texture map path for the material.
+ *
+ * Returns the stored alpha texture map path if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param map Pointer to a string where the map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetAlphaTextureMap(std::string *map) {
     if (!alphaTextureMapSet_) {
         return false;
@@ -347,11 +381,28 @@ bool Material::GetAlphaTextureMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the bump map texture path for the material.
+ *
+ * The bump map simulates small surface variations to create the illusion of
+ * surface detail without adding actual geometry.
+ *
+ * @param map The file path to the bump map texture.
+ */
 void Material::SetBumpMap(std::string map) {
     bumpMap_ = map;
     bumpMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the bump map texture path for the material.
+ *
+ * Returns the stored bump map texture path if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param map Pointer to a string where the bump map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetBumpMap(std::string *map) {
     if (!bumpMapSet_) {
         return false;
@@ -361,11 +412,29 @@ bool Material::GetBumpMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the displacement map texture path for the material.
+ *
+ * The displacement map alters the actual surface geometry of the material
+ * by modifying its vertices based on the map's data.
+ *
+ * @param map The file path to the displacement map texture.
+ */
 void Material::SetDisplacementMap(std::string map) {
     displacementMap_ = map;
     displacementMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the displacement map texture path for the material.
+ *
+ * Returns the stored displacement map texture path if it has been set.
+ * Otherwise, returns false.
+ *
+ * @param map Pointer to a string where the displacement map path will be
+ * stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetDisplacementMap(std::string *map) {
     if (!displacementMapSet_) {
         return false;
@@ -375,11 +444,29 @@ bool Material::GetDisplacementMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the stencil decal texture path for the material.
+ *
+ * The stencil decal texture is used for applying patterns or effects on
+ * specific areas of the material's surface, typically for detail work.
+ *
+ * @param map The file path to the stencil decal texture.
+ */
 void Material::SetStencilDecalTexture(std::string map) {
     stencilDecalTexture_ = map;
     stencilDecalTextureSet_ = true;
 }
 
+/**
+ * @brief Retrieves the stencil decal texture path for the material.
+ *
+ * Returns the stored stencil decal texture path if it has been set.
+ * Otherwise, returns false.
+ *
+ * @param map Pointer to a string where the stencil decal texture path will
+ * be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetStencilDecalTexture(std::string *map) {
     if (!stencilDecalTextureSet_) {
         return false;
