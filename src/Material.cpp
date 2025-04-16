@@ -161,5 +161,18 @@ bool Material::GetOpticalDensity(float *density) {
     return true;
 }
 
+void Material::SetTransparentDissolve(float transparency) {
+    transparentDissolve_ = transparency;
+    transparentDissolveSet_ = true;
+}
+
+bool Material::GetTransparentDissolve(float *transparency) {
+    if (!transparentDissolveSet_) {
+        return false;
+    }
+
+    *transparency = transparentDissolve_;
+    return true;
+}
 
 }   // namespace Meshborn

@@ -82,7 +82,6 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             Material newMaterial(materialName);
             materials.push_back(newMaterial);
             currentMaterial = materials.size() -1;
-            std::cout << "Current material index = " << currentMaterial << "\n";
 
         // Ambient colour
         } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
@@ -172,12 +171,20 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
 
         // Transparent dissolve
         } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
-            std::cout << "Transparent dissolve: " << view << std::endl;
+            float transparentDissolve;
+
+            if (!ProcessTagTransparentDissolve(line, &transparentDissolve)) {
+                return;
+            }
+
+            materials[currentMaterial].SetTransparentDissolve(transparentDissolve);
+            float transparency;
+            materials[currentMaterial].GetTransparentDissolve(&transparency);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
 
         // Optical density
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
-            std::cout << "Optical density: " << view << std::endl;
-
             float opticalDensity;
             if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
                 return;
@@ -408,8 +415,40 @@ bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
     return true;
 }
 
+/**
+ * @brief Parses the transparency (dissolve) value from a material tag.
+ *
+ * This function reads a dissolve value from the input line and stores it in
+ * the provided `transparency` pointer. The dissolve value defines the
+ * material's transparency:
+ *
+ *   - 1.0 means fully opaque
+ *   - 0.0 means fully transparent
+ *
+ * Valid values range from 0.0 to 1.0.
+ *
+ * @param line The input line containing the transparency value.
+ * @param transparency Pointer to a float where the parsed value will be stored.
+ * @return true if parsing and validation succeed, false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
                                                           float *transparency) {
+    auto words = SplitElementString(std::string(line));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Material transparent dissolve invalid");
+        return false;
+    }
+
+    if (!ParseFloat(words[1].c_str(), transparency)) return false;
+
+    if ((*transparency < 0.0f) || (*transparency > 1.0f)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material transparent dissolve invalid value");
+        return false;
+    }
+
+    return true;
 }
 
 /**

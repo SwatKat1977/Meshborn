@@ -44,6 +44,9 @@ class Material {
     void SetOpticalDensity(float density);
     bool GetOpticalDensity(float *density);
 
+    void SetTransparentDissolve(float transparency);
+    bool GetTransparentDissolve(float *transparency);
+
  private:
     std::string name_;
 
@@ -70,6 +73,10 @@ class Material {
     // Optical density
     float opticalDensity_;
     bool opticalDensitySet_;
+
+    // Transparent dissolve
+    float transparentDissolve_;
+    bool transparentDissolveSet_;
 };
 
 }   // namespace Meshborn
