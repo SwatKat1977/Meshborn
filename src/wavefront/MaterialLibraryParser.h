@@ -17,12 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef WAVEFRONT_MATERIALLIBRARYPARSER_H_
 #define WAVEFRONT_MATERIALLIBRARYPARSER_H_
+#include <memory>
 #include <string>
+#include <unordered_map>
 #include "glm/glm.hpp"
 #include "BaseWavefrontParser.h"
+#include "Material.h"
 
 namespace Meshborn {
 namespace WaveFront {
+
+using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
+
 
 class MaterialLibraryParser : public BaseWavefrontParser {
  public:

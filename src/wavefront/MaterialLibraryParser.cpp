@@ -62,8 +62,8 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         throw std::runtime_error(ex.what());
     }
 
-    std::vector<Material> materials;
-    int currentMaterial = -1;
+    MaterialMap materials;
+    std::shared_ptr<Material> currentMaterial = nullptr;
 
     for (const auto& line : rawLines) {
         std::string_view view(line);
@@ -79,13 +79,17 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             LOG(Logger::LogLevel::Debug, std::format(
                 "NEW MATERIAL => {}", materialName));
 
-            Material newMaterial(materialName);
-            materials.push_back(newMaterial);
-            currentMaterial = materials.size() -1;
+            auto newMaterial = std::make_shared<Material>(materialName);
+            materials[materialName] = newMaterial;
+
+            auto it = materials.find(materialName);
+            if (it != materials.end()) {
+                currentMaterial = it->second;
+            }
 
         // Ambient colour
         } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ka' keyword");
                 return;
             }
@@ -95,16 +99,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetAmbientColour(ambientColour);
+            currentMaterial->SetAmbientColour(ambientColour);
             glm::vec3 colour;
-            materials[currentMaterial].GetAmbientColour(&colour);
+            currentMaterial->GetAmbientColour(&colour);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|AMBIENT COLOUR => R: {} G: {} B: {}",
                 colour.x, colour.y, colour.z));
 
         // Diffuse colour
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Kd' keyword");
                 return;
             }
@@ -114,16 +118,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetDiffuseColour(diffuseColour);
+            currentMaterial->SetDiffuseColour(diffuseColour);
             glm::vec3 colour;
-            materials[currentMaterial].GetDiffuseColour(&colour);
+            currentMaterial->GetDiffuseColour(&colour);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|DIFFUSE COLOUR => R: {} G: {} B: {}",
                 colour.x, colour.y, colour.z));
 
         // Emissive colour
         } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ke' keyword");
                 return;
             }
@@ -133,16 +137,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetEmissiveColour(emissiveColour);
+            currentMaterial->SetEmissiveColour(emissiveColour);
             glm::vec3 colour;
-            materials[currentMaterial].GetEmissiveColour(&colour);
+            currentMaterial->GetEmissiveColour(&colour);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|EMISSIVE COLOUR => R: {} G: {} B: {}",
                 colour.x, colour.y, colour.z));
 
         // Specular colour
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
                 return;
             }
@@ -152,9 +156,9 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetSpecularColour(specularColour);
+            currentMaterial->SetSpecularColour(specularColour);
             glm::vec3 colour;
-            materials[currentMaterial].GetSpecularColour(&colour);
+            currentMaterial->GetSpecularColour(&colour);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|SPECULAR COLOUR => R: {} G: {} B: {}",
                 colour.x, colour.y, colour.z));
@@ -177,15 +181,20 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetTransparentDissolve(
+            currentMaterial->SetTransparentDissolve(
                 transparentDissolve);
             float transparency;
-            materials[currentMaterial].GetTransparentDissolve(&transparency);
+            currentMaterial->GetTransparentDissolve(&transparency);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
 
         // Optical density
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
+            if (!currentMaterial) {
+                LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
+                return;
+            }
+
             float opticalDensity;
             if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
                 return;
@@ -194,15 +203,15 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
 
-            materials[currentMaterial].SetOpticalDensity(opticalDensity);
+            currentMaterial->SetOpticalDensity(opticalDensity);
             float density;
-            materials[currentMaterial].GetOpticalDensity(&density);
+            currentMaterial->GetOpticalDensity(&density);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|OPTICAL DENSITY => {}", density));
 
         // Illumination model
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'illum' keyword");
                 return;
             }
@@ -212,16 +221,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetIlluminationModel(illuminationModel);
+            currentMaterial->SetIlluminationModel(illuminationModel);
             int model;
-            materials[currentMaterial].GetIlluminationModel(&model);
+            currentMaterial->GetIlluminationModel(&model);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|ILLUMINATION MODEL => {}", model));
 
         // Ambient texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_AMBIENT_TEXTURE_MAP)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ka' keyword");
                 return;
             }
@@ -231,16 +240,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetAmbientTextureMap(ambientTextureMap);
+            currentMaterial->SetAmbientTextureMap(ambientTextureMap);
             std::string textureMap;
-            materials[currentMaterial].GetAmbientTextureMap(&textureMap);
+            currentMaterial->GetAmbientTextureMap(&textureMap);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|AMBIENT TEXTURE MAP => {}", textureMap));
 
         // Diffuse texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_DIFFUSE_TEXTURE_MAP)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Kd' keyword");
                 return;
             }
@@ -250,16 +259,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetDiffuseTextureMap(diffuseTextureMap);
+            currentMaterial->SetDiffuseTextureMap(diffuseTextureMap);
             std::string textureMap;
-            materials[currentMaterial].GetDiffuseTextureMap(&textureMap);
+            currentMaterial->GetDiffuseTextureMap(&textureMap);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|DIFFUSE TEXTURE MAP => {}", textureMap));
 
         // Specular color texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_SPECULAR_COLOR_TEXTURE_MAP)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ks' keyword");
                 return;
             }
@@ -269,17 +278,17 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetSpecularColourTextureMap(
+            currentMaterial->SetSpecularColourTextureMap(
                 colourTextureMap);
             std::string textureMap;
-            materials[currentMaterial].GetSpecularColourTextureMap(&textureMap);
+            currentMaterial->GetSpecularColourTextureMap(&textureMap);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|SPECULAR COLOUR TEXTURE MAP => {}", textureMap));
 
         // Specular highlight component
         } else if (StartsWith(std::string(view),
                               KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ns' keyword");
                 return;
             }
@@ -290,10 +299,10 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetSpecularHighlightComponent(
+            currentMaterial->SetSpecularHighlightComponent(
                 highlightComponent);
             std::string component;
-            materials[currentMaterial].GetSpecularHighlightComponent(
+            currentMaterial->GetSpecularHighlightComponent(
                 &component);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|SPECULAR HIGHLIGHT COMPONENT => {}", component));
@@ -301,7 +310,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
         // Alpha texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_ALPHA_TEXTURE_MAP)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_d' keyword");
                 return;
             }
@@ -311,9 +320,9 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetAlphaTextureMap(alphaTextureMap);
+            currentMaterial->SetAlphaTextureMap(alphaTextureMap);
             std::string textureMap;
-            materials[currentMaterial].GetAlphaTextureMap(&textureMap);
+            currentMaterial->GetAlphaTextureMap(&textureMap);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|ALPHA TEXTURE MAP => {}", textureMap));
 
@@ -322,7 +331,7 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                                KEYWORD_MAP_BUMP)) ||
                    (StartsWith(std::string(view),
                                KEYWORD_BUMP_MAP))) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical,
                     "Mis-ordered 'bump/map_bump' keyword");
                 return;
@@ -333,16 +342,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetBumpMap(bumpMap);
+            currentMaterial->SetBumpMap(bumpMap);
             std::string textureMap;
-            materials[currentMaterial].GetBumpMap(&textureMap);
+            currentMaterial->GetBumpMap(&textureMap);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|BUMP MAP => {}", textureMap));
 
         // Displacement map
         } else if (StartsWith(std::string(view),
                               KEYWORD_DISPLACEMENT_MAP)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'disp' keyword");
                 return;
             }
@@ -352,16 +361,16 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetDisplacementMap(displacementMap);
+            currentMaterial->SetDisplacementMap(displacementMap);
             std::string map;
-            materials[currentMaterial].GetDisplacementMap(&map);
+            currentMaterial->GetDisplacementMap(&map);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|DISPLACEMENT MAP => {}", map));
 
        // Stencil decal texture
         } else if (StartsWith(std::string(view),
                               KEYWORD_STENCIL_DECAL_TEXTURE)) {
-            if (currentMaterial == -1) {
+            if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'decal' keyword");
                 return;
             }
@@ -371,9 +380,9 @@ void MaterialLibraryParser::ParseLibrary(std::string materialFile) {
                 return;
             }
 
-            materials[currentMaterial].SetStencilDecalTexture(decalTexture);
+            currentMaterial->SetStencilDecalTexture(decalTexture);
             std::string texture;
-            materials[currentMaterial].GetStencilDecalTexture(&texture);
+            currentMaterial->GetStencilDecalTexture(&texture);
             LOG(Logger::LogLevel::Debug, std::format(
                 "MATERIAL|STENCIL DECAL TEXTURE => {}", texture));
 
