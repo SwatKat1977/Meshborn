@@ -26,6 +26,8 @@ class Material {
  public:
     explicit Material(std::string name);
 
+    std::string GetName();
+
     void SetAmbientColour(glm::vec3 colour);
     bool GetAmbientColour(glm::vec3 *colour);
 

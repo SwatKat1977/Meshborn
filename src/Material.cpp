@@ -37,6 +37,10 @@ Material::Material(std::string name) : name_(name) {
     specularColourSet_ = false;
 }
 
+std::string Material::GetName() {
+    return name_;
+}
+
 /**
  * @brief Sets the ambient colour of the material.
  * 
