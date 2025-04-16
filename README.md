@@ -6,7 +6,7 @@ GLM V1.0.1
 
 ## Development status
 
-### Supported Wavefront tags
+### Supported Wavefront tags : object
 The following Wavefront obj tags are currently supported:
 
 | Tag                  | Status             | Notes                |
@@ -21,6 +21,21 @@ The following Wavefront obj tags are currently supported:
 | v (vertex)           | :white_check_mark: |                      |
 | vn (vertex normal)   | :white_check_mark: |                      |
 | vt (vertex texture)  | :x:                | Not implemented      |
+
+### Supported Wavefront tags : material
+The following Wavefront material tags are currently supported:
+
+| Tag                        | Status             | Notes                |
+|:---------------------------|:-------------------|:---------------------|
+| newmtl (new material)      | :white_check_mark: |                      |
+| Ka (ambient colour)        | :white_check_mark: |                      |
+| Kd (diffuse colour)        | :white_check_mark: |                      |
+| Ke (emissive colour)       | :white_check_mark: |                      |
+| Ks (specular colour)       | :white_check_mark: |                      |
+| Ns (specular exponent)     | :white_check_mark: |                      |
+| d (transparent disolve)    | :white_check_mark: |                      |
+| Ni (optical density)       | :white_check_mark: |                      |
+| illum (illumination_model) | :white_check_mark: |                      |
 
 ### Functionality implemented 
 The following functionality is currently supported:
