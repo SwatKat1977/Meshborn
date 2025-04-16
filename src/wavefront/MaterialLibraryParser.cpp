@@ -536,5 +536,37 @@ bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
     return true;
 }
 
+bool MaterialLibraryParser::ProcessTagAmbientTextureMap(std::string_view line,
+                                                        std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagDiffuseTextureMap(std::string_view line,
+                                                        std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagSpecularColorTextureMap(
+    std::string_view line, std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagSpecularHighlightConponent(
+    std::string_view line, std::string *component) {
+}
+
+bool MaterialLibraryParser::ProcessTagAlphaåTextureMap(std::string_view line,
+                                                       std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagBumpMap(std::string_view line,
+                                              std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagDisplacementMap(std::string_view line,
+                                                      std::string *map) {
+}
+
+bool MaterialLibraryParser::ProcessTagStencilDecalTexture(std::string_view line,
+                                                          std::string *texture) {
+}
+
 }   // namespace WaveFront
 }   // namespace Meshborn

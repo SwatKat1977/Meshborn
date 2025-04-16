@@ -45,6 +45,25 @@ class MaterialLibraryParser : public BaseWavefrontParser {
     bool ProcessTagOpticalDensity(std::string_view line, float *density);
 
     bool ProcessTagIlluminationModel(std::string_view line, int *density);
+
+    bool ProcessTagAmbientTextureMap(std::string_view line, std::string *map);
+
+    bool ProcessTagDiffuseTextureMap(std::string_view line, std::string *map);
+
+    bool ProcessTagSpecularColorTextureMap(std::string_view line,
+                                           std::string *map);
+
+    bool ProcessTagSpecularHighlightConponent(std::string_view line,
+                                              std::string *component);
+
+    bool ProcessTagAlphaåTextureMap(std::string_view line, std::string *map);
+
+    bool ProcessTagBumpMap(std::string_view line, std::string *map);
+
+    bool ProcessTagDisplacementMap(std::string_view line, std::string *map);
+
+    bool ProcessTagStencilDecalTexture(std::string_view line,
+                                       std::string *texture);
 };
 
 }   // namespace WaveFront
