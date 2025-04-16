@@ -36,20 +36,22 @@ The following Wavefront material tags are currently supported:
 | d (transparent disolve)               | :white_check_mark: |                      |
 | Ni (optical density)                  | :white_check_mark: |                      |
 | illum (illumination model)            | :white_check_mark: |                      |
-| map_Ka (ambient texture map)          | :x:                |                      |
-| map_Kd (diffuse texture map)          | :x:                |                      |
-| map_Ks (specular color texture map)   | :x:                |                      |
-| map_Ns (specular highlight component) | :x:                |                      |
-| map_d (alpha texture map)             | :x:                |                      |
-| map_bump/bump (bump map)              | :x:                |                      |
-| disp (displacement map)               | :x:                |                      |
-| decal (stencil decal texture)         | :x:                |                      |
+| map_Ka (ambient texture map)          | :white_check_mark: |                      |
+| map_Kd (diffuse texture map)          | :white_check_mark: |                      |
+| map_Ks (specular color texture map)   | :white_check_mark: |                      |
+| map_Ns (specular highlight component) | :white_check_mark: |                      |
+| map_d (alpha texture map)             | :white_check_mark: |                      |
+| map_bump/bump (bump map)              | :white_check_mark: |                      |
+| disp (displacement map)               | :white_check_mark: |                      |
+| decal (stencil decal texture)         | :white_check_mark: |                      |
 
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Tag                  | Status             | Notes                   |
-|:---------------------|:-------------------|:------------------------|
-| Basic object Read    | :construction:     | Currently working on    |
-| Basic material read  | :x:                | Needs mtllib and usemtl |
-| Logging              | :white_check_mark: |                         |
+| Functionality        | Status             | Notes                                        |
+|:---------------------|:-------------------|:---------------------------------------------|
+| Basic object Read    | :construction:     | Currently working on                         |
+| Basic material read  | :construction:     | Material read done, handling in obj not done |
+| Logging              | :white_check_mark: |                                              |
+| Materials class      | :construction:     | Work on material class in progress           |
+| Model class          | :x:                | Object parsingt needs rework first           |
