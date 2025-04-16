@@ -87,11 +87,28 @@ bool Material::GetDiffuseColour(glm::vec3 *colour) {
     return true;
 }
 
+/**
+ * @brief Sets the emissive color for the material.
+ *
+ * The emissive color defines how much light the material emits, independent
+ * of lighting. This makes the material appear self-illuminating.
+ *
+ * @param colour The emissive color to set (represented as a glm::vec3).
+ */
 void Material::SetEmissiveColour(glm::vec3 colour) {
     emissiveColour_ = colour;
     emissiveColourSet_ = true;
 }
 
+/**
+ * @brief Retrieves the emissive color for the material.
+ *
+ * Returns the stored emissive color if it has been set. Otherwise, returns
+ * false.
+ *
+ * @param colour Pointer to a glm::vec3 to store the emissive color.
+ * @return true if the color was set and retrieved, false otherwise.
+ */
 bool Material::GetEmissiveColour(glm::vec3 *colour) {
     if (!emissiveColourSet_) {
         return false;
