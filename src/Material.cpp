@@ -133,11 +133,28 @@ bool Material::GetSpecularColour(glm::vec3 *colour) {
     return true;
 }
 
+/**
+ * @brief Sets the illumination model for the material.
+ *
+ * This method sets the illumination model, which defines how the material
+ * interacts with light (e.g., diffuse, specular, reflection).
+ *
+ * @param model The illumination model index to set.
+ */
 void Material::SetIlluminationModel(int model) {
     illuminationModel_ = model;
     illuminationModelSet_ = true;
 }
 
+/**
+ * @brief Retrieves the current illumination model.
+ *
+ * Returns the stored illumination model if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param model Pointer to an integer where the model will be stored.
+ * @return true if the model was set and retrieved, false otherwise.
+ */
 bool Material::GetIlluminationModel(int *model) {
     if (!illuminationModelSet_) {
         return false;
@@ -147,11 +164,28 @@ bool Material::GetIlluminationModel(int *model) {
     return true;
 }
 
+/**
+ * @brief Sets the optical density (index of refraction) of the material.
+ *
+ * Optical density affects how much light bends as it enters the material.
+ * Common values range from 1.0 to 2.0, depending on the material type.
+ *
+ * @param density The optical density value to set.
+ */
 void Material::SetOpticalDensity(float density) {
     opticalDensity_ = density;
     opticalDensitySet_ = true;
 }
 
+/**
+ * @brief Retrieves the current optical density value.
+ *
+ * Returns the stored optical density if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param density Pointer to a float where the value will be stored.
+ * @return true if the value was set and retrieved, false otherwise.
+ */
 bool Material::GetOpticalDensity(float *density) {
     if (!opticalDensitySet_) {
         return false;
@@ -161,11 +195,29 @@ bool Material::GetOpticalDensity(float *density) {
     return true;
 }
 
+/**
+ * @brief Sets the transparent dissolve value for the material.
+ *
+ * This value defines how transparent the material is:
+ *   - 1.0 = fully opaque
+ *   - 0.0 = fully transparent
+ *
+ * @param transparency The transparency value to set (range: 0.0 to 1.0).
+ */
 void Material::SetTransparentDissolve(float transparency) {
     transparentDissolve_ = transparency;
     transparentDissolveSet_ = true;
 }
 
+/**
+ * @brief Retrieves the transparent dissolve value for the material.
+ *
+ * Returns the stored transparency value if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param transparency Pointer to a float to store the transparency value.
+ * @return true if the value was set and retrieved, false otherwise.
+ */
 bool Material::GetTransparentDissolve(float *transparency) {
     if (!transparentDissolveSet_) {
         return false;
@@ -175,11 +227,27 @@ bool Material::GetTransparentDissolve(float *transparency) {
     return true;
 }
 
+/**
+ * @brief Sets the ambient texture map path for the material.
+ *
+ * This defines the texture used for ambient lighting on the material.
+ *
+ * @param map The file path to the ambient texture map.
+ */
 void Material::SetAmbientTextureMap(std::string map) {
     ambientTextureMap_ = map;
     ambientTextureMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the ambient texture map path for the material.
+ *
+ * Returns the stored texture map path if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param map Pointer to a string where the map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetAmbientTextureMap(std::string *map) {
     if (!ambientTextureMapSet_) {
         return false;
@@ -189,11 +257,28 @@ bool Material::GetAmbientTextureMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the diffuse texture map path for the material.
+ *
+ * The diffuse texture defines the base color and surface detail of the
+ * material under direct lighting.
+ *
+ * @param map The file path to the diffuse texture map.
+ */
 void Material::SetDiffuseTextureMap(std::string map) {
     diffuseTextureMap_ = map;
     diffuseTextureMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the diffuse texture map path for the material.
+ *
+ * Returns the stored diffuse texture map path if it has been set. Otherwise,
+ * returns false.
+ *
+ * @param map Pointer to a string where the map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetDiffuseTextureMap(std::string *map) {
     if (!diffuseTextureMapSet_) {
         return false;
@@ -203,11 +288,28 @@ bool Material::GetDiffuseTextureMap(std::string *map) {
     return true;
 }
 
+/**
+ * @brief Sets the specular colour texture map path for the material.
+ *
+ * This texture map defines the color and intensity of specular highlights,
+ * affecting how shiny or reflective the surface appears.
+ *
+ * @param map The file path to the specular colour texture map.
+ */
 void Material::SetSpecularColourTextureMap(std::string map) {
     specularColourTextureMap_ = map;
     specularColourTextureMapSet_ = true;
 }
 
+/**
+ * @brief Retrieves the specular colour texture map path for the material.
+ *
+ * Returns the stored specular colour texture map path if it has been set.
+ * Otherwise, returns false.
+ *
+ * @param map Pointer to a string where the map path will be stored.
+ * @return true if the map was set and retrieved, false otherwise.
+ */
 bool Material::GetSpecularColourTextureMap(std::string *map) {
     if (!specularColourTextureMapSet_) {
         return false;
