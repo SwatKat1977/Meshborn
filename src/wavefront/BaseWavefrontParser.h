@@ -15,18 +15,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef WAVEFRONT_WAVEFRONTOBJLOADER_H_
-#define WAVEFRONT_WAVEFRONTOBJLOADER_H_
+#ifndef WAVEFRONT_BASEWAVEFRONTPARSER_H_
+#define WAVEFRONT_BASEWAVEFRONTPARSER_H_
 #include <string>
 #include <vector>
-#include "BaseWavefrontParser.h"
 
 namespace Meshborn {
 namespace WaveFront {
 
-void LoadFromFile(std::string filename);
+class BaseWavefrontParser {
+ protected:
+    std::vector<std::string> ReadFile(const std::string& filename);
+
+    std::vector<std::string> SplitElementString(const std::string& str);
+
+    bool StartsWith(const std::string& line, const std::string& prefix);
+
+    bool ParseFloat(const char* str, float *out);
+
+    bool ParseInt(const char* str, int *out);
+};
 
 }   // namespace WaveFront
 }   // namespace Meshborn
 
-#endif  // WAVEFRONT_WAVEFRONTOBJLOADER_H_
+#endif  //  WAVEFRONT_BASEWAVEFRONTPARSER_H_

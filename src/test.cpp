@@ -60,7 +60,7 @@ class Vertex {
 #include "Logger.h"
 
 class ConsoleLogger: public Meshborn::Logger::ILogger {
-public:
+ public:
     ConsoleLogger() = default;
 
     void Log(Meshborn::Logger::LogLevel level,
@@ -72,7 +72,6 @@ public:
 
 
 int main(int argc, char** argv) {
-
     std::string filename;
 
     for (int i = 1; i < argc; ++i) {

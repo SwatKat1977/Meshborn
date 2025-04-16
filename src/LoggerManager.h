@@ -60,13 +60,14 @@ class LoggerManager {
     #define SHOULD_LOG_DEBUG false
   #endif
 
-  #define LOG(level, message)                                                             \
-    do {                                                                                  \
-      if (Logger::LoggerManager::Instance().HasLogger()) {                                \
-        if ((level) != Logger::LogLevel::Debug || SHOULD_LOG_DEBUG) {                             \
-          Logger::LoggerManager::Instance().GetLogger().Log((level), (message));          \
-        }                                                                                 \
-      }                                                                                   \
+  #define LOG(level, message)                                           \
+    do {                                                                \
+      if (Logger::LoggerManager::Instance().HasLogger()) {              \
+        if ((level) != Logger::LogLevel::Debug || SHOULD_LOG_DEBUG) {   \
+          Logger::LoggerManager::Instance().GetLogger().Log((level),    \
+                                                            (message)); \
+        }                                                               \
+      }                                                                 \
     } while (0)
 #else
   #define LOG(level, message) do {} while (0)
