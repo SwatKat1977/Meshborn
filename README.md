@@ -6,6 +6,7 @@ Open source light-weight Wavefront obj loader.
 ## Version Information
 
 **Stable Release:** None
+
 **Bleeding-edge Release:** None
 
 ## Development status
