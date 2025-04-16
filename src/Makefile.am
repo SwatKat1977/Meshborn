@@ -18,9 +18,9 @@ includedir = $(prefix)/include/meshborn
 
 # Specify sources and output shared library
 lib_LTLIBRARIES = libMeshborn.la
-libMeshborn_la_SOURCES = Meshborn.cpp                        \
-                         wavefront/WavefrontObjLoader.cpp    \
-                         wavefront/BaseWavefrontParser.cpp   \
+libMeshborn_la_SOURCES = Meshborn.cpp                         \
+                         wavefront/WavefrontObjParser.cpp     \
+                         wavefront/BaseWavefrontParser.cpp    \
                          wavefront/MaterialLibraryParser.cpp  \
                          Material.cpp
 

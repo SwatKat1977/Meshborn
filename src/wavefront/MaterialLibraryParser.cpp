@@ -64,7 +64,6 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         throw std::runtime_error(ex.what());
     }
 
-    //MaterialMap materials;
     std::shared_ptr<Material> currentMaterial = nullptr;
 
     for (const auto& line : rawLines) {
