@@ -63,6 +63,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
     std::vector<Point4D> vertexPositions;
     std::vector<Point3D> vertexNormals;
+    std::vector<TextureCoordinates> textureCoordinates;
     std::vector<PolygonalFace> faces;
 
     for (const auto& line : rawLines) {
@@ -121,8 +122,17 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
         // Texture coordinate [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
+            TextureCoordinates coordinates;
+            if (!ParseTextureCoordinate(view, &coordinates)) {
+                return false;
+            }
+
             LOG(Logger::LogLevel::Debug, std::format(
-                "Found texture coordinate: {}", view));
+                "TEXTURE COORDINATE => U: {} | V: {} | W: {}",
+                coordinates.u,
+                coordinates.v,
+                coordinates.w));
+            textureCoordinates.push_back(coordinates);
 
         // Use material [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
@@ -381,7 +391,7 @@ bool WaveFrontObjParser::ParseTextureCoordinate(
     coordinates->v  = coordinateV;
     coordinates->w  = coordinateW;
 
-    return false;
+    return true;
 }
 
 }   // namespace WaveFront
