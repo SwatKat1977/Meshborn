@@ -30,13 +30,13 @@ The following Wavefront obj tags are currently supported:
 | usemtl (use material)| :x:                | Not implemented      |
 | v (vertex)           | :white_check_mark: |                      |
 | vn (vertex normal)   | :white_check_mark: |                      |
-| vt (vertex texture)  | :x:                | Not implemented      |
+| vt (vertex texture)  | :white_check_mark: |                      |
 
 ### Supported Wavefront tags : material
 The following Wavefront material tags are currently supported:
 
-| Tag                                 | Status             | Notes                |
-|:------------------------------------|:-------------------|:---------------------|
+| Tag                                   | Status             | Notes                |
+|:--------------------------------------|:-------------------|:---------------------|
 | newmtl (new material)                 | :white_check_mark: |                      |
 | Ka (ambient colour)                   | :white_check_mark: |                      |
 | Kd (diffuse colour)                   | :white_check_mark: |                      |
