@@ -1,7 +1,7 @@
 # Meshborn
 Wavefront Obj loader
 
-Open source light-weight Wavefront obj loader.
+Open source light-weight Wavefront obj loader with no dependencies.
 
 ## Version Information
 
@@ -66,6 +66,3 @@ The following functionality is currently supported:
 | Materials class      | :construction:     | Work on material class in progress                |
 | Model class          | :x:                | Object parsingt needs rework first                |
 | Unit tests           | :x:                | Unit tests to be started once main core is stable |
-
-## Dependency
-GLM V1.0.1
