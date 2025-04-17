@@ -24,6 +24,9 @@ struct RGB {
     float red;
     float green;
     float blue;
+
+    RGB() : red(0), green(0), blue(0) {}
+    RGB(float r, float g, float b) : red(r), green(g), blue(b) {}
 };
 
 struct Point3D {

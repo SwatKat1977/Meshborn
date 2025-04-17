@@ -14,9 +14,6 @@ LT_INIT
 # Check for C++ compiler
 AC_PROG_CXX
 
-# Set include and library paths (use proper variable names)
-AC_SUBST(AM_CPPFLAGS, "-I. -I\$(MESHBORN_GLM)")
-
 # Checks for header files
 AC_CHECK_HEADERS([stdio.h stdlib.h])
 

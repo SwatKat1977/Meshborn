@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "glm/glm.hpp"
 #include "BaseWavefrontParser.h"
 #include "Material.h"
 
@@ -39,10 +38,10 @@ class MaterialLibraryParser : public BaseWavefrontParser {
  private:
     bool ProcessTagNewMaterial(std::string_view line, std::string *material);
 
-    bool ProcessTagAmbientColour(std::string_view line, glm::vec3 *colour);
-    bool ProcessTagDiffuseColour(std::string_view line, glm::vec3 *colour);
-    bool ProcessTagEmissiveColour(std::string_view line, glm::vec3 *colour);
-    bool ProcessTagSpecularColour(std::string_view line, glm::vec3 *colour);
+    bool ProcessTagAmbientColour(std::string_view line, RGB *colour);
+    bool ProcessTagDiffuseColour(std::string_view line, RGB *colour);
+    bool ProcessTagEmissiveColour(std::string_view line, RGB *colour);
+    bool ProcessTagSpecularColour(std::string_view line, RGB *colour);
 
     bool ProcessTagSpecularExponent(std::string_view line, float *shininess);
 

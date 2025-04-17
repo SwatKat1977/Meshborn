@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
 #include <sstream>
 #include <utility>
-#include "glm/glm.hpp"
 #include "LoggerManager.h"
 #include "WaveFrontObjParser.h"
 #include "MaterialLibraryParser.h"

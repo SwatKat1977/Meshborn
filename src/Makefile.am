@@ -2,8 +2,7 @@
 
 # Compiler and linker flags
 AM_CPPFLAGS = -g -std=c++20 -Wall -Wextra -fPIC \
-              -I. \
-              -I$(MESHBORN_GLM)
+              -I.
 
 # Install header files
 nobase_include_HEADERS = Meshborn.h \
