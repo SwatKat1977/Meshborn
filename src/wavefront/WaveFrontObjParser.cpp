@@ -37,25 +37,11 @@ const char VECTOR_NORMAL_ELEMENT[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
-std::vector<std::string> ReadObjFile(const std::string& filename);
-
-std::vector<std::string> SplitElementString(const std::string& str) {
-    std::vector<std::string> tokens;
-    std::istringstream iss(str);
-    std::string token;
-
-    while (iss >> token) {
-        tokens.push_back(token);
-    }
-
-    return tokens;
-}
-
 bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<std::string> rawLines;
 
     try {
-        rawLines = ReadObjFile(filename);
+        rawLines = ReadFile(filename);
     }
     catch (std::runtime_error ex) {
         throw std::runtime_error(ex.what());
@@ -159,39 +145,16 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                 }
             }
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIALS LIBRARY => {}", view));
+            LOG(Logger::LogLevel::Debug,
+                std::format("MATERIALS LIBRARY => {}", view));
 
         } else {
-            std::cout << line << '\n';
+            LOG(Logger::LogLevel::Debug,
+                std::format("Unknown obj tag: '{}'", line));
         }
     }
 
     return true;
-}
-
-std::vector<std::string> ReadObjFile(const std::string& filename) {
-    std::vector<std::string> lines;
-    std::ifstream file(filename);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filename);
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        // Only keep the line if it's not empty or not a comment.
-        if (!line.empty() && !line.starts_with("#")) {
-            // Strip Windows carriage return
-            if (line.back() == '\r') {
-                line.pop_back();
-            }
-
-            lines.push_back(std::move(line));
-        }
-    }
-
-    return lines;
 }
 
 /**
