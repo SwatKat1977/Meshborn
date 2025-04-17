@@ -38,7 +38,6 @@ WaveFrontObjParser::WaveFrontObjParser() {
 }
 
 std::vector<std::string> ReadObjFile(const std::string& filename);
-bool ParseMaterials(std::string_view element, std::string &materialLibrary);
 
 std::vector<std::string> SplitElementString(const std::string& str) {
     std::vector<std::string> tokens;
@@ -338,7 +337,8 @@ bool WaveFrontObjParser::ParseVertexNormalElement(
  * @return true if the input string is correctly formatted and parsing
  *         succeeds; false otherwise.
  */
-bool ParseMaterials(std::string_view element, std::string &materialLibrary) {
+bool WaveFrontObjParser::ParseMaterials(std::string_view element,
+                                        std::string &materialLibrary) {
     auto words = SplitElementString(std::string(element));
 
     // Requires 2 works (keyword and material_file)

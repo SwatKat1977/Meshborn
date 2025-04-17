@@ -52,6 +52,9 @@ class WaveFrontObjParser : public BaseWavefrontParser {
 
     bool ParseVertexNormalElement(std::string_view element,
                                   Point3D* vectorNormalElement);
+
+    bool ParseMaterials(std::string_view element,
+                        std::string &materialLibrary);
 };
 
 }   // namespace WaveFront
