@@ -15,8 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef ST_
-#define ST_
+#ifndef STRUCTURES_H_
+#define STRUCTURES_H_
 
 namespace Meshborn {
 
@@ -49,4 +49,4 @@ struct TextureCoordinates {
 
 }   // namespace Meshborn
 
-#endif  // ST_
+#endif  // STRUCTURES_H_
