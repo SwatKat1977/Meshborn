@@ -40,6 +40,13 @@ struct Point4D {
     Point4D(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 };
 
+struct TextureCoordinates {
+    float u, v, w;
+
+    TextureCoordinates() : u(0), v(0), w(0) {}
+    TextureCoordinates(float u, float v, float w) : u(u), v(v), w(w) {}
+};
+
 }   // namespace Meshborn
 
 #endif  // ST_

@@ -341,7 +341,7 @@ bool WaveFrontObjParser::ParseMaterials(std::string_view element,
                                         std::string &materialLibrary) {
     auto words = SplitElementString(std::string(element));
 
-    // Requires 2 works (keyword and material_file)
+    // Requires 2 words (keyword and material_file)
     if (words.size() != 2) {
         return false;
     }
@@ -357,6 +357,31 @@ bool WaveFrontObjParser::ParseMaterials(std::string_view element,
     }
 
     return true;
+}
+
+bool WaveFrontObjParser::ParseTextureCoordinate(
+    std::string_view element, TextureCoordinates *coordinates) {
+    auto words = SplitElementString(std::string(element));
+
+    // Requires 4 words (keyword, u, v, w)
+    if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical, "Texture coordinate is invalid");
+        return false;
+    }
+
+    float coordinateU;
+    float coordinateV;
+    float coordinateW;
+
+    if (!ParseFloat(words[1].c_str(), &coordinateU)) return false;
+    if (!ParseFloat(words[2].c_str(), &coordinateV)) return false;
+    if (!ParseFloat(words[3].c_str(), &coordinateW)) return false;
+
+    coordinates->u  = coordinateU;
+    coordinates->v  = coordinateV;
+    coordinates->w  = coordinateW;
+
+    return false;
 }
 
 }   // namespace WaveFront
