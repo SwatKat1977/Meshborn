@@ -26,12 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
-const char MATERIAL_LIBRARY_ELEMENT[] = "mtllib ";
-const char POLYGONAL_FACE_ELEMENT[] = "f ";
-const char TEXTURE_COORDINATE_ELEMENT[] = "vt ";
-const char USE_MATERIAL_ELEMENT[] = "usemtl ";
-const char VECTOR_ELEMENT[] = "v ";
-const char VECTOR_NORMAL_ELEMENT[] = "vn ";
+const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
+const char KEYWORD_POLYGONAL_FACE[] = "f ";
+const char KEYWORD_TEXTURE_COORDINATE[] = "vt ";
+const char KEYWORD_USE_MATERIAL[] = "usemtl ";
+const char KEYWORD_VECTOR[] = "v ";
+const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 
 WaveFrontObjParser::WaveFrontObjParser() {
 }
@@ -55,7 +55,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
         std::string_view view(line);
 
         // Polygonal face
-        if (view.starts_with(POLYGONAL_FACE_ELEMENT)) {
+        if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, &face)) {
                 return false;
@@ -75,7 +75,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             faces.push_back(face);
 
         // Vertex position
-        } else if (view.starts_with(VECTOR_ELEMENT)) {
+        } else if (view.starts_with(KEYWORD_VECTOR)) {
             Point4D vertexPosition;
 
             if (!ParseVectorElement(view, &vertexPosition)) {
@@ -91,7 +91,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             vertexPositions.push_back(vertexPosition);
 
         // Vertex normal
-        } else if (view.starts_with(VECTOR_NORMAL_ELEMENT)) {
+        } else if (view.starts_with(KEYWORD_VECTOR_NORMAL)) {
             Point3D vertexNormal;
 
             if (!ParseVertexNormalElement(view, &vertexNormal)) {
@@ -106,7 +106,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             vertexNormals.push_back(vertexNormal);
 
         // Texture coordinate [NOT IMPLEMENTED YET!]
-        } else if (view.starts_with(TEXTURE_COORDINATE_ELEMENT)) {
+        } else if (view.starts_with(KEYWORD_TEXTURE_COORDINATE)) {
             TextureCoordinates coordinates;
             if (!ParseTextureCoordinate(view, &coordinates)) {
                 return false;
@@ -120,12 +120,12 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             textureCoordinates.push_back(coordinates);
 
         // Use material [NOT IMPLEMENTED YET!]
-        } else if (view.starts_with(USE_MATERIAL_ELEMENT)) {
+        } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
             LOG(Logger::LogLevel::Debug, std::format(
                 "Use material element: {}", view));
 
         // Material library [NOT IMPLEMENTED YET!]
-        } else if (view.starts_with(MATERIAL_LIBRARY_ELEMENT)) {
+        } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
             std::string materialLibrary;
 
             if (!ParseMaterials(view, materialLibrary)) {
