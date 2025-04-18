@@ -27,13 +27,13 @@ namespace Meshborn {
  * @param name The name of the material.
  */
 Material::Material(std::string name) : name_(name) {
-    ambientColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    ambientColour_ = RGB(0.0f, 0.0f, 0.0f);
     ambientColourSet_ = false;
 
-    diffuseColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    diffuseColour_ = RGB(0.0f, 0.0f, 0.0f);
     diffuseColourSet_ = false;
 
-    specularColour_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    specularColour_ = RGB(0.0f, 0.0f, 0.0f);
     specularColourSet_ = false;
 }
 
@@ -44,9 +44,9 @@ std::string Material::GetName() {
 /**
  * @brief Sets the ambient colour of the material.
  * 
- * @param colour A glm::vec3 representing the ambient RGB colour values.
+ * @param colour A RGB representing the ambient RGB colour values.
  */
-void Material::SetAmbientColour(glm::vec3 colour) {
+void Material::SetAmbientColour(RGB colour) {
     ambientColour_ = colour;
     ambientColourSet_ = true;
 }
@@ -57,7 +57,7 @@ void Material::SetAmbientColour(glm::vec3 colour) {
  * @param[out] colour The ambient colour will be stored here if set.
  * @return true if the ambient colour was set and returned; false otherwise.
  */
-bool Material::GetAmbientColour(glm::vec3 *colour) {
+bool Material::GetAmbientColour(RGB *colour) {
     if (!ambientColourSet_) {
         return false;
     }
@@ -69,9 +69,9 @@ bool Material::GetAmbientColour(glm::vec3 *colour) {
 /**
  * @brief Sets the diffuse colour of the material.
  * 
- * @param colour A glm::vec3 representing the diffuse RGB colour values.
+ * @param colour A RGB representing the diffuse RGB colour values.
  */
-void Material::SetDiffuseColour(glm::vec3 colour) {
+void Material::SetDiffuseColour(RGB colour) {
     diffuseColour_ = colour;
     diffuseColourSet_ = true;
 }
@@ -82,7 +82,7 @@ void Material::SetDiffuseColour(glm::vec3 colour) {
  * @param[out] colour The diffuse colour will be stored here if set.
  * @return true if the diffuse colour was set and returned; false otherwise.
  */
-bool Material::GetDiffuseColour(glm::vec3 *colour) {
+bool Material::GetDiffuseColour(RGB *colour) {
     if (!diffuseColourSet_) {
         return false;
     }
@@ -99,7 +99,7 @@ bool Material::GetDiffuseColour(glm::vec3 *colour) {
  *
  * @param colour The emissive color to set (represented as a glm::vec3).
  */
-void Material::SetEmissiveColour(glm::vec3 colour) {
+void Material::SetEmissiveColour(RGB colour) {
     emissiveColour_ = colour;
     emissiveColourSet_ = true;
 }
@@ -113,7 +113,7 @@ void Material::SetEmissiveColour(glm::vec3 colour) {
  * @param colour Pointer to a glm::vec3 to store the emissive color.
  * @return true if the color was set and retrieved, false otherwise.
  */
-bool Material::GetEmissiveColour(glm::vec3 *colour) {
+bool Material::GetEmissiveColour(RGB *colour) {
     if (!emissiveColourSet_) {
         return false;
     }
@@ -130,7 +130,7 @@ bool Material::GetEmissiveColour(glm::vec3 *colour) {
  *
  * @param colour The RGB colour value to use as the material's specular colour.
  */
-void Material::SetSpecularColour(glm::vec3 colour) {
+void Material::SetSpecularColour(RGB colour) {
     specularColour_ = colour;
     specularColourSet_ = true;
 }
@@ -145,7 +145,7 @@ void Material::SetSpecularColour(glm::vec3 colour) {
  * @param[out] colour Reference to a glm::vec3 to receive the specular colour.
  * @return true if the specular colour has been set, false otherwise.
  */
-bool Material::GetSpecularColour(glm::vec3 *colour) {
+bool Material::GetSpecularColour(RGB *colour) {
     if (!specularColourSet_) {
         return false;
     }

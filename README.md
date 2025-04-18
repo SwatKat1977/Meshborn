@@ -1,7 +1,7 @@
 # Meshborn
 Wavefront Obj loader
 
-Open source light-weight Wavefront obj loader.
+Open source light-weight Wavefront obj loader with no dependencies.
 
 ## Version Information
 
@@ -30,13 +30,13 @@ The following Wavefront obj tags are currently supported:
 | usemtl (use material)| :x:                | Not implemented      |
 | v (vertex)           | :white_check_mark: |                      |
 | vn (vertex normal)   | :white_check_mark: |                      |
-| vt (vertex texture)  | :x:                | Not implemented      |
+| vt (vertex texture)  | :white_check_mark: |                      |
 
 ### Supported Wavefront tags : material
 The following Wavefront material tags are currently supported:
 
-| Tag                                 | Status             | Notes                |
-|:------------------------------------|:-------------------|:---------------------|
+| Tag                                   | Status             | Notes                |
+|:--------------------------------------|:-------------------|:---------------------|
 | newmtl (new material)                 | :white_check_mark: |                      |
 | Ka (ambient colour)                   | :white_check_mark: |                      |
 | Kd (diffuse colour)                   | :white_check_mark: |                      |
@@ -66,6 +66,3 @@ The following functionality is currently supported:
 | Materials class      | :construction:     | Work on material class in progress                |
 | Model class          | :x:                | Object parsingt needs rework first                |
 | Unit tests           | :x:                | Unit tests to be started once main core is stable |
-
-## Dependency
-GLM V1.0.1

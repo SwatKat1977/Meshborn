@@ -55,7 +55,7 @@ class Vertex {
     float w_;
 };
 
-#include "wavefront/WaveFrontObjLoader.h"
+#include "wavefront/WaveFrontObjParser.h"
 #include "Meshborn.h"
 #include "Logger.h"
 
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
     std::cout << "Loading '" << filename << "'\n";
 
     try {
-        Meshborn::WaveFront::LoadFromFile(filename);
+        Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
     }
     catch (std::runtime_error ex) {
         std::cout << "[EXCEPTION] " << ex.what() << "\n";

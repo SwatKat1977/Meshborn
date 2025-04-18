@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 #include <string>
-#include "glm/glm.hpp"
+#include "Structures.h"
 
 namespace Meshborn {
 
@@ -28,17 +28,17 @@ class Material {
 
     std::string GetName();
 
-    void SetAmbientColour(glm::vec3 colour);
-    bool GetAmbientColour(glm::vec3 *colour);
+    void SetAmbientColour(RGB colour);
+    bool GetAmbientColour(RGB *colour);
 
-    void SetDiffuseColour(glm::vec3 colour);
-    bool GetDiffuseColour(glm::vec3 *colour);
+    void SetDiffuseColour(RGB colour);
+    bool GetDiffuseColour(RGB *colour);
 
-    void SetEmissiveColour(glm::vec3 colour);
-    bool GetEmissiveColour(glm::vec3 *colour);
+    void SetEmissiveColour(RGB colour);
+    bool GetEmissiveColour(RGB *colour);
 
-    void SetSpecularColour(glm::vec3 colour);
-    bool GetSpecularColour(glm::vec3 *colour);
+    void SetSpecularColour(RGB colour);
+    bool GetSpecularColour(RGB *colour);
 
     void SetIlluminationModel(int model);
     bool GetIlluminationModel(int *model);
@@ -77,19 +77,19 @@ class Material {
     std::string name_;
 
     // Ambient colour
-    glm::vec3 ambientColour_;
+    RGB ambientColour_;
     bool ambientColourSet_;
 
     // Diffuse colour
-    glm::vec3 diffuseColour_;
+    RGB diffuseColour_;
     bool diffuseColourSet_;
 
     // Emissive colour
-    glm::vec3 emissiveColour_;
+    RGB emissiveColour_;
     bool emissiveColourSet_;
 
     // Specular colour
-    glm::vec3 specularColour_;
+    RGB specularColour_;
     bool specularColourSet_;
 
     // Illumination model
