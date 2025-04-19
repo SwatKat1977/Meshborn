@@ -33,8 +33,22 @@ struct PolygonalFaceElement {
     int normal;
 };
 
+enum class PolygonalFaceType {
+    //  Triangle (3 vertices)
+    TRIANGE,
+
+    //  Quad (4 vertices)
+    QUAD,
+
+    // N-gon (5+ vertices):
+    // Technically allowed by the .obj format, though many parsers or game
+    // engines don’t support them directly.
+    N_GON
+};
+
 struct PolygonalFace {
-    PolygonalFaceElement elements[3];
+    PolygonalFaceType faceType;
+    std::vector<PolygonalFaceElement> elements;
 };
 
 class WaveFrontObjParser : public BaseWavefrontParser {

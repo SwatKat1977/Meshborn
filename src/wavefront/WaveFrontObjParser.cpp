@@ -61,17 +61,37 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                 return false;
             }
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "POLYGONAL FACE => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}",
-                face.elements[0].vertex,
-                face.elements[0].texture,
-                face.elements[0].normal,
-                face.elements[1].vertex,
-                face.elements[1].texture,
-                face.elements[1].normal,
-                face.elements[2].vertex,
-                face.elements[2].texture,
-                face.elements[2].normal));
+            if (face.faceType == PolygonalFaceType::TRIANGE) {
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}",
+                    face.elements[0].vertex,
+                    face.elements[0].texture,
+                    face.elements[0].normal,
+                    face.elements[1].vertex,
+                    face.elements[1].texture,
+                    face.elements[1].normal,
+                    face.elements[2].vertex,
+                    face.elements[2].texture,
+                    face.elements[2].normal));
+            } else {
+                std::string faceType;
+                if (face.faceType == PolygonalFaceType::QUAD) faceType = "Quad";
+                else faceType = "N-Gon";
+
+                LOG(Logger::LogLevel::Debug,
+                     std::format("POLYGONAL FACE ({}) =>", faceType));
+
+                for (size_t i = 0; i < face .elements.size(); ++i) {
+
+                    LOG(Logger::LogLevel::Debug, std::format(
+                        "    {} = {}/{}/{}",
+                        i,
+                        face.elements[i].vertex,
+                        face.elements[i].texture,
+                        face.elements[i].normal));
+                }
+
+            }
             faces.push_back(face);
 
         // Vertex position
@@ -140,6 +160,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                 MaterialMap materials;
                 if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
                                                           &materials)) {
+                    std::cout << "ERR parsing material library\n";
                     return false;
                 }
             }
@@ -185,16 +206,16 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                                                    PolygonalFace* face) {
     auto words = SplitElementString(std::string(element));
-    if (words.size() != 4) {
+    if (words.size() < 4) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Polygonal face '{}' is invalid", element));
         return false;
     }
 
-    for (int i = 0; i < 3; ++i) {
+    for (auto it = std::next(words.begin()); it != words.end(); ++it) {
         PolygonalFaceElement faceElement;
 
-        std::string rawFaceelement = words[i + 1];
-        // std::string rawFaceelement = "1//3";
-
+        std::string rawFaceelement = *it;
         size_t firstSlash = rawFaceelement.find('/');
         size_t secondSlash = rawFaceelement.find('/', firstSlash + 1);
 
@@ -226,7 +247,23 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                 secondSlash + 1));
         }
 
-        face->elements[i] = faceElement;
+        face->elements.push_back(faceElement);
+    }
+
+    switch((words.size() -1)) {
+        // 3 vertex - triangle
+        case 3:
+            face->faceType = PolygonalFaceType::TRIANGE;
+            break;
+
+        // 4 vertex - Quad
+        case 4:
+            face->faceType = PolygonalFaceType::QUAD;
+            break;
+
+        // N-gon (5+ vertices)
+        default:
+            face->faceType = PolygonalFaceType::N_GON;
     }
 
     return true;
@@ -251,9 +288,13 @@ bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
             }
         }
         catch (std::invalid_argument) {
+            LOG(Logger::LogLevel::Critical, std::format(
+                "Vector '{}' is invalid (invalid argument)", element));
             return false;
         }
         catch (std::out_of_range) {
+            LOG(Logger::LogLevel::Critical, std::format(
+                "Vector '{}' is invalid (out of range)", element));
             return false;
         }
 

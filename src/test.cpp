@@ -93,7 +93,9 @@ int main(int argc, char** argv) {
     std::cout << "Loading '" << filename << "'\n";
 
     try {
-        Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
+        bool status;
+        status = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
+        std::cout << "[DEBUG] Parse object return status of " << status << "\n";
     }
     catch (std::runtime_error ex) {
         std::cout << "[EXCEPTION] " << ex.what() << "\n";
