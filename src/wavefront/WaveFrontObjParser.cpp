@@ -51,7 +51,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<Point4D> vertexPositions;
     std::vector<Point3D> vertexNormals;
     std::vector<TextureCoordinates> textureCoordinates;
-    std::vector<PolygonalFace> faces;
 
     std::string currentObjectName = "default";
     std::string currentGroupName = "default";
@@ -144,7 +143,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             }
 
             currentMesh->faces.push_back(face);
-            // faces.push_back(face);
 
         // Vertex position
         } else if (view.starts_with(KEYWORD_VECTOR)) {
