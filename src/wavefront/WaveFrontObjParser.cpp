@@ -36,6 +36,9 @@ const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
+const char POLYGONAL_FACE_DEBUG_LOG = \
+    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}";
+
 bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<std::string> rawLines;
 
@@ -63,7 +66,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
             if (face.faceType == PolygonalFaceType::TRIANGE) {
                 LOG(Logger::LogLevel::Debug, std::format(
-                    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}",
+                    POLYGONAL_FACE_DEBUG_LOG,
                     face.elements[0].vertex,
                     face.elements[0].texture,
                     face.elements[0].normal,
@@ -75,14 +78,16 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                     face.elements[2].normal));
             } else {
                 std::string faceType;
-                if (face.faceType == PolygonalFaceType::QUAD) faceType = "Quad";
-                else faceType = "N-Gon";
+                if (face.faceType == PolygonalFaceType::QUAD) {
+                    faceType = "Quad";
+                } else {
+                    faceType = "N-Gon";
+                }
 
                 LOG(Logger::LogLevel::Debug,
                      std::format("POLYGONAL FACE ({}) =>", faceType));
 
                 for (size_t i = 0; i < face .elements.size(); ++i) {
-
                     LOG(Logger::LogLevel::Debug, std::format(
                         "    {} = {}/{}/{}",
                         i,
@@ -90,7 +95,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                         face.elements[i].texture,
                         face.elements[i].normal));
                 }
-
             }
             faces.push_back(face);
 
@@ -250,7 +254,7 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
         face->elements.push_back(faceElement);
     }
 
-    switch((words.size() -1)) {
+    switch ((words.size() -1)) {
         // 3 vertex - triangle
         case 3:
             face->faceType = PolygonalFaceType::TRIANGE;
