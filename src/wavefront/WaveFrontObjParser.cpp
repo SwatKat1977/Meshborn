@@ -53,23 +53,32 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<TextureCoordinates> textureCoordinates;
     std::vector<PolygonalFace> faces;
 
+    std::string currentObjectName = "default";
+    std::string currentGroupName = "default";
+
     for (const auto& line : rawLines) {
         std::string_view view(line);
 
         if (view.starts_with(KEYWORD_GROUP)) {
-            std::cout << "GROUP " << view << "\n";
             std::string groupName;
             if (!ParseGroupElement(view, &groupName)) {
                 return false;
             }
 
+            currentGroupName = groupName;
+            LOG(Logger::LogLevel::Debug,
+                std::format("GROUP => {}", currentGroupName));
+
         //         } else if (view.starts_with(KEYWORD_VECTOR)) {
         } else if (view.starts_with(KEYWORD_OBJECT)) {
-            std::cout << "OBJECT " << view << "\n";
             std::string objectName;
             if (!ParseObjectElement(view, &objectName)) {
                 return false;
             }
+
+            currentObjectName = objectName;
+            LOG(Logger::LogLevel::Debug,
+                std::format("OBJECT => {}", currentObjectName));
 
         // Polygonal face
         } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
