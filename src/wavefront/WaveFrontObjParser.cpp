@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
+const char KEYWORD_GROUP[] = "g ";
 const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
+const char KEYWORD_OBJECT[] = "o ";
 const char KEYWORD_POLYGONAL_FACE[] = "f ";
 const char KEYWORD_TEXTURE_COORDINATE[] = "vt ";
 const char KEYWORD_USE_MATERIAL[] = "usemtl ";
@@ -54,8 +56,15 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
     for (const auto& line : rawLines) {
         std::string_view view(line);
 
+        if (view.starts_with(KEYWORD_GROUP)) {
+            std::cout << "GROUP " << view << "\n";
+
+        //         } else if (view.starts_with(KEYWORD_VECTOR)) {
+        } else if (view.starts_with(KEYWORD_OBJECT)) {
+            std::cout << "OBJECT " << view << "\n";
+
         // Polygonal face
-        if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
+        } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, &face)) {
                 return false;
