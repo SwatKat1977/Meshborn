@@ -60,6 +60,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             std::cout << "GROUP " << view << "\n";
             std::string groupName;
             if (!ParseGroupElement(view, &groupName)) {
+                return false;
             }
 
         //         } else if (view.starts_with(KEYWORD_VECTOR)) {
@@ -67,7 +68,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             std::cout << "OBJECT " << view << "\n";
             std::string objectName;
             if (!ParseObjectElement(view, &objectName)) {
-
+                return false;
             }
 
         // Polygonal face
