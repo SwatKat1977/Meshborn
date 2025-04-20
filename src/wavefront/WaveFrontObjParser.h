@@ -68,7 +68,7 @@ class WaveFrontObjParser : public BaseWavefrontParser {
                                   Point3D* vectorNormalElement);
 
     bool ParseMaterials(std::string_view element,
-                        std::string &materialLibrary);
+                        std::string *materialLibrary);
 
     bool ParseTextureCoordinate(std::string_view element,
                                 TextureCoordinates *coordinates);

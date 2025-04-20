@@ -36,9 +36,6 @@ const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
-const char POLYGONAL_FACE_DEBUG_LOG = \
-    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}";
-
 bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<std::string> rawLines;
 
@@ -66,7 +63,8 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
             if (face.faceType == PolygonalFaceType::TRIANGE) {
                 LOG(Logger::LogLevel::Debug, std::format(
-                    POLYGONAL_FACE_DEBUG_LOG,
+                    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} "
+                    "| 3 = {}/{}/{}",
                     face.elements[0].vertex,
                     face.elements[0].texture,
                     face.elements[0].normal,
@@ -152,7 +150,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
             std::string materialLibrary;
 
-            if (!ParseMaterials(view, materialLibrary)) {
+            if (!ParseMaterials(view, &materialLibrary)) {
                 LOG(Logger::LogLevel::Critical, std::format(
                     "Materials library line '{}' is invalid",
                     view));
@@ -355,7 +353,7 @@ bool WaveFrontObjParser::ParseVertexNormalElement(
  *         succeeds; false otherwise.
  */
 bool WaveFrontObjParser::ParseMaterials(std::string_view element,
-                                        std::string &materialLibrary) {
+                                        std::string *materialLibrary) {
     auto words = SplitElementString(std::string(element));
 
     // Requires 2 words (keyword and material_file)
@@ -370,7 +368,7 @@ bool WaveFrontObjParser::ParseMaterials(std::string_view element,
             "Materials library '{}' is missing/inaccessible",
             words[1]));
     } else {
-        materialLibrary = words[1];
+        *materialLibrary = words[1];
     }
 
     return true;
