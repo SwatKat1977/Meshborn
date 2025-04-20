@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
