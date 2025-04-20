@@ -58,10 +58,17 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
         if (view.starts_with(KEYWORD_GROUP)) {
             std::cout << "GROUP " << view << "\n";
+            std::string groupName;
+            if (!ParseGroupElement(view, &groupName)) {
+            }
 
         //         } else if (view.starts_with(KEYWORD_VECTOR)) {
         } else if (view.starts_with(KEYWORD_OBJECT)) {
             std::cout << "OBJECT " << view << "\n";
+            std::string objectName;
+            if (!ParseObjectElement(view, &objectName)) {
+
+            }
 
         // Polygonal face
         } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
@@ -185,6 +192,32 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
         }
     }
 
+    return true;
+}
+
+bool WaveFrontObjParser::ParseGroupElement(std::string_view element,
+                                           std::string* groupName) {
+    auto words = SplitElementString(std::string(element));
+    if (words.size() < 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Group '{}' is invalid", element));
+        return false;
+    }
+
+    *groupName = words[1];
+    return true;
+}
+
+bool WaveFrontObjParser::ParseObjectElement(std::string_view element,
+                                            std::string* objectName) {
+    auto words = SplitElementString(std::string(element));
+    if (words.size() < 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Object '{}' is invalid", element));
+        return false;
+    }
+
+    *objectName = words[1];
     return true;
 }
 

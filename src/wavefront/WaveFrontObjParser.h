@@ -58,6 +58,13 @@ class WaveFrontObjParser : public BaseWavefrontParser {
     bool ParseObj(std::string filename);
 
  private:
+
+     bool ParseGroupElement(std::string_view element,
+                            std::string* face);
+
+    bool ParseObjectElement(std::string_view element,
+                            std::string* face);
+
     bool ParseVectorElement(std::string_view element,
                             Point4D* vectorElement);
 
