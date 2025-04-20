@@ -55,6 +55,10 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
     std::string currentObjectName = "default";
     std::string currentGroupName = "default";
+    std::string currentMaterial = "";
+    std::string currentMeshName = "default:default";
+    Mesh* currentMesh = nullptr;
+    std::vector<Mesh> meshes;
 
     for (const auto& line : rawLines) {
         std::string_view view(line);
@@ -66,6 +70,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             }
 
             currentGroupName = groupName;
+            currentMeshName = currentObjectName + ":" + currentGroupName;
             LOG(Logger::LogLevel::Debug,
                 std::format("GROUP => {}", currentGroupName));
 
@@ -77,6 +82,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
             }
 
             currentObjectName = objectName;
+            currentMeshName = currentObjectName + ":" + currentGroupName;
             LOG(Logger::LogLevel::Debug,
                 std::format("OBJECT => {}", currentObjectName));
 
@@ -120,7 +126,25 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                         face.elements[i].normal));
                 }
             }
-            faces.push_back(face);
+
+            if (!currentMesh ||
+                currentMesh->name != currentMeshName ||
+                currentMesh->material != currentMaterial) {
+                // New mesh because object/group/material changed
+                Mesh newMesh;
+                newMesh.name = currentMeshName;
+                newMesh.material = currentMaterial;
+                meshes.push_back(std::move(newMesh));
+                currentMesh = &meshes.back();
+
+                LOG(Logger::LogLevel::Debug,
+                    std::format("NEW MESH => name: {}, material: {}",
+                                currentMesh->name,
+                                currentMesh->material));
+            }
+
+            currentMesh->faces.push_back(face);
+            // faces.push_back(face);
 
         // Vertex position
         } else if (view.starts_with(KEYWORD_VECTOR)) {

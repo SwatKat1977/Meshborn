@@ -21,35 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "BaseWavefrontParser.h"
 #include "../Structures.h"
+#include "../Mesh.h"
 
 namespace Meshborn {
 namespace WaveFront {
-
-struct PolygonalFaceElement {
-    PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
-
-    int vertex;
-    int texture;
-    int normal;
-};
-
-enum class PolygonalFaceType {
-    //  Triangle (3 vertices)
-    TRIANGE,
-
-    //  Quad (4 vertices)
-    QUAD,
-
-    // N-gon (5+ vertices):
-    // Technically allowed by the .obj format, though many parsers or game
-    // engines don’t support them directly.
-    N_GON
-};
-
-struct PolygonalFace {
-    PolygonalFaceType faceType;
-    std::vector<PolygonalFaceElement> elements;
-};
 
 class WaveFrontObjParser : public BaseWavefrontParser {
  public:
