@@ -298,6 +298,8 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
         // Format: v
         if (firstSlash == std::string::npos) {
             faceElement.vertex = std::stoi(rawFaceelement);
+            faceElement.texture = -1;
+            faceElement.normal = -1;
 
         // Format: v/vt
         } else if (secondSlash == std::string::npos) {
@@ -305,11 +307,13 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                 0, firstSlash));
             faceElement.texture = std::stoi(rawFaceelement.substr(
                 firstSlash + 1));
+            faceElement.normal = -1;
 
         // Format: v//vn
         } else if (secondSlash == firstSlash + 1) {
             faceElement.vertex = std::stoi(rawFaceelement.substr(
                 0, firstSlash));
+            faceElement.texture = -1;
             faceElement.normal = std::stoi(rawFaceelement.substr(
                 secondSlash + 1));
 
