@@ -58,7 +58,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
     std::string currentMaterial = "";
     std::string currentMeshName = "default:default";
     Mesh* currentMesh = nullptr;
-    std::vector<Mesh> meshes;
 
     for (const auto& line : rawLines) {
         std::string_view view(line);
@@ -74,7 +73,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             LOG(Logger::LogLevel::Debug,
                 std::format("GROUP => {}", currentGroupName));
 
-        //         } else if (view.starts_with(KEYWORD_VECTOR)) {
         } else if (view.starts_with(KEYWORD_OBJECT)) {
             std::string objectName;
             if (!ParseObjectElement(view, &objectName)) {
@@ -134,8 +132,8 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 Mesh newMesh;
                 newMesh.name = currentMeshName;
                 newMesh.material = currentMaterial;
-                meshes.push_back(std::move(newMesh));
-                currentMesh = &meshes.back();
+                model->meshes.push_back(std::move(newMesh));
+                currentMesh = &model->meshes.back();
 
                 LOG(Logger::LogLevel::Debug,
                     std::format("NEW MESH => name: {}, material: {}",

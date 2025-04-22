@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string_view>
 #include <vector>
 #include "Logger.h"
+#include "Model.h"
 
 const std::map<Meshborn::Logger::LogLevel, std::string> LogLevelToString {
     { Meshborn::Logger::LogLevel::Debug,    "DEBUG" },
@@ -92,9 +93,12 @@ int main(int argc, char** argv) {
 
     std::cout << "Loading '" << filename << "'\n";
 
+    Meshborn::WaveFront::Model model;
+
     try {
         bool status;
-        status = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
+        status = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename,
+                                                                    &model);
         std::cout << "[DEBUG] Parse object return status of " << status << "\n";
     }
     catch (std::runtime_error ex) {
