@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef STRUCTURES_H_
 #define STRUCTURES_H_
+#include <vector>
 
 namespace Meshborn {
 
@@ -49,6 +50,10 @@ struct TextureCoordinates {
     TextureCoordinates() : u(0), v(0), w(0) {}
     TextureCoordinates(float u, float v, float w) : u(u), v(v), w(w) {}
 };
+
+using Point3DList = std::vector<Point3D>;
+using Point4DList = std::vector<Point4D>;
+using TextureCoordinatesList = std::vector<TextureCoordinates>;
 
 }   // namespace Meshborn
 
