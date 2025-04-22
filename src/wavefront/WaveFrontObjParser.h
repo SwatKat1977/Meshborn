@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseWavefrontParser.h"
 #include "../Structures.h"
 #include "../Mesh.h"
+#include "../Model.h"
 
 namespace Meshborn {
 namespace WaveFront {
@@ -30,7 +31,7 @@ class WaveFrontObjParser : public BaseWavefrontParser {
  public:
     WaveFrontObjParser();
 
-    bool ParseObj(std::string filename);
+    bool ParseObj(std::string filename, Model* model);
 
  private:
      bool ParseGroupElement(std::string_view element,

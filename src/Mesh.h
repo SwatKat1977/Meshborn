@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MESH_H_
 #include <string>
 #include <vector>
+#include "Structures.h"
 
 namespace Meshborn {
 namespace WaveFront {
@@ -55,6 +56,7 @@ class Mesh {
     std::string material;
     bool materialSet;
     std::vector<PolygonalFace> faces;
+    std::vector<Point3D> vertices;
 };
 
 }   // namespace WaveFront

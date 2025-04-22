@@ -38,7 +38,8 @@ const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
-bool WaveFrontObjParser::ParseObj(std::string filename) {
+bool WaveFrontObjParser::ParseObj(std::string filename,
+                                  Model* model) {
     std::vector<std::string> rawLines;
 
     try {
