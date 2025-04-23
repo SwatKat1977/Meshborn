@@ -133,8 +133,12 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 newMesh.name = currentMeshName;
                 newMesh.material = currentMaterial;
                 model->meshes.push_back(std::move(newMesh));
-                currentMesh = &model->meshes.back();
 
+                if (currentMesh) {
+                    LOG(Logger::LogLevel::Debug, "Moving along ....");
+                }
+
+                currentMesh = &model->meshes.back();
                 LOG(Logger::LogLevel::Debug,
                     std::format("NEW MESH => name: {}, material: {}",
                                 currentMesh->name,
@@ -221,6 +225,11 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             LOG(Logger::LogLevel::Debug,
                 std::format("Unknown obj tag: '{}'", line));
         }
+    }
+
+    if (currentMesh) {
+        FinaliseVertices(currentMesh, vertexPositions, vertexNormals,
+                         textureCoordinates);
     }
 
     return true;
@@ -348,6 +357,16 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
     return true;
 }
 
+/**
+ * Parses a 3D or 4D vector string and stores it in a Point4D structure.
+ *
+ * Expects 4 or 5 space-separated values: keyword, x, y, z, and optional w.
+ * Converts the numeric values and stores them in the output vector element.
+ *
+ * @param element The input string containing the vector definition.
+ * @param vectorElement Output pointer for the parsed 4D vector.
+ * @return true on success, false if parsing fails or input is invalid.
+ */
 bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
                                             Point4D* vectorElement) {
     auto words = SplitElementString(std::string(element));
@@ -385,6 +404,16 @@ bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
     return true;
 }
 
+/**
+ * Parses a vertex normal string and stores it in a Point3D structure.
+ *
+ * Accepts a string with 4 or 5 space-separated elements: keyword and the
+ * x, y, z components. Parses the components and assigns them to the output.
+ *
+ * @param element The input string containing the normal vector.
+ * @param vectorNormalElement Output pointer for the parsed normal vector.
+ * @return true on success, false if parsing fails or input is invalid.
+ */
 bool WaveFrontObjParser::ParseVertexNormalElement(
     std::string_view element, Point3D* vectorNormalElement) {
     float x;
@@ -451,6 +480,16 @@ bool WaveFrontObjParser::ParseMaterials(std::string_view element,
     return true;
 }
 
+/**
+ * Parses a texture coordinate string and stores the result.
+ *
+ * Expects a string with four space-separated elements: keyword, u, v, and w.
+ * Extracts the float values and writes them to the given coordinates struct.
+ *
+ * @param element The input string containing the texture coordinate data.
+ * @param coordinates Output pointer for parsed texture coordinate values.
+ * @return true on successful parse, false on format or parse error.
+ */
 bool WaveFrontObjParser::ParseTextureCoordinate(
     std::string_view element, TextureCoordinates *coordinates) {
     auto words = SplitElementString(std::string(element));
@@ -472,6 +511,65 @@ bool WaveFrontObjParser::ParseTextureCoordinate(
     coordinates->u  = coordinateU;
     coordinates->v  = coordinateV;
     coordinates->w  = coordinateW;
+
+    return true;
+}
+
+/**
+ * Finalises the mesh by converting face data into vertex attributes.
+ *
+ * This function populates the mesh's vertex list using face indices and the
+ * provided lists of positions, normals, and texture coordinates. Returns
+ * false if any indices are out of bounds or the mesh is null.
+ *
+ * @param mesh Pointer to the mesh to populate.
+ * @param positions List of 4D vertex positions.
+ * @param normals List of 3D vertex normals.
+ * @param textureCoordinates List of texture coordinate vectors.
+ * @return true on success, false if input data is invalid.
+ */
+bool WaveFrontObjParser::FinaliseVertices(
+    Mesh *mesh,
+    const Point4DList& positions,
+    const Point3DList& normals,
+    const TextureCoordinatesList& textureCoordinates) {
+
+    LOG(Logger::LogLevel::Debug, "Finalizing mesh ....");
+
+    if (!mesh) return false;
+
+    mesh->vertices.clear();
+
+    for (const auto& face : mesh->faces) {
+        Vertex vertex;
+
+        for (const auto& elem : face.elements) {
+            if (elem.vertex < 1 ||
+                elem.vertex > static_cast<int>(positions.size())) {
+                return false;
+            }
+
+            vertex.position = {
+                positions[elem.vertex - 1].x,
+                positions[elem.vertex - 1].y,
+                positions[elem.vertex - 1].z,
+                positions[elem.vertex - 1].w
+            };
+
+            vertex.normal = { 0.0f, 0.0f, 0.0f };
+            if (elem.normal >= 1 &&
+                elem.normal <= static_cast<int>(normals.size())) {
+                    vertex.normal = normals[elem.normal - 1];
+            }
+
+            vertex.textureCoordinates = { 0.0f, 0.0f, 0.0f };
+            if (elem.texture >= 1 &&
+                elem.texture <= static_cast<int>(textureCoordinates.size())) {
+                vertex.textureCoordinates =
+                    textureCoordinates[elem.texture - 1];
+            }
+        }
+    }
 
     return true;
 }
