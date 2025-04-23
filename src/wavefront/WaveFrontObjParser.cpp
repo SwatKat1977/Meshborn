@@ -107,13 +107,12 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 currentMesh->material != currentMaterial) {
 
                 if (currentMesh) {
-                    LOG(Logger::LogLevel::Debug, "Moving along ....");
-
                     if (!FinaliseVertices(currentMesh,
                         vertexPositions,
                         vertexNormals,
                         textureCoordinates)) {
-                        printf("failed to finalise\n");
+                        LOG(Logger::LogLevel::Debug,
+                            "Failed to finalise a mesh");
                         return false;
                     }
                 }
@@ -223,9 +222,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
 
         // Use material [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
-            LOG(Logger::LogLevel::Debug, std::format(
-                "Use material element: {}", view));
-
             std::string useMaterialName;
             if (!ParseUseMaterial(view, &useMaterialName)) {
                 return false;
