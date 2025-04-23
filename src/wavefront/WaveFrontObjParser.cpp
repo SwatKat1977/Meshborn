@@ -38,6 +38,20 @@ const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
+/**
+ * Parses a Wavefront .obj file and fills the provided model object with data.
+ *
+ * Reads the specified .obj file, parsing vertex positions, normals,
+ * texture coordinates, faces, groups, and objects. Meshes are created
+ * based on object/group/material changes. Material libraries may also
+ * be parsed if specified. This parser supports triangle, quad, and
+ * n-gon polygonal faces.
+ *
+ * @param filename The path to the .obj file to be parsed.
+ * @param model Pointer to the Model object to populate.
+ * @return true if parsing succeeds, false if any error occurs.
+ * @throws std::runtime_error if the file cannot be read.
+ */
 bool WaveFrontObjParser::ParseObj(std::string filename,
                                   Model* model) {
     std::vector<std::string> rawLines;
@@ -235,6 +249,16 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
     return true;
 }
 
+/**
+ * Parses a group name element from a string and stores the result.
+ *
+ * Expects at least two space-separated words: keyword and group name.
+ * Extracts the name and assigns it to the provided output string.
+ *
+ * @param element The input string containing the group definition.
+ * @param groupName Output pointer for the parsed group name.
+ * @return true on success, false if input format is invalid.
+ */
 bool WaveFrontObjParser::ParseGroupElement(std::string_view element,
                                            std::string* groupName) {
     auto words = SplitElementString(std::string(element));
@@ -248,6 +272,16 @@ bool WaveFrontObjParser::ParseGroupElement(std::string_view element,
     return true;
 }
 
+/**
+ * Parses an object name element from a string and stores the result.
+ *
+ * Expects at least two space-separated words: keyword and object name.
+ * Extracts the name and assigns it to the provided output string.
+ *
+ * @param element The input string containing the object definition.
+ * @param objectName Output pointer for the parsed object name.
+ * @return true on success, false if input format is invalid.
+ */
 bool WaveFrontObjParser::ParseObjectElement(std::string_view element,
                                             std::string* objectName) {
     auto words = SplitElementString(std::string(element));
