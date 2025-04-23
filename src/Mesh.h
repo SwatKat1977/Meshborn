@@ -56,7 +56,7 @@ class Mesh {
     std::string material;
     bool materialSet;
     std::vector<PolygonalFace> faces;
-    std::vector<Point3D> vertices;
+    std::vector<Vertex> vertices;
 };
 
 }   // namespace WaveFront
