@@ -576,9 +576,9 @@ bool WaveFrontObjParser::FinaliseVertices(
     mesh->vertices.clear();
 
     for (const auto& face : mesh->faces) {
-        Vertex vertex;
-
         for (const auto& elem : face.elements) {
+            Vertex vertex;
+
             if (elem.vertex < 1 ||
                 elem.vertex > static_cast<int>(positions.size())) {
                 return false;
@@ -603,6 +603,9 @@ bool WaveFrontObjParser::FinaliseVertices(
                 vertex.textureCoordinates =
                     textureCoordinates[elem.texture - 1];
             }
+
+            mesh->vertices.push_back(vertex);
+
         }
     }
 
