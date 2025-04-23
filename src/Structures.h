@@ -51,6 +51,14 @@ struct TextureCoordinates {
     TextureCoordinates(float u, float v, float w) : u(u), v(v), w(w) {}
 };
 
+
+class Vertex {
+ public:
+    Point4D position;
+    Point3D normal;
+    TextureCoordinates textureCoordinates;
+};
+
 using Point3DList = std::vector<Point3D>;
 using Point4DList = std::vector<Point4D>;
 using TextureCoordinatesList = std::vector<TextureCoordinates>;
