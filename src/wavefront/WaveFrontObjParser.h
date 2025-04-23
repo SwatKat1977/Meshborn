@@ -55,6 +55,9 @@ class WaveFrontObjParser : public BaseWavefrontParser {
     bool ParseTextureCoordinate(std::string_view element,
                                 TextureCoordinates *coordinates);
 
+    bool ParseUseMaterial(std::string_view element,
+                          std::string *material);
+
     bool FinaliseVertices(Mesh *mesh,
                           const Point4DList& positions,
                           const Point3DList& normals,

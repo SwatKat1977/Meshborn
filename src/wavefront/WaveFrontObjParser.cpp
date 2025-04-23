@@ -101,6 +101,40 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
 
         // Polygonal face
         } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
+
+            if (!currentMesh ||
+                currentMesh->name != currentMeshName ||
+                currentMesh->material != currentMaterial) {
+
+                if (currentMesh) {
+                    LOG(Logger::LogLevel::Debug, "Moving along ....");
+
+                    if (!FinaliseVertices(currentMesh,
+                        vertexPositions,
+                        vertexNormals,
+                        textureCoordinates)) {
+                        printf("failed to finalise\n");
+                        return false;
+                    }
+                }
+
+                // Create an instance of Mesh class for object/group/material
+                // change.
+                Mesh newMesh;
+                newMesh.name = currentMeshName;
+                newMesh.material = currentMaterial;
+
+                // Add the new meshes to the the model and the set the current
+                // mesh to it by getting the last element in the array.
+                model->meshes.push_back(std::move(newMesh));
+                currentMesh = &model->meshes.back();
+
+                LOG(Logger::LogLevel::Debug,
+                    std::format("NEW MESH => name: {}, material: {}",
+                        currentMesh->name,
+                        currentMesh->material));
+            }
+
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, &face)) {
                 return false;
@@ -138,26 +172,6 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                         face.elements[i].texture,
                         face.elements[i].normal));
                 }
-            }
-
-            if (!currentMesh ||
-                currentMesh->name != currentMeshName ||
-                currentMesh->material != currentMaterial) {
-                // New mesh because object/group/material changed
-                Mesh newMesh;
-                newMesh.name = currentMeshName;
-                newMesh.material = currentMaterial;
-                model->meshes.push_back(std::move(newMesh));
-
-                if (currentMesh) {
-                    LOG(Logger::LogLevel::Debug, "Moving along ....");
-                }
-
-                currentMesh = &model->meshes.back();
-                LOG(Logger::LogLevel::Debug,
-                    std::format("NEW MESH => name: {}, material: {}",
-                                currentMesh->name,
-                                currentMesh->material));
             }
 
             currentMesh->faces.push_back(face);
@@ -211,6 +225,16 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
             LOG(Logger::LogLevel::Debug, std::format(
                 "Use material element: {}", view));
+
+            std::string useMaterialName;
+            if (!ParseUseMaterial(view, &useMaterialName)) {
+                return false;
+            }
+
+            currentMaterial = useMaterialName;
+
+            LOG(Logger::LogLevel::Debug, std::format(
+                "USE MATERIAL => {}", currentMaterial));
 
         // Material library [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
@@ -550,6 +574,20 @@ bool WaveFrontObjParser::ParseTextureCoordinate(
     return true;
 }
 
+bool WaveFrontObjParser::ParseUseMaterial(std::string_view element,
+                                          std::string* material) {
+    auto words = SplitElementString(std::string(element));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "User Material entry is invalid");
+        return false;
+    }
+
+    *material = words[1];
+
+    return true;
+}
+
 /**
  * Finalises the mesh by converting face data into vertex attributes.
  *
@@ -569,9 +607,14 @@ bool WaveFrontObjParser::FinaliseVertices(
     const Point3DList& normals,
     const TextureCoordinatesList& textureCoordinates) {
 
-    LOG(Logger::LogLevel::Debug, "Finalizing mesh ....");
+    LOG(Logger::LogLevel::Debug, std::format("Finalizing mesh '{}'",
+                                             mesh->name));
 
-    if (!mesh) return false;
+    if (!mesh) {
+        LOG(Logger::LogLevel::Critical,
+            "Invalid mesh passed to FinaliseVertices");
+        return false;
+    }
 
     mesh->vertices.clear();
 
