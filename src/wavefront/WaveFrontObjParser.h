@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,29 +21,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "BaseWavefrontParser.h"
 #include "../Structures.h"
+#include "../Mesh.h"
+#include "../Model.h"
 
 namespace Meshborn {
 namespace WaveFront {
-
-struct PolygonalFaceElement {
-    PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
-
-    int vertex;
-    int texture;
-    int normal;
-};
-
-struct PolygonalFace {
-    PolygonalFaceElement elements[3];
-};
 
 class WaveFrontObjParser : public BaseWavefrontParser {
  public:
     WaveFrontObjParser();
 
-    bool ParseObj(std::string filename);
+    bool ParseObj(std::string filename, Model* model);
 
  private:
+     bool ParseGroupElement(std::string_view element,
+                            std::string* face);
+
+    bool ParseObjectElement(std::string_view element,
+                            std::string* face);
+
     bool ParseVectorElement(std::string_view element,
                             Point4D* vectorElement);
 
@@ -54,10 +50,18 @@ class WaveFrontObjParser : public BaseWavefrontParser {
                                   Point3D* vectorNormalElement);
 
     bool ParseMaterials(std::string_view element,
-                        std::string &materialLibrary);
+                        std::string *materialLibrary);
 
     bool ParseTextureCoordinate(std::string_view element,
                                 TextureCoordinates *coordinates);
+
+    bool ParseUseMaterial(std::string_view element,
+                          std::string *material);
+
+    bool FinaliseVertices(Mesh *mesh,
+                          const Point4DList& positions,
+                          const Point3DList& normals,
+                          const TextureCoordinatesList& textureCoordinates);
 };
 
 }   // namespace WaveFront

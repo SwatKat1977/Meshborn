@@ -15,29 +15,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef LOGGER_H_
-#define LOGGER_H_
-#include <string>
-#include <functional>
+#ifndef MODEL_H_
+#define MODEL_H_
+#include <vector>
+#include "Mesh.h"
 
 namespace Meshborn {
-namespace Logger {
+namespace WaveFront {
 
-enum class LogLevel {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Critical
-};
-
-class ILogger {
+class Model {
  public:
-    virtual ~ILogger() = default;
-    virtual void Log(LogLevel level, const std::string& message) = 0;
+    std::vector<Mesh> meshes;
 };
 
-}   // namespace Logger
+}   // namespace WaveFront
 }   // namespace Meshborn
 
-#endif  // LOGGER_H_
+#endif  // MODEL_H_

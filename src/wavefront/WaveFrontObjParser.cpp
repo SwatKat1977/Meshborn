@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <format>
 #include <fstream>
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
 #include <sstream>
@@ -26,7 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
+const char KEYWORD_GROUP[] = "g ";
 const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
+const char KEYWORD_OBJECT[] = "o ";
 const char KEYWORD_POLYGONAL_FACE[] = "f ";
 const char KEYWORD_TEXTURE_COORDINATE[] = "vt ";
 const char KEYWORD_USE_MATERIAL[] = "usemtl ";
@@ -36,7 +39,22 @@ const char KEYWORD_VECTOR_NORMAL[] = "vn ";
 WaveFrontObjParser::WaveFrontObjParser() {
 }
 
-bool WaveFrontObjParser::ParseObj(std::string filename) {
+/**
+ * Parses a Wavefront .obj file and fills the provided model object with data.
+ *
+ * Reads the specified .obj file, parsing vertex positions, normals,
+ * texture coordinates, faces, groups, and objects. Meshes are created
+ * based on object/group/material changes. Material libraries may also
+ * be parsed if specified. This parser supports triangle, quad, and
+ * n-gon polygonal faces.
+ *
+ * @param filename The path to the .obj file to be parsed.
+ * @param model Pointer to the Model object to populate.
+ * @return true if parsing succeeds, false if any error occurs.
+ * @throws std::runtime_error if the file cannot be read.
+ */
+bool WaveFrontObjParser::ParseObj(std::string filename,
+                                  Model* model) {
     std::vector<std::string> rawLines;
 
     try {
@@ -49,30 +67,111 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
     std::vector<Point4D> vertexPositions;
     std::vector<Point3D> vertexNormals;
     std::vector<TextureCoordinates> textureCoordinates;
-    std::vector<PolygonalFace> faces;
+
+    std::string currentObjectName = "default";
+    std::string currentGroupName = "default";
+    std::string currentMaterial = "";
+    std::string currentMeshName = "default:default";
+    Mesh* currentMesh = nullptr;
 
     for (const auto& line : rawLines) {
         std::string_view view(line);
 
+        if (view.starts_with(KEYWORD_GROUP)) {
+            std::string groupName;
+            if (!ParseGroupElement(view, &groupName)) {
+                return false;
+            }
+
+            currentGroupName = groupName;
+            currentMeshName = currentObjectName + ":" + currentGroupName;
+            LOG(Logger::LogLevel::Debug,
+                std::format("GROUP => {}", currentGroupName));
+
+        } else if (view.starts_with(KEYWORD_OBJECT)) {
+            std::string objectName;
+            if (!ParseObjectElement(view, &objectName)) {
+                return false;
+            }
+
+            currentObjectName = objectName;
+            currentMeshName = currentObjectName + ":" + currentGroupName;
+            LOG(Logger::LogLevel::Debug,
+                std::format("OBJECT => {}", currentObjectName));
+
         // Polygonal face
-        if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
+        } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
+            if (!currentMesh ||
+                currentMesh->name != currentMeshName ||
+                currentMesh->material != currentMaterial) {
+                if (currentMesh) {
+                    if (!FinaliseVertices(currentMesh,
+                        vertexPositions,
+                        vertexNormals,
+                        textureCoordinates)) {
+                        LOG(Logger::LogLevel::Debug,
+                            "Failed to finalise a mesh");
+                        return false;
+                    }
+                }
+
+                // Create an instance of Mesh class for object/group/material
+                // change.
+                Mesh newMesh;
+                newMesh.name = currentMeshName;
+                newMesh.material = currentMaterial;
+
+                // Add the new meshes to the the model and the set the current
+                // mesh to it by getting the last element in the array.
+                model->meshes.push_back(std::move(newMesh));
+                currentMesh = &model->meshes.back();
+
+                LOG(Logger::LogLevel::Debug,
+                    std::format("NEW MESH => name: {}, material: {}",
+                        currentMesh->name,
+                        currentMesh->material));
+            }
+
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, &face)) {
                 return false;
             }
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "POLYGONAL FACE => 1 = {}/{}/{} | 2 = {}/{}/{} | 3 = {}/{}/{}",
-                face.elements[0].vertex,
-                face.elements[0].texture,
-                face.elements[0].normal,
-                face.elements[1].vertex,
-                face.elements[1].texture,
-                face.elements[1].normal,
-                face.elements[2].vertex,
-                face.elements[2].texture,
-                face.elements[2].normal));
-            faces.push_back(face);
+            if (face.faceType == PolygonalFaceType::TRIANGE) {
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "POLYGONAL FACE [triangle] => 1 = {}/{}/{} | 2 = {}/{}/{} "
+                    "| 3 = {}/{}/{}",
+                    face.elements[0].vertex,
+                    face.elements[0].texture,
+                    face.elements[0].normal,
+                    face.elements[1].vertex,
+                    face.elements[1].texture,
+                    face.elements[1].normal,
+                    face.elements[2].vertex,
+                    face.elements[2].texture,
+                    face.elements[2].normal));
+            } else {
+                std::string faceType;
+                if (face.faceType == PolygonalFaceType::QUAD) {
+                    faceType = "Quad";
+                } else {
+                    faceType = "N-Gon";
+                }
+
+                LOG(Logger::LogLevel::Debug,
+                     std::format("POLYGONAL FACE ({}) =>", faceType));
+
+                for (size_t i = 0; i < face .elements.size(); ++i) {
+                    LOG(Logger::LogLevel::Debug, std::format(
+                        "    {} = {}/{}/{}",
+                        i,
+                        face.elements[i].vertex,
+                        face.elements[i].texture,
+                        face.elements[i].normal));
+                }
+            }
+
+            currentMesh->faces.push_back(face);
 
         // Vertex position
         } else if (view.starts_with(KEYWORD_VECTOR)) {
@@ -121,14 +220,21 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 
         // Use material [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
+            std::string useMaterialName;
+            if (!ParseUseMaterial(view, &useMaterialName)) {
+                return false;
+            }
+
+            currentMaterial = useMaterialName;
+
             LOG(Logger::LogLevel::Debug, std::format(
-                "Use material element: {}", view));
+                "USE MATERIAL => {}", currentMaterial));
 
         // Material library [NOT IMPLEMENTED YET!]
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
             std::string materialLibrary;
 
-            if (!ParseMaterials(view, materialLibrary)) {
+            if (!ParseMaterials(view, &materialLibrary)) {
                 LOG(Logger::LogLevel::Critical, std::format(
                     "Materials library line '{}' is invalid",
                     view));
@@ -140,6 +246,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
                 MaterialMap materials;
                 if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
                                                           &materials)) {
+                    std::cout << "ERR parsing material library\n";
                     return false;
                 }
             }
@@ -153,6 +260,57 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
         }
     }
 
+    if (currentMesh) {
+        FinaliseVertices(currentMesh, vertexPositions, vertexNormals,
+                         textureCoordinates);
+    }
+
+    return true;
+}
+
+/**
+ * Parses a group name element from a string and stores the result.
+ *
+ * Expects at least two space-separated words: keyword and group name.
+ * Extracts the name and assigns it to the provided output string.
+ *
+ * @param element The input string containing the group definition.
+ * @param groupName Output pointer for the parsed group name.
+ * @return true on success, false if input format is invalid.
+ */
+bool WaveFrontObjParser::ParseGroupElement(std::string_view element,
+                                           std::string* groupName) {
+    auto words = SplitElementString(std::string(element));
+    if (words.size() < 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Group '{}' is invalid", element));
+        return false;
+    }
+
+    *groupName = words[1];
+    return true;
+}
+
+/**
+ * Parses an object name element from a string and stores the result.
+ *
+ * Expects at least two space-separated words: keyword and object name.
+ * Extracts the name and assigns it to the provided output string.
+ *
+ * @param element The input string containing the object definition.
+ * @param objectName Output pointer for the parsed object name.
+ * @return true on success, false if input format is invalid.
+ */
+bool WaveFrontObjParser::ParseObjectElement(std::string_view element,
+                                            std::string* objectName) {
+    auto words = SplitElementString(std::string(element));
+    if (words.size() < 2) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Object '{}' is invalid", element));
+        return false;
+    }
+
+    *objectName = words[1];
     return true;
 }
 
@@ -185,22 +343,24 @@ bool WaveFrontObjParser::ParseObj(std::string filename) {
 bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                                                    PolygonalFace* face) {
     auto words = SplitElementString(std::string(element));
-    if (words.size() != 4) {
+    if (words.size() < 4) {
+        LOG(Logger::LogLevel::Critical, std::format(
+            "Polygonal face '{}' is invalid", element));
         return false;
     }
 
-    for (int i = 0; i < 3; ++i) {
+    for (auto it = std::next(words.begin()); it != words.end(); ++it) {
         PolygonalFaceElement faceElement;
 
-        std::string rawFaceelement = words[i + 1];
-        // std::string rawFaceelement = "1//3";
-
+        std::string rawFaceelement = *it;
         size_t firstSlash = rawFaceelement.find('/');
         size_t secondSlash = rawFaceelement.find('/', firstSlash + 1);
 
         // Format: v
         if (firstSlash == std::string::npos) {
             faceElement.vertex = std::stoi(rawFaceelement);
+            faceElement.texture = -1;
+            faceElement.normal = -1;
 
         // Format: v/vt
         } else if (secondSlash == std::string::npos) {
@@ -208,11 +368,13 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                 0, firstSlash));
             faceElement.texture = std::stoi(rawFaceelement.substr(
                 firstSlash + 1));
+            faceElement.normal = -1;
 
         // Format: v//vn
         } else if (secondSlash == firstSlash + 1) {
             faceElement.vertex = std::stoi(rawFaceelement.substr(
                 0, firstSlash));
+            faceElement.texture = -1;
             faceElement.normal = std::stoi(rawFaceelement.substr(
                 secondSlash + 1));
 
@@ -226,12 +388,38 @@ bool WaveFrontObjParser::ParsePolygonalFaceElement(std::string_view element,
                 secondSlash + 1));
         }
 
-        face->elements[i] = faceElement;
+        face->elements.push_back(faceElement);
+    }
+
+    switch ((words.size() -1)) {
+        // 3 vertex - triangle
+        case 3:
+            face->faceType = PolygonalFaceType::TRIANGE;
+            break;
+
+        // 4 vertex - Quad
+        case 4:
+            face->faceType = PolygonalFaceType::QUAD;
+            break;
+
+        // N-gon (5+ vertices)
+        default:
+            face->faceType = PolygonalFaceType::N_GON;
     }
 
     return true;
 }
 
+/**
+ * Parses a 3D or 4D vector string and stores it in a Point4D structure.
+ *
+ * Expects 4 or 5 space-separated values: keyword, x, y, z, and optional w.
+ * Converts the numeric values and stores them in the output vector element.
+ *
+ * @param element The input string containing the vector definition.
+ * @param vectorElement Output pointer for the parsed 4D vector.
+ * @return true on success, false if parsing fails or input is invalid.
+ */
 bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
                                             Point4D* vectorElement) {
     auto words = SplitElementString(std::string(element));
@@ -251,9 +439,13 @@ bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
             }
         }
         catch (std::invalid_argument) {
+            LOG(Logger::LogLevel::Critical, std::format(
+                "Vector '{}' is invalid (invalid argument)", element));
             return false;
         }
         catch (std::out_of_range) {
+            LOG(Logger::LogLevel::Critical, std::format(
+                "Vector '{}' is invalid (out of range)", element));
             return false;
         }
 
@@ -265,6 +457,16 @@ bool WaveFrontObjParser::ParseVectorElement(std::string_view element,
     return true;
 }
 
+/**
+ * Parses a vertex normal string and stores it in a Point3D structure.
+ *
+ * Accepts a string with 4 or 5 space-separated elements: keyword and the
+ * x, y, z components. Parses the components and assigns them to the output.
+ *
+ * @param element The input string containing the normal vector.
+ * @param vectorNormalElement Output pointer for the parsed normal vector.
+ * @return true on success, false if parsing fails or input is invalid.
+ */
 bool WaveFrontObjParser::ParseVertexNormalElement(
     std::string_view element, Point3D* vectorNormalElement) {
     float x;
@@ -310,7 +512,7 @@ bool WaveFrontObjParser::ParseVertexNormalElement(
  *         succeeds; false otherwise.
  */
 bool WaveFrontObjParser::ParseMaterials(std::string_view element,
-                                        std::string &materialLibrary) {
+                                        std::string *materialLibrary) {
     auto words = SplitElementString(std::string(element));
 
     // Requires 2 words (keyword and material_file)
@@ -325,12 +527,22 @@ bool WaveFrontObjParser::ParseMaterials(std::string_view element,
             "Materials library '{}' is missing/inaccessible",
             words[1]));
     } else {
-        materialLibrary = words[1];
+        *materialLibrary = words[1];
     }
 
     return true;
 }
 
+/**
+ * Parses a texture coordinate string and stores the result.
+ *
+ * Expects a string with four space-separated elements: keyword, u, v, and w.
+ * Extracts the float values and writes them to the given coordinates struct.
+ *
+ * @param element The input string containing the texture coordinate data.
+ * @param coordinates Output pointer for parsed texture coordinate values.
+ * @return true on successful parse, false on format or parse error.
+ */
 bool WaveFrontObjParser::ParseTextureCoordinate(
     std::string_view element, TextureCoordinates *coordinates) {
     auto words = SplitElementString(std::string(element));
@@ -352,6 +564,99 @@ bool WaveFrontObjParser::ParseTextureCoordinate(
     coordinates->u  = coordinateU;
     coordinates->v  = coordinateV;
     coordinates->w  = coordinateW;
+
+    return true;
+}
+
+/**
+ * Parses a 'usemtl' line from a Wavefront .obj file and extracts the
+ * material name.
+ *
+ * Expects the input string to contain exactly two words: the 'usemtl'
+ * keyword followed by the material name. If valid, the material name is
+ * written to the provided output pointer.
+ *
+ * @param element The line from the .obj file (e.g., "usemtl MaterialName").
+ * @param material Pointer to a string where the parsed material name will
+ *                 be stored.
+ * @return true if parsing succeeds; false if the line is malformed.
+ */
+bool WaveFrontObjParser::ParseUseMaterial(std::string_view element,
+                                          std::string* material) {
+    auto words = SplitElementString(std::string(element));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "User Material entry is invalid");
+        return false;
+    }
+
+    *material = words[1];
+
+    return true;
+}
+
+/**
+ * Finalises the mesh by converting face data into vertex attributes.
+ *
+ * This function populates the mesh's vertex list using face indices and the
+ * provided lists of positions, normals, and texture coordinates. Returns
+ * false if any indices are out of bounds or the mesh is null.
+ *
+ * @param mesh Pointer to the mesh to populate.
+ * @param positions List of 4D vertex positions.
+ * @param normals List of 3D vertex normals.
+ * @param textureCoordinates List of texture coordinate vectors.
+ * @return true on success, false if input data is invalid.
+ */
+bool WaveFrontObjParser::FinaliseVertices(
+    Mesh *mesh,
+    const Point4DList& positions,
+    const Point3DList& normals,
+    const TextureCoordinatesList& textureCoordinates) {
+
+    LOG(Logger::LogLevel::Debug, std::format("Finalizing mesh '{}'",
+                                             mesh->name));
+
+    if (!mesh) {
+        LOG(Logger::LogLevel::Critical,
+            "Invalid mesh passed to FinaliseVertices");
+        return false;
+    }
+
+    mesh->vertices.clear();
+
+    for (const auto& face : mesh->faces) {
+        for (const auto& elem : face.elements) {
+            Vertex vertex;
+
+            if (elem.vertex < 1 ||
+                elem.vertex > static_cast<int>(positions.size())) {
+                return false;
+            }
+
+            vertex.position = {
+                positions[elem.vertex - 1].x,
+                positions[elem.vertex - 1].y,
+                positions[elem.vertex - 1].z,
+                positions[elem.vertex - 1].w
+            };
+
+            vertex.normal = { 0.0f, 0.0f, 0.0f };
+            if (elem.normal >= 1 &&
+                elem.normal <= static_cast<int>(normals.size())) {
+                    vertex.normal = normals[elem.normal - 1];
+            }
+
+            vertex.textureCoordinates = { 0.0f, 0.0f, 0.0f };
+            if (elem.texture >= 1 &&
+                elem.texture <= static_cast<int>(textureCoordinates.size())) {
+                vertex.textureCoordinates =
+                    textureCoordinates[elem.texture - 1];
+            }
+
+            mesh->vertices.push_back(vertex);
+        }
+    }
 
     return true;
 }
