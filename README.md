@@ -22,10 +22,10 @@ The following Wavefront obj tags are currently supported:
 | Tag                  | Status             | Notes                |
 |:---------------------|:-------------------|:---------------------|
 | f (face)             | :white_check_mark: |                      |
-| g (group)            | :x:                | Not implemented      |
+| g (group)            | :white_check_mark: |                      |
 | l (line element)     | :x:                | Not implemented      |
-| mtllib (materials)   | :x:                | Not implemented      |
-| o (object)           | :x:                | Not implemented      |
+| mtllib (materials)   | :construction:     | Partial implementation |
+| o (object)           | :white_check_mark: |                      |
 | s (Smooth shading )  | :x:                | Not implemented      |
 | usemtl (use material)| :x:                | Not implemented      |
 | v (vertex)           | :white_check_mark: |                      |
@@ -64,5 +64,5 @@ The following functionality is currently supported:
 | Basic material read  | :construction:     | Material read done, handling in obj not done      |
 | Logging              | :white_check_mark: |                                                   |
 | Materials class      | :construction:     | Work on material class in progress                |
-| Model class          | :x:                | Object parsingt needs rework first                |
+| Model class          | :construction:     | Partial implementation for basic functionality    |
 | Unit tests           | :x:                | Unit tests to be started once main core is stable |

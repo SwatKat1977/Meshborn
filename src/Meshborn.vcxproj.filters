@@ -8,6 +8,9 @@
     <Filter Include="Wavefront">
       <UniqueIdentifier>{04dac089-3815-4233-aa96-62ec8a7e8e8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Github">
+      <UniqueIdentifier>{703dcf53-a510-49cf-84b7-2fb6bbfb3497}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
@@ -41,5 +44,13 @@
       <Filter>Wavefront</Filter>
     </ClInclude>
     <ClInclude Include="Material.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitignore">
+      <Filter>Github</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>Github</Filter>
+    </None>
   </ItemGroup>
 </Project>
