@@ -101,11 +101,9 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
 
         // Polygonal face
         } else if (view.starts_with(KEYWORD_POLYGONAL_FACE)) {
-
             if (!currentMesh ||
                 currentMesh->name != currentMeshName ||
                 currentMesh->material != currentMaterial) {
-
                 if (currentMesh) {
                     if (!FinaliseVertices(currentMesh,
                         vertexPositions,
@@ -570,6 +568,19 @@ bool WaveFrontObjParser::ParseTextureCoordinate(
     return true;
 }
 
+/**
+ * Parses a 'usemtl' line from a Wavefront .obj file and extracts the
+ * material name.
+ *
+ * Expects the input string to contain exactly two words: the 'usemtl'
+ * keyword followed by the material name. If valid, the material name is
+ * written to the provided output pointer.
+ *
+ * @param element The line from the .obj file (e.g., "usemtl MaterialName").
+ * @param material Pointer to a string where the parsed material name will
+ *                 be stored.
+ * @return true if parsing succeeds; false if the line is malformed.
+ */
 bool WaveFrontObjParser::ParseUseMaterial(std::string_view element,
                                           std::string* material) {
     auto words = SplitElementString(std::string(element));
@@ -644,7 +655,6 @@ bool WaveFrontObjParser::FinaliseVertices(
             }
 
             mesh->vertices.push_back(vertex);
-
         }
     }
 

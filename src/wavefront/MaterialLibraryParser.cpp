@@ -714,7 +714,20 @@ bool MaterialLibraryParser::ProcessTagSpecularColorTextureMap(
 
     return true;
 }
-
+/**
+ * Parses a 'map_ns' (specular highlight component) line from a material
+ * library (.mtl) file and extracts the corresponding texture map filename.
+ *
+ * This map typically defines the shininess level or specular exponent map
+ * used in the material shading process.
+ * The line should contain exactly two parts: the keyword and the texture filename.
+ * If valid, the filename is stored in the provided string pointer.
+ *
+ * @param line The line from the .mtl file (e.g., "map_ns specular_map.png").
+ * @param component Pointer to a string where the extracted filename will be stored.
+ * @return true if the specular highlight component line is valid and successfully parsed;
+ *         false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagSpecularHighlightConponent(
     std::string_view line, std::string *component) {
     auto words = SplitElementString(std::string(line));
@@ -730,6 +743,20 @@ bool MaterialLibraryParser::ProcessTagSpecularHighlightConponent(
     return true;
 }
 
+/**
+ * Parses a 'map_d' (alpha texture map) line from a material library (.mtl)
+ * file and extracts the associated texture map filename.
+ *
+ * This line typically specifies the transparency texture used in a material.
+ * It should consist of exactly two parts: the keyword and the filename.
+ * If valid, the filename is stored in the provided string pointer.
+ *
+ * @param line The line from the .mtl file (e.g., "map_d alpha_map.png").
+ * @param map Pointer to a string where the extracted texture map filename
+ *            will be stored.
+ * @return true if the alpha texture map line is valid and successfully parsed;
+ *         false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagAlphaTextureMap(std::string_view line,
                                                        std::string *map) {
     auto words = SplitElementString(std::string(line));
@@ -745,6 +772,20 @@ bool MaterialLibraryParser::ProcessTagAlphaTextureMap(std::string_view line,
     return true;
 }
 
+/**
+ * Parses a 'bump' (bump map) line from a material library (.mtl) file
+ * and extracts the bump map filename.
+ *
+ * The line should contain exactly two elements: the 'bump' keyword and the
+ * associated bump map filename. If the format is valid, the filename is
+ * stored in the provided string pointer.
+ *
+ * @param line The line from the .mtl file (e.g., "bump normal_map.png").
+ * @param map Pointer to a string where the extracted bump map filename
+ *            will be saved.
+ * @return true if the bump map line is valid and successfully parsed;
+ *         false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagBumpMap(std::string_view line,
                                               std::string *map) {
     auto words = SplitElementString(std::string(line));
@@ -760,6 +801,20 @@ bool MaterialLibraryParser::ProcessTagBumpMap(std::string_view line,
     return true;
 }
 
+/**
+ * Parses a 'disp' (displacement map) line from a material library (.mtl) file
+ * and extracts the displacement map filename.
+ *
+ * The input line must consist of exactly two words: the 'disp' keyword
+ * followed by the displacement map filename. If valid, the filename is
+ * stored in the output string.
+ *
+ * @param line The line from the .mtl file (e.g., "disp height.png").
+ * @param map Pointer to a string where the parsed displacement map filename
+ *            will be stored.
+ * @return true if the line is correctly formatted and parsing is successful;
+ *         false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagDisplacementMap(std::string_view line,
                                                       std::string *map) {
     auto words = SplitElementString(std::string(line));
@@ -775,6 +830,20 @@ bool MaterialLibraryParser::ProcessTagDisplacementMap(std::string_view line,
     return true;
 }
 
+/**
+ * Parses a 'decal' line from a material library (.mtl) file and extracts
+ * the stencil decal texture filename.
+ *
+ * The input line must consist of exactly two words: the 'decal' keyword
+ * followed by the texture filename. If valid, the filename is written to
+ * the provided output pointer.
+ *
+ * @param line The line from the .mtl file (e.g., "decal stencil.png").
+ * @param texture Pointer to a string where the parsed texture filename will
+ *                be stored.
+ * @return true if the line is correctly formatted and parsing succeeds;
+ *         false otherwise.
+ */
 bool MaterialLibraryParser::ProcessTagStencilDecalTexture(
     std::string_view line, std::string *texture) {
     auto words = SplitElementString(std::string(line));
