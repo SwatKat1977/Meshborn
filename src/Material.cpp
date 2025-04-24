@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
-    /**
+ /**
  * @brief Constructs a new Material with the given name.
  * 
  * Initializes the ambient colour to black (0, 0, 0) and marks it as unset.

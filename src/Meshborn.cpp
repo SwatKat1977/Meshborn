@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
+/**
+ * Sets the global logger instance.
+ *
+ * Transfers ownership of the provided logger to the LoggerManager singleton,
+ * replacing any existing logger. This allows centralized control over
+ * logging behavior throughout the application.
+ *
+ * @param logger A unique pointer to a new ILogger implementation.
+ */
 void SetLogger(std::unique_ptr<Logger::ILogger> logger) {
     Logger::LoggerManager::Instance().SetLogger(std::move(logger));
 }
