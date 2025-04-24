@@ -25,6 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Meshborn {
 namespace WaveFront {
 
+/**
+ * Splits a space-delimited string into individual tokens.
+ *
+ * This function takes a string and splits it into substrings using whitespace
+ * as the delimiter. Consecutive spaces are treated as a single delimiter.
+ *
+ * @param str The input string to split.
+ * @return A vector of strings containing each token in the original string.
+ */
 std::vector<std::string> BaseWavefrontParser::SplitElementString(
     const std::string& str) {
     std::vector<std::string> tokens;
@@ -38,6 +47,18 @@ std::vector<std::string> BaseWavefrontParser::SplitElementString(
     return tokens;
 }
 
+/**
+ * Reads a text file line by line, filtering out empty lines and comments.
+ *
+ * This function opens the specified file and reads its contents line by line.
+ * It ignores lines that are empty or begin with the comment character '#'.
+ * On Windows systems, it also removes any carriage return characters ('\r')
+ * from the end of each line.
+ *
+ * @param filename The path to the file to read.
+ * @return A vector of strings, each representing a relevant line from the file.
+ * @throws std::runtime_error if the file cannot be opened.
+ */
 std::vector<std::string> BaseWavefrontParser::ReadFile(
     const std::string& filename) {
     std::vector<std::string> lines;
@@ -63,6 +84,20 @@ std::vector<std::string> BaseWavefrontParser::ReadFile(
     return lines;
 }
 
+/**
+ * Checks whether a given line starts with a specific prefix, ignoring any
+ * leading whitespace characters.
+ *
+ * This function skips over any leading whitespace (spaces, tabs, etc.) in the
+ * input line before comparing the start of the line with the given prefix.
+ * The comparison is case-sensitive and does not trim whitespace from the
+ * prefix.
+ *
+ * @param line The string to check.
+ * @param prefix The prefix to look for at the start of the line.
+ * @return true if the line starts with the prefix after skipping leading whitespace,
+ *         false otherwise.
+ */
 bool BaseWavefrontParser::StartsWith(const std::string& line,
                                      const std::string& prefix) {
     size_t i = 0;
@@ -73,6 +108,20 @@ bool BaseWavefrontParser::StartsWith(const std::string& line,
     return line.compare(i, prefix.length(), prefix) == 0;
 }
 
+/**
+ * Parses a string into a floating-point (float) value. This function checks
+ * for errors during the conversion, such as out-of-range values and the presence
+ * of invalid characters in the input string.
+ *
+ * The function uses `strtof` to convert the string to a `float`. If the input
+ * is not a valid float or contains extra non-numeric characters, or if the
+ * resulting value is out of the representable range for floats, the function
+ * returns false.
+ *
+ * @param str The string to be parsed into a float.
+ * @param out A pointer to a float where the parsed result will be stored if successful.
+ * @return true if the string was successfully parsed into a valid float, false otherwise.
+ */
 bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
     errno = 0;
     char* end;
@@ -82,6 +131,22 @@ bool BaseWavefrontParser::ParseFloat(const char* str, float *out) {
     return true;
 }
 
+/**
+ * Parses a string into an integer (int) value. The function handles potential
+ * errors that may arise during the conversion process, including out-of-range
+ * values and invalid input formats.
+ *
+ * This function uses `std::strtoll` to perform the conversion, ensuring that
+ * the value is within the valid range of an integer (`INT_MIN` to `INT_MAX`).
+ * If the conversion fails due to invalid characters or out-of-range values,
+ * the function will return false.
+ *
+ * @param str The string to be parsed into an integer.
+ * @param out A pointer to an integer where the result will be stored if the
+ *            parsing is successful.
+ * @return true if the string was successfully parsed into a valid integer,
+ *         false otherwise.
+ */
 bool BaseWavefrontParser::ParseInt(const char* str, int* out) {
     errno = 0;
     char* end;
