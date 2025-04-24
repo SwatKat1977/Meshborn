@@ -45,16 +45,26 @@ enum class PolygonalFaceType {
     N_GON
 };
 
+/**
+ * Represents a single polygonal face in a 3D mesh.
+ *
+ * A face consists of one or more elements, each of which typically references
+ * a vertex, texture coordinate, and/or normal index.
+ */
 struct PolygonalFace {
     PolygonalFaceType faceType;
     std::vector<PolygonalFaceElement> elements;
 };
 
+/**
+ * Represents a 3D mesh consisting of vertices and polygonal faces.
+ *
+ * A mesh may also be associated with a name and material identifier.
+ */
 class Mesh {
  public:
     std::string name;
     std::string material;
-    bool materialSet;
     std::vector<PolygonalFace> faces;
     std::vector<Vertex> vertices;
 };
