@@ -218,7 +218,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 coordinates.w));
             textureCoordinates.push_back(coordinates);
 
-        // Use material [NOT IMPLEMENTED YET!]
+        // Use material
         } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
             std::string useMaterialName;
             if (!ParseUseMaterial(view, &useMaterialName)) {
@@ -230,7 +230,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             LOG(Logger::LogLevel::Debug, std::format(
                 "USE MATERIAL => {}", currentMaterial));
 
-        // Material library [NOT IMPLEMENTED YET!]
+        // Material library
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
             std::string materialLibrary;
 
@@ -242,10 +242,8 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             }
 
             if (!materialLibrary.empty()) {
-                printf("Parsing material library....\n");
-                MaterialMap materials;
                 if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
-                                                          &materials)) {
+                                                          &model->materials)) {
                     std::cout << "ERR parsing material library\n";
                     return false;
                 }

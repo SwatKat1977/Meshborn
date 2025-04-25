@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef MODEL_H_
 #define MODEL_H_
+#include <map>
 #include <vector>
+#include "Material.h"
 #include "Mesh.h"
 
 namespace Meshborn {
@@ -26,6 +28,7 @@ namespace WaveFront {
 class Model {
  public:
     std::vector<Mesh> meshes;
+    MaterialMap materials;
 };
 
 }   // namespace WaveFront
