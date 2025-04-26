@@ -27,8 +27,13 @@ namespace WaveFront {
 
 class Model {
  public:
+    Model() : totalMeshes(0), totalMaterials(0) {}
+
     std::vector<Mesh> meshes;
+    unsigned int totalMeshes;
+
     MaterialMap materials;
+    unsigned int totalMaterials;
 };
 
 }   // namespace WaveFront

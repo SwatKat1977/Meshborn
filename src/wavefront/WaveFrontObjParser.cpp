@@ -249,8 +249,11 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 }
             }
 
+            model->totalMaterials = model->materials.size();
+
             LOG(Logger::LogLevel::Debug,
-                std::format("MATERIALS LIBRARY => {}", view));
+                std::format("MATERIALS LIBRARY => {} ~ count = {}",
+                            view, model->totalMaterials));
 
         } else {
             LOG(Logger::LogLevel::Debug,
@@ -262,6 +265,8 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         FinaliseVertices(currentMesh, vertexPositions, vertexNormals,
                          textureCoordinates);
     }
+
+    model->totalMeshes = model->meshes.size();
 
     return true;
 }
