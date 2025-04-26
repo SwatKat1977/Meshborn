@@ -31,7 +31,7 @@ class WaveFrontObjParser : public BaseWavefrontParser {
  public:
     WaveFrontObjParser();
 
-    bool ParseObj(std::string filename, Model* model);
+    std::unique_ptr<Model> ParseObj(std::string filename);
 
  private:
      bool ParseGroupElement(std::string_view element,

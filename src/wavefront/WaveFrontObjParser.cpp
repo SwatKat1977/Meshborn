@@ -53,8 +53,8 @@ WaveFrontObjParser::WaveFrontObjParser() {
  * @return true if parsing succeeds, false if any error occurs.
  * @throws std::runtime_error if the file cannot be read.
  */
-bool WaveFrontObjParser::ParseObj(std::string filename,
-                                  Model* model) {
+std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
+    auto model = std::make_unique<Model>();
     std::vector<std::string> rawLines;
 
     try {
@@ -80,7 +80,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         if (view.starts_with(KEYWORD_GROUP)) {
             std::string groupName;
             if (!ParseGroupElement(view, &groupName)) {
-                return false;
+                return nullptr;
             }
 
             currentGroupName = groupName;
@@ -91,7 +91,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         } else if (view.starts_with(KEYWORD_OBJECT)) {
             std::string objectName;
             if (!ParseObjectElement(view, &objectName)) {
-                return false;
+                return nullptr;
             }
 
             currentObjectName = objectName;
@@ -111,7 +111,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                         textureCoordinates)) {
                         LOG(Logger::LogLevel::Debug,
                             "Failed to finalise a mesh");
-                        return false;
+                        return nullptr;
                     }
                 }
 
@@ -134,7 +134,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
 
             PolygonalFace face;
             if (!ParsePolygonalFaceElement(view, &face)) {
-                return false;
+                return nullptr;
             }
 
             if (face.faceType == PolygonalFaceType::TRIANGE) {
@@ -178,7 +178,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             Point4D vertexPosition;
 
             if (!ParseVectorElement(view, &vertexPosition)) {
-                return false;
+                return nullptr;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
@@ -194,7 +194,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
             Point3D vertexNormal;
 
             if (!ParseVertexNormalElement(view, &vertexNormal)) {
-                return false;
+                return nullptr;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
@@ -208,7 +208,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         } else if (view.starts_with(KEYWORD_TEXTURE_COORDINATE)) {
             TextureCoordinates coordinates;
             if (!ParseTextureCoordinate(view, &coordinates)) {
-                return false;
+                return nullptr;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
@@ -222,7 +222,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
         } else if (view.starts_with(KEYWORD_USE_MATERIAL)) {
             std::string useMaterialName;
             if (!ParseUseMaterial(view, &useMaterialName)) {
-                return false;
+                return nullptr;
             }
 
             currentMaterial = useMaterialName;
@@ -238,14 +238,14 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
                 LOG(Logger::LogLevel::Critical, std::format(
                     "Materials library line '{}' is invalid",
                     view));
-                return false;
+                return nullptr;
             }
 
             if (!materialLibrary.empty()) {
                 if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
                                                           &model->materials)) {
                     std::cout << "ERR parsing material library\n";
-                    return false;
+                    return nullptr;
                 }
             }
 
@@ -268,7 +268,7 @@ bool WaveFrontObjParser::ParseObj(std::string filename,
 
     model->totalMeshes = model->meshes.size();
 
-    return true;
+    return model;
 }
 
 /**
