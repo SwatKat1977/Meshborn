@@ -5,27 +5,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Wavefront">
-      <UniqueIdentifier>{04dac089-3815-4233-aa96-62ec8a7e8e8b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Github">
       <UniqueIdentifier>{703dcf53-a510-49cf-84b7-2fb6bbfb3497}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test.cpp" />
     <ClCompile Include="Meshborn.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="wavefront\BaseWavefrontParser.cpp">
-      <Filter>Wavefront</Filter>
-    </ClCompile>
-    <ClCompile Include="wavefront\MaterialLibraryParser.cpp">
-      <Filter>Wavefront</Filter>
-    </ClCompile>
-    <ClCompile Include="wavefront\WaveFrontObjParser.cpp">
-      <Filter>Wavefront</Filter>
-    </ClCompile>
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="BaseWavefrontParser.cpp" />
+    <ClCompile Include="MaterialLibraryParser.cpp" />
+    <ClCompile Include="WaveFrontObjParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logger.h" />
@@ -34,22 +24,16 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="wavefront\BaseWavefrontParser.h">
-      <Filter>Wavefront</Filter>
-    </ClInclude>
-    <ClInclude Include="wavefront\MaterialLibraryParser.h">
-      <Filter>Wavefront</Filter>
-    </ClInclude>
-    <ClInclude Include="wavefront\WaveFrontObjParser.h">
-      <Filter>Wavefront</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h" />
+    <ClInclude Include="BaseWavefrontParser.h" />
+    <ClInclude Include="MaterialLibraryParser.h" />
+    <ClInclude Include="WaveFrontObjParser.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.gitignore">
+    <None Include="..\..\.gitignore">
       <Filter>Github</Filter>
     </None>
-    <None Include="..\README.md">
+    <None Include="..\..\README.md">
       <Filter>Github</Filter>
     </None>
   </ItemGroup>
