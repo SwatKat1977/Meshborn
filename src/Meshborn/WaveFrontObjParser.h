@@ -15,8 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef WAVEFRONT_WAVEFRONTOBJPARSER_H_
-#define WAVEFRONT_WAVEFRONTOBJPARSER_H_
+#ifndef WAVEFRONTOBJPARSER_H_
+#define WAVEFRONTOBJPARSER_H_
+#include <memory>
 #include <string>
 #include <vector>
 #include "BaseWavefrontParser.h"
@@ -65,4 +66,4 @@ class WaveFrontObjParser : public BaseWavefrontParser {
 
 }   // namespace Meshborn
 
-#endif  // WAVEFRONT_WAVEFRONTOBJPARSER_H_
+#endif  // WAVEFRONTOBJPARSER_H_

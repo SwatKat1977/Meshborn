@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibraryTest", "LibraryTest\LibraryTest.vcxproj", "{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{490C9417-8502-49B2-AF34-D8ECA1928D82} = {490C9417-8502-49B2-AF34-D8ECA1928D82}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Meshborn", "Meshborn\Meshborn.vcxproj", "{490C9417-8502-49B2-AF34-D8ECA1928D82}"
 EndProject

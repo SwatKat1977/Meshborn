@@ -15,8 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef WAVEFRONT_MATERIALLIBRARYPARSER_H_
-#define WAVEFRONT_MATERIALLIBRARYPARSER_H_
+#ifndef MATERIALLIBRARYPARSER_H_
+#define MATERIALLIBRARYPARSER_H_
 #include <memory>
 #include <string>
 #include "BaseWavefrontParser.h"
@@ -69,4 +69,4 @@ class MaterialLibraryParser : public BaseWavefrontParser {
 
 }   // namespace Meshborn
 
-#endif  // WAVEFRONT_MATERIALLIBRARYPARSER_H_
+#endif  // MATERIALLIBRARYPARSER_H_
