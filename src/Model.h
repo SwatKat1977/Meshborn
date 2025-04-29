@@ -30,10 +30,10 @@ class Model {
     Model() : totalMeshes(0), totalMaterials(0) {}
 
     std::vector<Mesh> meshes;
-    unsigned int totalMeshes;
+    size_t totalMeshes;
 
     MaterialMap materials;
-    unsigned int totalMaterials;
+    size_t totalMaterials;
 };
 
 }   // namespace WaveFront
