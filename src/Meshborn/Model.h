@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Mesh.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 /**
  * @class Model
@@ -70,7 +69,6 @@ class Model {
     size_t totalMaterials;
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
 #endif  // MODEL_H_

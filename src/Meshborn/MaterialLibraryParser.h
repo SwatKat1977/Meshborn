@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Material.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 class MaterialLibraryParser : public BaseWavefrontParser {
  public:
@@ -68,7 +67,6 @@ class MaterialLibraryParser : public BaseWavefrontParser {
                                        std::string *texture);
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
 #endif  // WAVEFRONT_MATERIALLIBRARYPARSER_H_

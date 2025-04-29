@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 
 namespace Meshborn {
-namespace WaveFront {
 
 class BaseWavefrontParser {
  protected:
@@ -36,7 +35,6 @@ class BaseWavefrontParser {
     bool ParseInt(const char* str, int *out);
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
 #endif  //  WAVEFRONT_BASEWAVEFRONTPARSER_H_

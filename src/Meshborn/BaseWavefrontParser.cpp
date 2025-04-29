@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseWavefrontParser.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 /**
  * Splits a space-delimited string into individual tokens.
@@ -162,5 +161,4 @@ bool BaseWavefrontParser::ParseInt(const char* str, int* out) {
     return true;
 }
 
-}   // namespace WaveFront
 }   // namespace Meshborn

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "MaterialLibraryParser.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 const char KEYWORD_GROUP[] = "g ";
 const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
@@ -665,4 +664,3 @@ bool WaveFrontObjParser::FinaliseVertices(
 }
 
 }   // namespace WaveFront
-}   // namespace Meshborn

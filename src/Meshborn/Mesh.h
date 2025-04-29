@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Structures.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 struct PolygonalFaceElement {
     PolygonalFaceElement() : vertex(-1), texture(-1), normal(-1) {}
@@ -69,7 +68,6 @@ class Mesh {
     std::vector<Vertex> vertices;
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
 #endif  // MESH_H_

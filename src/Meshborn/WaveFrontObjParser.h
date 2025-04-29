@@ -20,12 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 #include "BaseWavefrontParser.h"
-#include "../Structures.h"
-#include "../Mesh.h"
-#include "../Model.h"
+#include "Structures.h"
+#include "Mesh.h"
+#include "Model.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 class WaveFrontObjParser : public BaseWavefrontParser {
  public:
@@ -64,7 +63,6 @@ class WaveFrontObjParser : public BaseWavefrontParser {
                           const TextureCoordinatesList& textureCoordinates);
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
 #endif  // WAVEFRONT_WAVEFRONTOBJPARSER_H_
