@@ -32,30 +32,6 @@ const std::map<Meshborn::Logger::LogLevel, std::string> LogLevelToString {
     { Meshborn::Logger::LogLevel::Critical, "CRITICAL" }
 };
 
-class Vertex {
- public:
-    Vertex(float x, float y, float z) :
-        x_(x), y_(y), z_(z), w_(DEFAULT_W_VALUE) {}
-
-    Vertex(float x, float y, float z, float w) :
-        x_(x), y_(y), z_(z), w_(w) {}
-
-    float X() const { return x_; }
-    float Y() const { return y_; }
-    float Z() const { return z_; }
-    float W() const { return w_; }
-
- private:
-    Vertex() = delete;  // No default construction allowed
-
-    const float DEFAULT_W_VALUE = 1.0f;
-
-    float x_;
-    float y_;
-    float z_;
-    float w_;
-};
-
 #include "wavefront/WaveFrontObjParser.h"
 #include "Meshborn.h"
 #include "Logger.h"
@@ -70,7 +46,6 @@ class ConsoleLogger: public Meshborn::Logger::ILogger {
                   << message << std::endl;
     }
 };
-
 
 int main(int argc, char** argv) {
     std::string filename;
@@ -97,8 +72,8 @@ int main(int argc, char** argv) {
 
     try {
         bool status;
-        status = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename,
-                                                                    &model);
+        auto model = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
+        status = (!model) ? false : true;
         std::cout << "[DEBUG] Parse object return status of " << status << "\n";
     }
     catch (std::runtime_error ex) {

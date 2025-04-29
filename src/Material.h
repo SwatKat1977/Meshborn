@@ -1,6 +1,6 @@
 /*
 Meshborn
-Copyright (C) 2025  SwatKat1977
+Copyright (C) 2025 SwatKat1977
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 #include <string>
+#include <unordered_map>
 #include "Structures.h"
 
 namespace Meshborn {
@@ -136,6 +137,8 @@ class Material {
     std::string stencilDecalTexture_;
     bool stencilDecalTextureSet_;
 };
+
+using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
 
 }   // namespace Meshborn
 
