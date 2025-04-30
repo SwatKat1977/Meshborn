@@ -58,11 +58,14 @@ The following Wavefront material tags are currently supported:
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Functionality        | Status             | Notes                                             |
-|:---------------------|:-------------------|:--------------------------------------------------|
-| Basic object Read    | :construction:     | Currently working on                              |
-| Basic material read  | :construction:     | Material read done, handling in obj not done      |
-| Logging              | :white_check_mark: |                                                   |
-| Materials class      | :construction:     | Work on material class in progress                |
-| Model class          | :construction:     | Partial implementation for basic functionality    |
-| Unit tests           | :x:                | Unit tests to be started once main core is stable |
+| Functionality           | Status             | Notes                                             |
+|:------------------------|:-------------------|:--------------------------------------------------|
+| Basic object Read       | :construction:     | Currently working on                              |
+| Basic material read     | :construction:     | Material read done, handling in obj not done      |
+| Logging                 | :white_check_mark: |                                                   |
+| Materials class         | :construction:     | Work on material class in progress                |
+| Validate material values| :x:                |                                                   |
+| Mesh class              | :construction:     | Work in progress                                  |
+| Validate object values  | :construction:     | Work in progress                                  |
+| Model class             | :construction:     | Partial implementation for basic functionality    |
+| Unit tests              | :x:                | Unit tests to be started once main core is stable |
