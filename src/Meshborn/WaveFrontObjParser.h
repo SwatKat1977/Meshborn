@@ -15,17 +15,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef WAVEFRONT_WAVEFRONTOBJPARSER_H_
-#define WAVEFRONT_WAVEFRONTOBJPARSER_H_
+#ifndef WAVEFRONTOBJPARSER_H_
+#define WAVEFRONTOBJPARSER_H_
+#include <memory>
 #include <string>
 #include <vector>
 #include "BaseWavefrontParser.h"
-#include "../Structures.h"
-#include "../Mesh.h"
-#include "../Model.h"
+#include "Structures.h"
+#include "Mesh.h"
+#include "Model.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 class WaveFrontObjParser : public BaseWavefrontParser {
  public:
@@ -64,7 +64,6 @@ class WaveFrontObjParser : public BaseWavefrontParser {
                           const TextureCoordinatesList& textureCoordinates);
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
-#endif  // WAVEFRONT_WAVEFRONTOBJPARSER_H_
+#endif  // WAVEFRONTOBJPARSER_H_

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Meshborn", "Meshborn.vcxproj", "{490C9417-8502-49B2-AF34-D8ECA1928D82}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibraryTest", "LibraryTest\LibraryTest.vcxproj", "{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Meshborn", "Meshborn\Meshborn.vcxproj", "{490C9417-8502-49B2-AF34-D8ECA1928D82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Debug|x64.ActiveCfg = Debug|x64
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Debug|x64.Build.0 = Debug|x64
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Debug|x86.ActiveCfg = Debug|Win32
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Debug|x86.Build.0 = Debug|Win32
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Release|x64.ActiveCfg = Release|x64
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Release|x64.Build.0 = Release|x64
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Release|x86.ActiveCfg = Release|Win32
+		{1A7900F5-1FCC-43DF-BBC4-302AD466CD0A}.Release|x86.Build.0 = Release|Win32
 		{490C9417-8502-49B2-AF34-D8ECA1928D82}.Debug|x64.ActiveCfg = Debug|x64
 		{490C9417-8502-49B2-AF34-D8ECA1928D82}.Debug|x64.Build.0 = Debug|x64
 		{490C9417-8502-49B2-AF34-D8ECA1928D82}.Debug|x86.ActiveCfg = Debug|Win32

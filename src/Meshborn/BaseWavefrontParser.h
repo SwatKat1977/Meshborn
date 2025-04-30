@@ -15,28 +15,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MODEL_H_
-#define MODEL_H_
-#include <map>
+#ifndef BASEWAVEFRONTPARSER_H_
+#define BASEWAVEFRONTPARSER_H_
+#include <string>
 #include <vector>
-#include "Material.h"
-#include "Mesh.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
-class Model {
- public:
-    Model() : totalMeshes(0), totalMaterials(0) {}
+class BaseWavefrontParser {
+ protected:
+    std::vector<std::string> ReadFile(const std::string& filename);
 
-    std::vector<Mesh> meshes;
-    unsigned int totalMeshes;
+    std::vector<std::string> SplitElementString(const std::string& str);
 
-    MaterialMap materials;
-    unsigned int totalMaterials;
+    bool StartsWith(const std::string& line, const std::string& prefix);
+
+    bool ParseFloat(const char* str, float *out);
+
+    bool ParseInt(const char* str, int *out);
 };
 
-}   // namespace WaveFront
 }   // namespace Meshborn
 
-#endif  // MODEL_H_
+#endif  //  BASEWAVEFRONTPARSER_H_

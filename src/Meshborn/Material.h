@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include "Structures.h"

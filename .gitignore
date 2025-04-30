@@ -4,6 +4,9 @@
 .vs
 Meshborn.vcxproj.user
 src/x64
+src/Meshborn/x64/
+src/LibraryTest/LibraryTest.vcxproj.user
+src/LibraryTest/x64/
 
 ####################
 # Mac specific

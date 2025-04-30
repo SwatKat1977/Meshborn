@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "LoggerManager.h"
 
 namespace Meshborn {
-namespace WaveFront {
 
 const char KEYWORD_NEW_MATERIAL[] = "newmtl ";
 const char KEYWORD_AMBIENT[] = "Ka ";
@@ -941,5 +940,4 @@ bool MaterialLibraryParser::ProcessTagStencilDecalTexture(
     return true;
 }
 
-}   // namespace WaveFront
 }   // namespace Meshborn

@@ -18,7 +18,7 @@ AC_PROG_CXX
 AC_CHECK_HEADERS([stdio.h stdlib.h])
 
 # Output Makefile in root and subdirectories
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/Meshborn/Makefile])
 
 # Generate the configuration script
 AC_OUTPUT

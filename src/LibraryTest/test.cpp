@@ -32,7 +32,7 @@ const std::map<Meshborn::Logger::LogLevel, std::string> LogLevelToString {
     { Meshborn::Logger::LogLevel::Critical, "CRITICAL" }
 };
 
-#include "wavefront/WaveFrontObjParser.h"
+#include "WaveFrontObjParser.h"
 #include "Meshborn.h"
 #include "Logger.h"
 
@@ -68,11 +68,11 @@ int main(int argc, char** argv) {
 
     std::cout << "Loading '" << filename << "'\n";
 
-    Meshborn::WaveFront::Model model;
+    Meshborn::Model model;
 
     try {
         bool status;
-        auto model = Meshborn::WaveFront::WaveFrontObjParser().ParseObj(filename);
+        auto model = Meshborn::WaveFrontObjParser().ParseObj(filename);
         status = (!model) ? false : true;
         std::cout << "[DEBUG] Parse object return status of " << status << "\n";
     }
