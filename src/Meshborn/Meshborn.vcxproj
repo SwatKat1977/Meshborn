@@ -85,7 +85,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)"</Command>
+      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)" "$(Configuration)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy distribution files</Message>
@@ -107,6 +107,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)" "$(Configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -121,7 +124,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)"</Command>
+      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)" "$(Configuration)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy distribution files</Message>
@@ -143,6 +146,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>call "$(SolutionDir)post_build.bat" "$(SolutionDir)" "$(ProjectDir)" "$(TargetPath)" "$(Configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseWavefrontParser.cpp" />
