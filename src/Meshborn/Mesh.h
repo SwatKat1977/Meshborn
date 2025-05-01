@@ -53,6 +53,7 @@ enum class PolygonalFaceType {
 struct PolygonalFace {
     PolygonalFaceType faceType;
     std::vector<PolygonalFaceElement> elements;
+    uint8_t smoothShadingGroup;
 };
 
 /**

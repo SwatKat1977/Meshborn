@@ -30,6 +30,7 @@ const char KEYWORD_GROUP[] = "g ";
 const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
 const char KEYWORD_OBJECT[] = "o ";
 const char KEYWORD_POLYGONAL_FACE[] = "f ";
+const char KEYWORD_SMOOTH_SHADING[] = "s ";
 const char KEYWORD_TEXTURE_COORDINATE[] = "vt ";
 const char KEYWORD_USE_MATERIAL[] = "usemtl ";
 const char KEYWORD_VECTOR[] = "v ";
@@ -71,6 +72,7 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
     std::string currentGroupName = "default";
     std::string currentMaterial = "";
     std::string currentMeshName = "default:default";
+    uint8_t currentSmoothGroup = 0;
     Mesh* currentMesh = nullptr;
 
     for (const auto& line : rawLines) {

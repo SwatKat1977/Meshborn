@@ -26,7 +26,7 @@ The following Wavefront obj tags are currently supported:
 | l (line element)     | :x:                | Not implemented      |
 | mtllib (materials)   | :construction:     | Partial implementation |
 | o (object)           | :white_check_mark: |                      |
-| s (Smooth shading )  | :x:                | Not implemented      |
+| s (Smooth shading)   | :x:                | Not implemented      |
 | usemtl (use material)| :x:                | Not implemented      |
 | v (vertex)           | :white_check_mark: |                      |
 | vn (vertex normal)   | :white_check_mark: |                      |
