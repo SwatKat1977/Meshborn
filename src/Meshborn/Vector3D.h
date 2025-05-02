@@ -31,13 +31,22 @@ class Vector3D {
     Vector3D() : x(0.f), y(0.f), z(0.f) {}
     Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
 
-    // Magnitude (length) of the vector
+    /**
+     * @brief Computes the Euclidean length (magnitude) of a 3D vector.
+     *
+     * @return The length of the vector.
+     */
     float Length() const {
         return std::sqrt(x * x + y * y + z * z);
     }
 
-    // Normalize this vector in-place
-    void Normalize() {
+    /**
+     * @brief Normalises a 3D vector in-place to have a length of 1.
+     *
+     * If the vector has near-zero length, it is set to (0, 0, 0) to avoid
+     * division by zero.
+     */
+    void Normalise() {
         float len = Length();
         if (len == 0.f)
             throw std::runtime_error("Cannot normalize zero-length vector");
@@ -59,7 +68,12 @@ class Vector3D {
         return x * other.x + y * other.y + z * other.z;
     }
 
-    // Cross product
+    /**
+     * @brief Computes the cross product of two 3D vectors.
+     *
+     * @param other The second vector.
+     * @return A new Vector3D representing the cross product a × b.
+     */
     Vector3D Cross(const Vector3D& other) const {
         return {
             y * other.z - z * other.y,
@@ -89,11 +103,6 @@ class Vector3D {
 
     bool operator==(const Vector3D& rhs) const {
         return x == rhs.x && y == rhs.y && z == rhs.z;
-    }
-
-    // Optional: stream output
-    friend std::ostream& operator<<(std::ostream& os, const Vector3D& v) {
-        return os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
     }
 };
 
