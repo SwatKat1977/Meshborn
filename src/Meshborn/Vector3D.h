@@ -48,8 +48,11 @@ class Vector3D {
      */
     void Normalise() {
         float len = Length();
-        if (len == 0.f)
+
+        if (len == 0.f) {
             throw std::runtime_error("Cannot normalize zero-length vector");
+        }
+
         x /= len;
         y /= len;
         z /= len;
@@ -58,8 +61,11 @@ class Vector3D {
     // Return a normalized copy of this vector
     Vector3D Normalized() const {
         float len = Length();
-        if (len == 0.f)
+
+        if (len == 0.f) {
             throw std::runtime_error("Cannot normalize zero-length vector");
+        }
+
         return { x / len, y / len, z / len };
     }
 
@@ -96,8 +102,10 @@ class Vector3D {
     }
 
     Vector3D operator/(float scalar) const {
-        if (scalar == 0.f)
+        if (scalar == 0.f) {
             throw std::runtime_error("Division by zero");
+        }
+
         return { x / scalar, y / scalar, z / scalar };
     }
 
