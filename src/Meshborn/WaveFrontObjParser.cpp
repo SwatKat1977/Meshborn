@@ -599,6 +599,30 @@ bool WaveFrontObjParser::ParseUseMaterial(std::string_view element,
     return true;
 }
 
+bool WaveFrontObjParser::ParseSmoothShading(std::string_view element,
+                                            int *shadingGroup) {
+    auto words = SplitElementString(std::string(element));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Smooth shading entry is invalid");
+        return false;
+    }
+
+    if (words[1] == "off") {
+        *shadingGroup = 0;
+
+    } else {
+
+        if (!ParseInt(words[1].c_str(), shadingGroup)) {
+            LOG(Logger::LogLevel::Critical,
+                std::format("Invalid smoothing group: '{}'", element));
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /**
  * Finalises the mesh by converting face data into vertex attributes.
  *
