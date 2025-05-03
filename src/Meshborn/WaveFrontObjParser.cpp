@@ -231,6 +231,19 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
             LOG(Logger::LogLevel::Debug, std::format(
                 "USE MATERIAL => {}", currentMaterial));
 
+        // Smooth shading
+        } else if (view.starts_with(KEYWORD_SMOOTH_SHADING)) {
+
+            int shadingGroup;
+            if (!ParseSmoothShading(view, &shadingGroup)) {
+                return nullptr;
+            }
+
+            currentSmoothGroup = shadingGroup;
+
+           LOG(Logger::LogLevel::Debug, std::format(
+               "SMOOTH SHADING => {}", currentSmoothGroup));
+
         // Material library
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
             std::string materialLibrary;
