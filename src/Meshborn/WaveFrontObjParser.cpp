@@ -104,6 +104,8 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
 
             currentGroupName = groupName;
             currentMeshName = currentObjectName + ":" + currentGroupName;
+            currentSmoothGroup = 0;
+
             LOG(Logger::LogLevel::Debug,
                 std::format("GROUP => {}", currentGroupName));
 
@@ -115,6 +117,8 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
 
             currentObjectName = objectName;
             currentMeshName = currentObjectName + ":" + currentGroupName;
+            currentSmoothGroup = 0;
+
             LOG(Logger::LogLevel::Debug,
                 std::format("OBJECT => {}", currentObjectName));
 
@@ -189,6 +193,9 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
                         face.elements[i].normal));
                 }
             }
+
+            // Set smoothing group
+            face.smoothShadingGroup = currentSmoothGroup;
 
             currentMesh->faces.push_back(face);
 
