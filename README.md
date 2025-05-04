@@ -27,7 +27,7 @@ The following Wavefront obj tags are currently supported:
 | mtllib (materials)   | :white_check_mark: |                 |
 | o (object)           | :white_check_mark: |                 |
 | s (Smooth shading)   | :white_check_mark: |                 |
-| usemtl (use material)| :x:                | Not implemented |
+| usemtl (use material)| :white_check_mark: |                 |
 | v (vertex)           | :white_check_mark: |                 |
 | vn (vertex normal)   | :white_check_mark: |                 |
 | vt (vertex texture)  | :white_check_mark: |                 |
@@ -58,14 +58,14 @@ The following Wavefront material tags are currently supported:
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Functionality           | Status             | Notes                                          |
-|:------------------------|:-------------------|:-----------------------------------------------|
-| Basic object Read       | :construction:     | Currently working on                           |
-| Basic material read     | :white_check_mark: |                                                |
-| Logging                 | :white_check_mark: |                                                |
-| Materials class         | :white_check_mark: |                                                |
-| Validate material values| :x:                |                                                |
-| Mesh class              | :white_check_mark: |                                                |
-| Validate object values  | :construction:     | Work in progress                               |
-| Model class             | :construction:     | Partial implementation for basic functionality |
-| Unit tests              | :x:                | To be started once main core is stable         |
+| Functionality           | Status             | Notes                                  |
+|:------------------------|:-------------------|:---------------------------------------|
+| Basic object Read       | :construction:     | Line (L) not implemented               |
+| Basic material read     | :white_check_mark: |                                        |
+| Logging                 | :white_check_mark: |                                        |
+| Materials class         | :white_check_mark: |                                        |
+| Validate material values| :x:                |                                        |
+| Mesh class              | :white_check_mark: |                                        |
+| Validate object values  | :construction:     | Work in progress                       |
+| Model class             | :white_check_mark: |                                        |
+| Unit tests              | :x:                | To be started once main core is stable |
