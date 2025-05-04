@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
 #include <sstream>
+#include <unordered_map>
 #include <utility>
 #include "LoggerManager.h"
 #include "WaveFrontObjParser.h"
@@ -250,7 +251,6 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
 
         // Smooth shading
         } else if (view.starts_with(KEYWORD_SMOOTH_SHADING)) {
-
             int shadingGroup;
             if (!ParseSmoothShading(view, &shadingGroup)) {
                 return nullptr;
@@ -642,7 +642,6 @@ bool WaveFrontObjParser::ParseSmoothShading(std::string_view element,
         *shadingGroup = 0;
 
     } else {
-
         if (!ParseInt(words[1].c_str(), shadingGroup)) {
             LOG(Logger::LogLevel::Critical,
                 std::format("Invalid smoothing group: '{}'", element));
@@ -672,7 +671,8 @@ bool WaveFrontObjParser::FinaliseVertices(
     const Point3DList& normals,
     const TextureCoordinatesList& textureCoordinates) {
 
-    LOG(Logger::LogLevel::Debug, std::format("Finalizing mesh '{}'", mesh->name));
+    LOG(Logger::LogLevel::Debug, std::format("Finalizing mesh '{}'",
+        mesh->name));
 
     if (!mesh) {
         LOG(Logger::LogLevel::Critical,
@@ -745,7 +745,8 @@ bool WaveFrontObjParser::FinaliseVertices(
             vertex.textureCoordinates = { 0.0f, 0.0f, 0.0f };
             if (elem.texture >= 1 &&
                 elem.texture <= static_cast<int>(textureCoordinates.size())) {
-                vertex.textureCoordinates = textureCoordinates[elem.texture - 1];
+                vertex.textureCoordinates =
+                       textureCoordinates[elem.texture - 1];
             }
 
             uint8_t sg = face.smoothShadingGroup;
@@ -758,13 +759,14 @@ bool WaveFrontObjParser::FinaliseVertices(
                     vertex.normal = Point3D{avg.x, avg.y, avg.z};
 
                 } else {
-                    vertex.normal = { 0.0f, 1.0f, 0.0f }; // fallback
+                    vertex.normal = { 0.0f, 1.0f, 0.0f };   // Fallback
                 }
             } else {
-                if (elem.normal >= 1 && elem.normal <= static_cast<int>(normals.size())) {
+                if (elem.normal >= 1 &&
+                    elem.normal <= static_cast<int>(normals.size())) {
                     vertex.normal = normals[elem.normal - 1];
                 } else {
-                    vertex.normal = { 0.0f, 1.0f, 0.0f }; // fallback
+                    vertex.normal = { 0.0f, 1.0f, 0.0f };   // Fallback
                 }
             }
 

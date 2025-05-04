@@ -19,18 +19,18 @@ contain bugs or errors.
 ### Supported Wavefront tags : object
 The following Wavefront obj tags are currently supported:
 
-| Tag                  | Status             | Notes                |
-|:---------------------|:-------------------|:---------------------|
-| f (face)             | :white_check_mark: |                      |
-| g (group)            | :white_check_mark: |                      |
-| l (line element)     | :x:                | Not implemented      |
-| mtllib (materials)   | :construction:     | Partial implementation |
-| o (object)           | :white_check_mark: |                      |
-| s (Smooth shading)   | :x:                | Not implemented      |
-| usemtl (use material)| :x:                | Not implemented      |
-| v (vertex)           | :white_check_mark: |                      |
-| vn (vertex normal)   | :white_check_mark: |                      |
-| vt (vertex texture)  | :white_check_mark: |                      |
+| Tag                  | Status             | Notes           |
+|:---------------------|:-------------------|:----------------|
+| f (face)             | :white_check_mark: |                 |
+| g (group)            | :white_check_mark: |                 |
+| l (line element)     | :x:                | Not implemented |
+| mtllib (materials)   |  :x:               |                 |
+| o (object)           | :white_check_mark: |                 |
+| s (Smooth shading)   | :white_check_mark: |                 |
+| usemtl (use material)| :x:                | Not implemented |
+| v (vertex)           | :white_check_mark: |                 |
+| vn (vertex normal)   | :white_check_mark: |                 |
+| vt (vertex texture)  | :white_check_mark: |                 |
 
 ### Supported Wavefront tags : material
 The following Wavefront material tags are currently supported:
