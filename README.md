@@ -24,7 +24,7 @@ The following Wavefront obj tags are currently supported:
 | f (face)             | :white_check_mark: |                 |
 | g (group)            | :white_check_mark: |                 |
 | l (line element)     | :x:                | Not implemented |
-| mtllib (materials)   |  :x:               |                 |
+| mtllib (materials)   | :white_check_mark: |                 |
 | o (object)           | :white_check_mark: |                 |
 | s (Smooth shading)   | :white_check_mark: |                 |
 | usemtl (use material)| :x:                | Not implemented |
