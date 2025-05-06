@@ -33,10 +33,10 @@ class MaterialLibraryParser : public BaseWavefrontParser {
  private:
     bool ProcessTagNewMaterial(std::string_view line, std::string *material);
 
-    bool ProcessTagAmbientColour(std::string_view line, RGB *colour);
-    bool ProcessTagDiffuseColour(std::string_view line, RGB *colour);
-    bool ProcessTagEmissiveColour(std::string_view line, RGB *colour);
-    bool ProcessTagSpecularColour(std::string_view line, RGB *colour);
+    ParseResult ProcessTagAmbientColour(std::string_view line, RGB *colour);
+    ParseResult ProcessTagDiffuseColour(std::string_view line, RGB *colour);
+    ParseResult ProcessTagEmissiveColour(std::string_view line, RGB *colour);
+    ParseResult ProcessTagSpecularColour(std::string_view line, RGB *colour);
 
     bool ProcessTagSpecularExponent(std::string_view line, float *shininess);
 

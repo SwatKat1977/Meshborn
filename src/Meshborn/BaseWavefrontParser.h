@@ -22,6 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
+enum class ParseResult {
+    Success,
+    Incomplete,
+    Failure
+};
+
 class BaseWavefrontParser {
  protected:
     std::vector<std::string> ReadFile(const std::string& filename);

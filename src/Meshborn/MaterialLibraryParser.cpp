@@ -446,25 +446,25 @@ bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
  * @param colour Pointer to glm::vec3 to store the parsed RGB values.
  * @return true if parsing was successful, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
-                                                    RGB *colour) {
+ParseResult MaterialLibraryParser::ProcessTagAmbientColour(
+                std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
-        return false;
+        return ParseResult::Failure;
     }
 
     float red;
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
+    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
+    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
 
     *colour = RGB(red, green, blue);
 
-    return true;
+    return ParseResult::Success;
 }
 
 /**
@@ -474,25 +474,25 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
  * @param colour Pointer to glm::vec3 to store the parsed RGB values.
  * @return true if parsing was successful, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
-                                                    RGB *colour) {
+ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
+                std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
-        return false;
+        return ParseResult::Failure;
     }
 
     float red;
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
+    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
+    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
 
     *colour = RGB(red, green, blue);
 
-    return true;
+    return ParseResult::Success;
 }
 
 /**
@@ -502,25 +502,25 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
  * @param colour Pointer to glm::vec3 to store the parsed RGB values.
  * @return true if parsing was successful, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
-                                                     RGB *colour) {
+ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
+                std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
-        return false;
+        return ParseResult::Failure;
     }
 
     float red;
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
+    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
+    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
 
     *colour = RGB(red, green, blue);
 
-    return true;
+    return ParseResult::Success;
 }
 
 /**
@@ -530,25 +530,25 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
  * @param colour Pointer to glm::vec3 to store the parsed RGB values.
  * @return true if parsing was successful, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
-                                                     RGB *colour) {
+ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
+                std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
-        return false;
+        return ParseResult::Failure;
     }
 
     float red;
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
+    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
+    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
 
     *colour = RGB(red, green, blue);
 
-    return true;
+    return ParseResult::Success;
 }
 
 /**
