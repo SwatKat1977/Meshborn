@@ -22,6 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Meshborn {
 
+enum class ParseResult {
+    Success,
+    Incomplete,
+    Failure
+};
+
 class BaseWavefrontParser {
  protected:
     std::vector<std::string> ReadFile(const std::string& filename);
@@ -33,6 +39,14 @@ class BaseWavefrontParser {
     bool ParseFloat(const char* str, float *out);
 
     bool ParseInt(const char* str, int *out);
+
+    inline bool FloatInRange(float value, float min, float max) {
+        return value >= min && value <= max;
+    }
+
+    inline bool IntInRange(int value, int min, int max) {
+        return value >= min && value <= max;
+    }
 };
 
 }   // namespace Meshborn

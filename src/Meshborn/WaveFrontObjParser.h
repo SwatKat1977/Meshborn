@@ -52,6 +52,9 @@ class WaveFrontObjParser : public BaseWavefrontParser {
     bool ParseMaterials(std::string_view element,
                         std::string *materialLibrary);
 
+    bool ParseSmoothShading(std::string_view element,
+                            int *shadingGroup);
+
     bool ParseTextureCoordinate(std::string_view element,
                                 TextureCoordinates *coordinates);
 

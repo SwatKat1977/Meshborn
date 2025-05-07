@@ -19,10 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <iostream>         /// TEMPORARY - TO BE DELETED!!!
 #include <sstream>
+#include <unordered_map>
 #include <utility>
 #include "LoggerManager.h"
 #include "WaveFrontObjParser.h"
 #include "MaterialLibraryParser.h"
+#include "Vector3D.h"
 
 namespace Meshborn {
 
@@ -30,10 +32,27 @@ const char KEYWORD_GROUP[] = "g ";
 const char KEYWORD_MATERIAL_LIBRARY[] = "mtllib ";
 const char KEYWORD_OBJECT[] = "o ";
 const char KEYWORD_POLYGONAL_FACE[] = "f ";
+const char KEYWORD_SMOOTH_SHADING[] = "s ";
 const char KEYWORD_TEXTURE_COORDINATE[] = "vt ";
 const char KEYWORD_USE_MATERIAL[] = "usemtl ";
 const char KEYWORD_VECTOR[] = "v ";
 const char KEYWORD_VECTOR_NORMAL[] = "vn ";
+
+struct VertexKey {
+    int vertexIndex;
+    uint8_t smoothingGroup;
+    bool operator==(const VertexKey& other) const {
+        return vertexIndex == other.vertexIndex &&
+               smoothingGroup == other.smoothingGroup;
+    }
+};
+
+struct VertexKeyHash {
+    std::size_t operator()(const VertexKey& key) const {
+        return std::hash<int>{}(key.vertexIndex) ^
+               (std::hash<uint8_t>{}(key.smoothingGroup) << 1);
+    }
+};
 
 WaveFrontObjParser::WaveFrontObjParser() {
 }
@@ -71,6 +90,7 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
     std::string currentGroupName = "default";
     std::string currentMaterial = "";
     std::string currentMeshName = "default:default";
+    uint8_t currentSmoothGroup = 0;
     Mesh* currentMesh = nullptr;
 
     for (const auto& line : rawLines) {
@@ -84,6 +104,8 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
 
             currentGroupName = groupName;
             currentMeshName = currentObjectName + ":" + currentGroupName;
+            currentSmoothGroup = 0;
+
             LOG(Logger::LogLevel::Debug,
                 std::format("GROUP => {}", currentGroupName));
 
@@ -95,6 +117,8 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
 
             currentObjectName = objectName;
             currentMeshName = currentObjectName + ":" + currentGroupName;
+            currentSmoothGroup = 0;
+
             LOG(Logger::LogLevel::Debug,
                 std::format("OBJECT => {}", currentObjectName));
 
@@ -170,6 +194,9 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
                 }
             }
 
+            // Set smoothing group
+            face.smoothShadingGroup = currentSmoothGroup;
+
             currentMesh->faces.push_back(face);
 
         // Vertex position
@@ -224,10 +251,31 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
                 return nullptr;
             }
 
-            currentMaterial = useMaterialName;
+            // Check if the material exists
+            auto it = model->materials.find("MyMaterialName");
+            if (it != model->materials.end()) {
+                currentMaterial = useMaterialName;
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "USE MATERIAL => {}", currentMaterial));
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "USE MATERIAL => {}", currentMaterial));
+
+            } else {
+                LOG(Logger::LogLevel::Warning, std::format(
+                    "Attempting to use invalid material '{}', ignoring...",
+                    useMaterialName));
+            }
+
+        // Smooth shading
+        } else if (view.starts_with(KEYWORD_SMOOTH_SHADING)) {
+            int shadingGroup;
+            if (!ParseSmoothShading(view, &shadingGroup)) {
+                return nullptr;
+            }
+
+            currentSmoothGroup = shadingGroup;
+
+           LOG(Logger::LogLevel::Debug, std::format(
+               "SMOOTH SHADING => {}", currentSmoothGroup));
 
         // Material library
         } else if (view.starts_with(KEYWORD_MATERIAL_LIBRARY)) {
@@ -243,7 +291,6 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
             if (!materialLibrary.empty()) {
                 if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
                                                           &model->materials)) {
-                    std::cout << "ERR parsing material library\n";
                     return nullptr;
                 }
             }
@@ -597,6 +644,29 @@ bool WaveFrontObjParser::ParseUseMaterial(std::string_view element,
     return true;
 }
 
+bool WaveFrontObjParser::ParseSmoothShading(std::string_view element,
+                                            int *shadingGroup) {
+    auto words = SplitElementString(std::string(element));
+
+    if (words.size() != 2) {
+        LOG(Logger::LogLevel::Critical, "Smooth shading entry is invalid");
+        return false;
+    }
+
+    if (words[1] == "off") {
+        *shadingGroup = 0;
+
+    } else {
+        if (!ParseInt(words[1].c_str(), shadingGroup)) {
+            LOG(Logger::LogLevel::Critical,
+                std::format("Invalid smoothing group: '{}'", element));
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /**
  * Finalises the mesh by converting face data into vertex attributes.
  *
@@ -617,7 +687,7 @@ bool WaveFrontObjParser::FinaliseVertices(
     const TextureCoordinatesList& textureCoordinates) {
 
     LOG(Logger::LogLevel::Debug, std::format("Finalizing mesh '{}'",
-                                             mesh->name));
+        mesh->name));
 
     if (!mesh) {
         LOG(Logger::LogLevel::Critical,
@@ -627,33 +697,92 @@ bool WaveFrontObjParser::FinaliseVertices(
 
     mesh->vertices.clear();
 
+    std::unordered_map<VertexKey, Vector3D, VertexKeyHash> normalSums;
+    std::unordered_map<VertexKey, int, VertexKeyHash> normalCounts;
+
+    // First pass: accumulate smoothed normals
+    for (const auto& face : mesh->faces) {
+        if (face.elements.size() < 3) continue;
+
+        for (size_t i = 1; i + 1 < face.elements.size(); ++i) {
+            const auto& e0 = face.elements[0];
+            const auto& e1 = face.elements[i];
+            const auto& e2 = face.elements[i + 1];
+
+            if (e0.vertex < 1 || e1.vertex < 1 || e2.vertex < 1) continue;
+
+            const auto& p0 = positions[e0.vertex - 1];
+            const auto& p1 = positions[e1.vertex - 1];
+            const auto& p2 = positions[e2.vertex - 1];
+
+            Vector3D edge1 = { p1.x - p0.x, p1.y - p0.y, p1.z - p0.z };
+            Vector3D edge2 = { p2.x - p0.x, p2.y - p0.y, p2.z - p0.z };
+
+            Vector3D faceNormal = edge1.Cross(edge2);
+            faceNormal.Normalise();
+
+            for (const auto& elem : {e0, e1, e2}) {
+                if (elem.vertex < 1 ||
+                    elem.vertex > static_cast<int>(positions.size()))
+                    continue;
+
+                Vector3D normal = faceNormal;
+                if (elem.normal >= 1 &&
+                    elem.normal <= static_cast<int>(normals.size())) {
+                    const auto& normalRef = normals[elem.normal - 1];
+                    normal = Vector3D{normalRef.x, normalRef.y, normalRef.z};
+                }
+
+                uint8_t sg = face.smoothShadingGroup;
+                if (sg != 0) {
+                    VertexKey key{elem.vertex, sg};
+                    normalSums[key].x += normal.x;
+                    normalSums[key].y += normal.y;
+                    normalSums[key].z += normal.z;
+                    normalCounts[key]++;
+                }
+            }
+        }
+    }
+
+    // Second pass: generate final vertex data
     for (const auto& face : mesh->faces) {
         for (const auto& elem : face.elements) {
             Vertex vertex;
 
             if (elem.vertex < 1 ||
-                elem.vertex > static_cast<int>(positions.size())) {
+                elem.vertex > static_cast<int>(positions.size()))
                 return false;
-            }
 
-            vertex.position = {
-                positions[elem.vertex - 1].x,
-                positions[elem.vertex - 1].y,
-                positions[elem.vertex - 1].z,
-                positions[elem.vertex - 1].w
-            };
-
-            vertex.normal = { 0.0f, 0.0f, 0.0f };
-            if (elem.normal >= 1 &&
-                elem.normal <= static_cast<int>(normals.size())) {
-                    vertex.normal = normals[elem.normal - 1];
-            }
+            const auto& p = positions[elem.vertex - 1];
+            vertex.position = { p.x, p.y, p.z, p.w };
 
             vertex.textureCoordinates = { 0.0f, 0.0f, 0.0f };
             if (elem.texture >= 1 &&
                 elem.texture <= static_cast<int>(textureCoordinates.size())) {
                 vertex.textureCoordinates =
-                    textureCoordinates[elem.texture - 1];
+                       textureCoordinates[elem.texture - 1];
+            }
+
+            uint8_t sg = face.smoothShadingGroup;
+            if (sg != 0) {
+                VertexKey key{elem.vertex, sg};
+                auto it = normalSums.find(key);
+                if (it != normalSums.end()) {
+                    Vector3D avg = it->second;
+                    avg.Normalise();
+                    vertex.normal = Point3D{avg.x, avg.y, avg.z};
+
+                } else {
+                    vertex.normal = { 0.0f, 1.0f, 0.0f };   // Fallback
+                }
+            } else {
+                if (elem.normal >= 1 &&
+                    elem.normal <= static_cast<int>(normals.size())) {
+                    vertex.normal = normals[elem.normal - 1];
+                } else {
+                    vertex.normal = { 0.0f, 1.0f, 0.0f };   // Fallback
+                }
             }
 
             mesh->vertices.push_back(vertex);

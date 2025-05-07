@@ -19,18 +19,18 @@ contain bugs or errors.
 ### Supported Wavefront tags : object
 The following Wavefront obj tags are currently supported:
 
-| Tag                  | Status             | Notes                |
-|:---------------------|:-------------------|:---------------------|
-| f (face)             | :white_check_mark: |                      |
-| g (group)            | :white_check_mark: |                      |
-| l (line element)     | :x:                | Not implemented      |
-| mtllib (materials)   | :construction:     | Partial implementation |
-| o (object)           | :white_check_mark: |                      |
-| s (Smooth shading )  | :x:                | Not implemented      |
-| usemtl (use material)| :x:                | Not implemented      |
-| v (vertex)           | :white_check_mark: |                      |
-| vn (vertex normal)   | :white_check_mark: |                      |
-| vt (vertex texture)  | :white_check_mark: |                      |
+| Tag                  | Status             | Notes           |
+|:---------------------|:-------------------|:----------------|
+| f (face)             | :white_check_mark: |                 |
+| g (group)            | :white_check_mark: |                 |
+| l (line element)     | :x:                | Not implemented |
+| mtllib (materials)   | :white_check_mark: |                 |
+| o (object)           | :white_check_mark: |                 |
+| s (Smooth shading)   | :white_check_mark: |                 |
+| usemtl (use material)| :white_check_mark: |                 |
+| v (vertex)           | :white_check_mark: |                 |
+| vn (vertex normal)   | :white_check_mark: |                 |
+| vt (vertex texture)  | :white_check_mark: |                 |
 
 ### Supported Wavefront tags : material
 The following Wavefront material tags are currently supported:
@@ -58,14 +58,13 @@ The following Wavefront material tags are currently supported:
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Functionality           | Status             | Notes                                             |
-|:------------------------|:-------------------|:--------------------------------------------------|
-| Basic object Read       | :construction:     | Currently working on                              |
-| Basic material read     | :construction:     | Material read done, handling in obj not done      |
-| Logging                 | :white_check_mark: |                                                   |
-| Materials class         | :construction:     | Work on material class in progress                |
-| Validate material values| :x:                |                                                   |
-| Mesh class              | :construction:     | Work in progress                                  |
-| Validate object values  | :construction:     | Work in progress                                  |
-| Model class             | :construction:     | Partial implementation for basic functionality    |
-| Unit tests              | :x:                | Unit tests to be started once main core is stable |
+| Functionality          | Status             | Notes                                  |
+|:-----------------------|:-------------------|:---------------------------------------|
+| Basic object Read      | :construction:     | Line (L) not implemented               |
+| Basic material read    | :white_check_mark: |                                        |
+| Logging                | :white_check_mark: |                                        |
+| Materials class        | :white_check_mark: |                                        |
+| Mesh class             | :white_check_mark: |                                        |
+| Validate object values | :construction:     | Work in progress                       |
+| Model class            | :white_check_mark: |                                        |
+| Unit tests             | :x:                | To be started once main core is stable |

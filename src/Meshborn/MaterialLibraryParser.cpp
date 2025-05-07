@@ -218,10 +218,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             float opticalDensity;
             if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
                 return false;
-            }
-
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
+            } 
 
             currentMaterial->SetOpticalDensity(opticalDensity);
             float density;
@@ -451,6 +448,8 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material ambient colour invalid elements");
         return false;
     }
 
@@ -458,9 +457,23 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material ambient colour invalid red elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material ambient colour invalid green elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material ambient colour invalid blue elements");
+        return false;
+    }
 
     *colour = RGB(red, green, blue);
 
@@ -479,6 +492,8 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material diffuse colour invalid elements");
         return false;
     }
 
@@ -486,9 +501,23 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material diffuse colour invalid red elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material diffuse colour invalid green elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material diffuse colour invalid blue elements");
+        return false;
+    }
 
     *colour = RGB(red, green, blue);
 
@@ -507,6 +536,8 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid elements");
         return false;
     }
 
@@ -514,9 +545,23 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid red elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Warning,
+            "Material emissive colour invalid green elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid blue elements");
+        return false;
+    }
 
     *colour = RGB(red, green, blue);
 
@@ -535,6 +580,8 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid elements");
         return false;
     }
 
@@ -542,9 +589,23 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return false;
-    if (!ParseFloat(words[2].c_str(), &green)) return false;
-    if (!ParseFloat(words[3].c_str(), &blue)) return false;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid red elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid green elements");
+        return false;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid blue elements");
+        return false;
+    }
 
     *colour = RGB(red, green, blue);
 
@@ -575,7 +636,11 @@ bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
         return false;
     }
 
-    if (!ParseFloat(words[1].c_str(), shininess)) return false;
+    if (!ParseFloat(words[1].c_str(), shininess)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular exponent invalid value");
+        return false;
+    }
 
     return true;
 }
@@ -607,11 +672,9 @@ bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
         return false;
     }
 
-    if (!ParseFloat(words[1].c_str(), transparency)) return false;
-
-    if ((*transparency < 0.0f) || (*transparency > 1.0f)) {
+    if (!ParseFloat(words[1].c_str(), transparency)) {
         LOG(Logger::LogLevel::Critical,
-            "Material transparent dissolve invalid value");
+            "Transparent dissolve value invalid");
         return false;
     }
 
@@ -646,9 +709,7 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
         return false;
     }
 
-    if (!ParseFloat(words[1].c_str(), density)) return false;
-
-    if ((*density < 0.001f) || (*density > 10.0f)) {
+    if (!ParseFloat(words[1].c_str(), density)) {
         LOG(Logger::LogLevel::Critical,
             "Material optical density invalid value");
         return false;
@@ -684,7 +745,7 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
  *   true if the illumination model is parsed and valid; false otherwise.
  */
 bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
-                                                        int *density) {
+                                                        int *model) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -692,11 +753,9 @@ bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
         return false;
     }
 
-    if (!ParseInt(words[1].c_str(), density)) return false;
-
-    if ((*density < 0) || (*density > 10)) {
+    if (!ParseInt(words[1].c_str(), model)) {
         LOG(Logger::LogLevel::Critical,
-            "Material illumination model invalid value (range 0-10)");
+            "Material illumination model value invalid");
         return false;
     }
 
