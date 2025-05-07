@@ -61,6 +61,10 @@ const float TRANSPARENT_DISSOLVE_MIN = 0.0f;
 const float TRANSPARENT_DISSOLVE_MAX = 1.0f;
 const float SPECULAR_EXPONENT_MIN = 0.0f;
 const float SPECULAR_EXPONENT_MAX = 1000.0f;
+const float OPTICAL_DENSITY_MIN = 0.001f;
+const float OPTICAL_DENSITY_MAX = 10.0f;
+const int ILLUMINATION_MODEL_MIN = 0;
+const int ILLUMINATION_MODEL_MAX = 10;
 
 MaterialLibraryParser::MaterialLibraryParser() {
 }
@@ -261,18 +265,23 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             }
 
             float opticalDensity;
-            if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
+            auto status = ProcessTagOpticalDensity(line, &opticalDensity);
+            if (status == ParseResult::Failure) {
                 return false;
+
+            } else if (status == ParseResult::Incomplete) {
+                /* code */
+
+            } else {
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
+
+                currentMaterial->SetOpticalDensity(opticalDensity);
+                float density;
+                currentMaterial->GetOpticalDensity(&density);
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "MATERIAL|OPTICAL DENSITY => {}", density));
             }
-
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
-
-            currentMaterial->SetOpticalDensity(opticalDensity);
-            float density;
-            currentMaterial->GetOpticalDensity(&density);
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|OPTICAL DENSITY => {}", density));
 
         // Illumination model
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
@@ -282,15 +291,20 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             }
 
             int illuminationModel;
-            if (!ProcessTagIlluminationModel(line, &illuminationModel)) {
+            auto status = ProcessTagIlluminationModel(line, &illuminationModel);
+            if (status == ParseResult::Failure) {
                 return false;
-            }
 
-            currentMaterial->SetIlluminationModel(illuminationModel);
-            int model;
-            currentMaterial->GetIlluminationModel(&model);
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|ILLUMINATION MODEL => {}", model));
+            } else if (status == ParseResult::Incomplete) {
+                /* code */
+
+            } else {
+                currentMaterial->SetIlluminationModel(illuminationModel);
+                int model;
+                currentMaterial->GetIlluminationModel(&model);
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "MATERIAL|ILLUMINATION MODEL => {}", model));
+            }
 
         // Ambient texture map
         } else if (StartsWith(std::string(view),
@@ -940,24 +954,31 @@ ParseResult MaterialLibraryParser::ProcessTagTransparentDissolve(
  * @param density Pointer to a float where the parsed value will be stored.
  * @return true if parsing and validation succeed, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
-                                                     float *density) {
+ParseResult MaterialLibraryParser::ProcessTagOpticalDensity(
+    std::string_view line, float *density) {
     auto words = SplitElementString(std::string(line));
+    bool invalidValue = false;
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical, "Material optical density invalid");
-        return false;
+        return ParseResult::Failure;
     }
 
-    if (!ParseFloat(words[1].c_str(), density)) return false;
-
-    if ((*density < 0.001f) || (*density > 10.0f)) {
+    if (!ParseFloat(words[1].c_str(), density)) {
         LOG(Logger::LogLevel::Critical,
-            "Material optical density invalid value");
-        return false;
+            "Optical density value invalid");
+        return ParseResult::Failure;
     }
 
-    return true;
+    if (!FloatInRange(*density,
+                      OPTICAL_DENSITY_MIN,
+                      OPTICAL_DENSITY_MAX)) {
+        LOG(Logger::LogLevel::Warning,
+            "Material optical density value out of range");
+        invalidValue = true;
+    }
+
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /*
@@ -986,24 +1007,31 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
  * Returns:
  *   true if the illumination model is parsed and valid; false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
-                                                        int *density) {
+ParseResult MaterialLibraryParser::ProcessTagIlluminationModel(
+    std::string_view line, int *model) {
     auto words = SplitElementString(std::string(line));
+    bool invalidValue = false;
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical, "Material illumination model invalid");
-        return false;
+        return ParseResult::Failure;
     }
 
-    if (!ParseInt(words[1].c_str(), density)) return false;
-
-    if ((*density < 0) || (*density > 10)) {
+    if (!ParseInt(words[1].c_str(), model)) {
         LOG(Logger::LogLevel::Critical,
-            "Material illumination model invalid value (range 0-10)");
-        return false;
+            "Material illumination model value invalid");
+        return ParseResult::Failure;
     }
 
-    return true;
+    if (!IntInRange(*model,
+                    ILLUMINATION_MODEL_MIN,
+                    ILLUMINATION_MODEL_MAX)) {
+        LOG(Logger::LogLevel::Warning,
+            "Material illumination model invalid value (range 0-10)");
+        invalidValue = true;
+    }
+
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /**

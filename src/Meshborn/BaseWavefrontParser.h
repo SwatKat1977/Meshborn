@@ -43,6 +43,10 @@ class BaseWavefrontParser {
     inline bool FloatInRange(float value, float min, float max) {
         return value >= min && value <= max;
     }
+
+    inline bool IntInRange(int value, int min, int max) {
+        return value >= min && value <= max;
+    }
 };
 
 }   // namespace Meshborn

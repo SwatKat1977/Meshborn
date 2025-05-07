@@ -44,9 +44,11 @@ class MaterialLibraryParser : public BaseWavefrontParser {
     ParseResult ProcessTagTransparentDissolve(std::string_view line,
                                               float *transparency);
 
-    bool ProcessTagOpticalDensity(std::string_view line, float *density);
+    ParseResult ProcessTagOpticalDensity(std::string_view line,
+                                         float *density);
 
-    bool ProcessTagIlluminationModel(std::string_view line, int *density);
+    ParseResult ProcessTagIlluminationModel(std::string_view line,
+                                            int *density);
 
     bool ProcessTagAmbientTextureMap(std::string_view line, std::string *map);
 
