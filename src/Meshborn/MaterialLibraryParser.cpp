@@ -57,6 +57,10 @@ const float EMISSSIVE_COLOUR_MIN = 0.0f;
 const float EMISSSIVE_COLOUR_MAX = 1.0f;
 const float SPECULAR_COLOUR_MIN = 0.0f;
 const float SPECULAR_COLOUR_MAX = 1.0f;
+const float TRANSPARENT_DISSOLVE_MIN = 0.0f;
+const float TRANSPARENT_DISSOLVE_MAX = 1.0f;
+const float SPECULAR_EXPONENT_MIN = 0.0f;
+const float SPECULAR_EXPONENT_MAX = 1000.0f;
 
 MaterialLibraryParser::MaterialLibraryParser() {
 }
@@ -215,27 +219,39 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         // Specular exponent
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR_EXPONENT)) {
             float specularExponent;
-            if (!ProcessTagSpecularExponent(line, &specularExponent)) {
-                return false;
-            }
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|SPECULAR EXPONENT => {}", specularExponent));
+            auto status =  ProcessTagSpecularExponent(line, &specularExponent);
+            if (status == ParseResult::Failure) {
+                return false;
+
+            } else if (status == ParseResult::Incomplete) {
+                /* code */
+
+            } else {
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "MATERIAL|SPECULAR EXPONENT => {}", specularExponent));
+            }
 
         // Transparent dissolve
         } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
             float transparentDissolve;
 
-            if (!ProcessTagTransparentDissolve(line, &transparentDissolve)) {
+            auto status = ProcessTagTransparentDissolve(line,
+                                                        &transparentDissolve);
+            if (status == ParseResult::Failure) {
                 return false;
-            }
 
-            currentMaterial->SetTransparentDissolve(
-                transparentDissolve);
-            float transparency;
-            currentMaterial->GetTransparentDissolve(&transparency);
-            LOG(Logger::LogLevel::Debug, std::format(
-                "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
+            } else if (status == ParseResult::Incomplete) {
+                /* code */
+
+            } else {
+                currentMaterial->SetTransparentDissolve(
+                    transparentDissolve);
+                float transparency;
+                currentMaterial->GetTransparentDissolve(&transparency);
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
+            }
 
         // Optical density
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
@@ -600,7 +616,7 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
     }
 
     if (!FloatInRange(red, DIFFUSE_COLOUR_MIN, DIFFUSE_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material diffuse colour red value out of range");
         invalidValue = true;
     }
@@ -612,7 +628,7 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
     }
 
     if (!FloatInRange(green, DIFFUSE_COLOUR_MIN, DIFFUSE_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material diffuse colour green value out of range");
         invalidValue = true;
     }
@@ -624,7 +640,7 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
     }
 
     if (!FloatInRange(blue, DIFFUSE_COLOUR_MIN, DIFFUSE_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material diffuse colour blue value out of range");
         invalidValue = true;
     }
@@ -691,13 +707,13 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
     }
 
     if (!ParseFloat(words[2].c_str(), &green)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material emissive colour invalid green elements");
         return ParseResult::Failure;
     }
 
     if (!FloatInRange(green, EMISSSIVE_COLOUR_MIN, EMISSSIVE_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material emissive colour green value out of range");
         invalidValue = true;
     }
@@ -709,7 +725,7 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
     }
 
     if (!FloatInRange(blue, EMISSSIVE_COLOUR_MIN, EMISSSIVE_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material emissive colour blue value out of range");
         invalidValue = true;
     }
@@ -768,7 +784,7 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
     }
 
     if (!FloatInRange(red, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material specular colour red value out of range");
         invalidValue = true;
     }
@@ -780,7 +796,7 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
     }
 
     if (!FloatInRange(green, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material specular colour green value out of range");
         invalidValue = true;
     }
@@ -792,7 +808,7 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
     }
 
     if (!FloatInRange(blue, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
-        LOG(Logger::LogLevel::Critical,
+        LOG(Logger::LogLevel::Warning,
             "Material specular colour blue value out of range");
         invalidValue = true;
     }
@@ -803,70 +819,106 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
 }
 
 /**
- * Parses an 'Ns' (specular exponent) line from a material library (.mtl) file
- * and extracts the shininess value.
+ * @brief Parses and validates the specular exponent (shininess) value from a
+ *        material line.
  *
- * The specular exponent controls the focus of specular highlights on the
- * material. Higher values result in smaller, sharper highlights, simulating
- * glossier surfaces. The line must contain exactly two tokens: the keyword
- * 'Ns' and a float value.
+ * This function extracts a single floating-point value representing the
+ * specular exponent (shininess) from the material definition line. The line
+ * must contain exactly two elements:
+ *   - The first word is the tag name (e.g. "Ns") and is ignored.
+ *   - The second word is a float in the valid shininess range.
  *
- * @param line The input line from the .mtl file (e.g., "Ns 96.078431").
- * @param shininess Pointer to a float where the extracted shininess value will
- *                   be stored.
- * @return true if the line is well-formed and the value was successfully parsed;
- *         false otherwise.
+ * If parsing fails or the number of elements is incorrect, the function
+ * returns failure. If the value is parsed but outside the valid range
+ * (SPECULAR_EXPONENT_MIN to SPECULAR_EXPONENT_MAX), the function returns
+ * incomplete.
+ *
+ * @param line       The line from the material file containing the shininess
+ *                   definition.
+ * @param shininess  Pointer to a float that will be populated with the parsed
+ *                   value on success.
+ *
+ * @return ParseResult::Success if parsed and within range.  
+ *         ParseResult::Incomplete if parsed but out of range.  
+ *         ParseResult::Failure on format or conversion errors.
  */
-bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
-                                                       float *shininess) {
+ParseResult MaterialLibraryParser::ProcessTagSpecularExponent(
+    std::string_view line, float *shininess) {
+    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical, "Material specular exponent invalid");
-        return false;
+        return ParseResult::Failure;
     }
 
-    if (!ParseFloat(words[1].c_str(), shininess)) return false;
+    if (!ParseFloat(words[1].c_str(), shininess)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular exponent invalid value");
+        return ParseResult::Failure;
+    }
 
-    return true;
+    if (!FloatInRange(*shininess,
+                      SPECULAR_EXPONENT_MIN,
+                      SPECULAR_EXPONENT_MAX)) {
+        LOG(Logger::LogLevel::Warning,
+            "Material specular exponent value out of range");
+        invalidValue = true;
+    }
+
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /**
- * @brief Parses the transparency (dissolve) value from a material tag.
+ * @brief Parses and validates the transparent dissolve value from a material
+ *        line.
  *
- * This function reads a dissolve value from the input line and stores it in
- * the provided `transparency` pointer. The dissolve value defines the
- * material's transparency:
+ * This function extracts a single floating-point value representing
+ * transparency (dissolve) from the material definition line. The line must
+ * contain exactly two elements:
+ *   - The first word is the tag name (e.g. "d") and is ignored.
+ *   - The second word is a float in the allowed transparency range.
  *
- *   - 1.0 means fully opaque
- *   - 0.0 means fully transparent
+ * If parsing fails or the number of elements is incorrect, the function
+ * returns failure. If the value is parsed but outside the valid range
+ * (TRANSPARENT_DISSOLVE_MIN to TRANSPARENT_DISSOLVE_MAX), the function
+ * returns incomplete.
  *
- * Valid values range from 0.0 to 1.0.
+ * @param line         The line from the material file containing the dissolve
+ *                     definition.
+ * @param transparency Pointer to a float that will be populated with the
+ *                     parsed value on success.
  *
- * @param line The input line containing the transparency value.
- * @param transparency Pointer to a float where the parsed value will be
- *                     stored.
- * @return true if parsing and validation succeed, false otherwise.
+ * @return ParseResult::Success if parsed and within range.
+ *         ParseResult::Incomplete if parsed but out of range.
+ *         ParseResult::Failure on format or conversion errors.
  */
-bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
-                                                          float *transparency) {
+ParseResult MaterialLibraryParser::ProcessTagTransparentDissolve(
+    std::string_view line, float *transparency) {
+    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical,
             "Material transparent dissolve invalid");
-        return false;
+        return ParseResult::Failure;
     }
 
-    if (!ParseFloat(words[1].c_str(), transparency)) return false;
-
-    if ((*transparency < 0.0f) || (*transparency > 1.0f)) {
+    if (!ParseFloat(words[1].c_str(), transparency)) {
         LOG(Logger::LogLevel::Critical,
-            "Material transparent dissolve invalid value");
-        return false;
+            "Transparent dissolve value invalid");
+        return ParseResult::Failure;
     }
 
-    return true;
+    if (!FloatInRange(*transparency,
+                      TRANSPARENT_DISSOLVE_MIN,
+                      TRANSPARENT_DISSOLVE_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material transparent dissolve value out of range");
+        invalidValue = true;
+    }
+
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /**
