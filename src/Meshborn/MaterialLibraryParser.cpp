@@ -147,49 +147,39 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Kd' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             RGB diffuseColour;
-            auto status = ProcessTagDiffuseColour(view, &diffuseColour);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetDiffuseColour(diffuseColour);
-                RGB colour;
-                currentMaterial->GetDiffuseColour(&colour);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|DIFFUSE COLOUR => R: {} G: {} B: {}",
-                    colour.red, colour.green, colour.blue));
+            if (!ProcessTagDiffuseColour(view, &diffuseColour)) {
+                return false;
             }
+
+            currentMaterial->SetDiffuseColour(diffuseColour);
+            RGB colour;
+            currentMaterial->GetDiffuseColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|DIFFUSE COLOUR => R: {} G: {} B: {}",
+                colour.red, colour.green, colour.blue));
 
         // Emissive colour
         } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ke' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             RGB emissiveColour;
-            auto status = ProcessTagEmissiveColour(view, &emissiveColour);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetEmissiveColour(emissiveColour);
-                RGB colour;
-                currentMaterial->GetEmissiveColour(&colour);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|EMISSIVE COLOUR => R: {} G: {} B: {}",
-                    colour.red, colour.green, colour.blue));
+            if (!ProcessTagEmissiveColour(view, &emissiveColour)) {
+                return false;
             }
+
+            currentMaterial->SetEmissiveColour(emissiveColour);
+            RGB colour;
+            currentMaterial->GetEmissiveColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|EMISSIVE COLOUR => R: {} G: {} B: {}",
+                colour.red, colour.green, colour.blue));
 
         // Specular colour
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
