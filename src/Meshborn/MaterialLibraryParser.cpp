@@ -199,8 +199,8 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
 
             auto status = ProcessTagTransparentDissolve(line,
                                                         &transparentDissolve);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
+            if (status == False) {
+                return False;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -218,59 +218,49 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             float opticalDensity;
-            auto status = ProcessTagOpticalDensity(line, &opticalDensity);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
+            if (!ProcessTagOpticalDensity(line, &opticalDensity)) {
+                return false;
+            } 
 
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetOpticalDensity(opticalDensity);
-                float density;
-                currentMaterial->GetOpticalDensity(&density);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|OPTICAL DENSITY => {}", density));
-            }
+            currentMaterial->SetOpticalDensity(opticalDensity);
+            float density;
+            currentMaterial->GetOpticalDensity(&density);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|OPTICAL DENSITY => {}", density));
 
         // Illumination model
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'illum' keyword");
-                return ParseResult::Failure;
+                return False;
             }
 
             int illuminationModel;
-            auto status = ProcessTagIlluminationModel(line, &illuminationModel);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetIlluminationModel(illuminationModel);
-                int model;
-                currentMaterial->GetIlluminationModel(&model);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|ILLUMINATION MODEL => {}", model));
+            if (!ProcessTagIlluminationModel(line, &illuminationModel)) {
+                return false;
             }
 
+            currentMaterial->SetIlluminationModel(illuminationModel);
+            int model;
+            currentMaterial->GetIlluminationModel(&model);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|ILLUMINATION MODEL => {}", model));
+å
         // Ambient texture map
         } else if (StartsWith(std::string(view),
                               KEYWORD_AMBIENT_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ka' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string ambientTextureMap;
             if (!ProcessTagAmbientTextureMap(line, &ambientTextureMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetAmbientTextureMap(ambientTextureMap);
@@ -284,12 +274,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_DIFFUSE_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Kd' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string diffuseTextureMap;
             if (!ProcessTagDiffuseTextureMap(line, &diffuseTextureMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetDiffuseTextureMap(diffuseTextureMap);
@@ -303,12 +293,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_SPECULAR_COLOR_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ks' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string colourTextureMap;
             if (!ProcessTagSpecularColorTextureMap(line, &colourTextureMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetSpecularColourTextureMap(
@@ -323,13 +313,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ns' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string highlightComponent;
             if (!ProcessTagSpecularHighlightConponent(line,
                                                        &highlightComponent)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetSpecularHighlightComponent(
@@ -345,12 +335,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_ALPHA_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_d' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string alphaTextureMap;
             if (!ProcessTagAlphaTextureMap(line, &alphaTextureMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetAlphaTextureMap(alphaTextureMap);
@@ -367,12 +357,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical,
                     "Mis-ordered 'bump/map_bump' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string bumpMap;
             if (!ProcessTagBumpMap(line, &bumpMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetBumpMap(bumpMap);
@@ -386,12 +376,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_DISPLACEMENT_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'disp' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string displacementMap;
             if (!ProcessTagDisplacementMap(line, &displacementMap)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetDisplacementMap(displacementMap);
@@ -405,12 +395,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_STENCIL_DECAL_TEXTURE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'decal' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             std::string decalTexture;
             if (!ProcessTagStencilDecalTexture(line, &decalTexture)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             currentMaterial->SetStencilDecalTexture(decalTexture);
@@ -427,7 +417,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         }
     }
 
-    return ParseResult::Success;
+    return true;
 }
 
 /**
@@ -476,12 +466,11 @@ bool MaterialLibraryParser::ProcessTagNewMaterial(std::string_view line,
  *         within range.
  *         ParseResult::Incomplete if values were parsed but at least one is
  *         out of range.
- *         ParseResult::Failure if parsing failed due to format or conversion
+ *         False if parsing failed due to format or conversion
  *         issues.
  */
 bool MaterialLibraryParser::ProcessTagAmbientColour(
                 std::string_view line, RGB *colour) {
-    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -541,12 +530,11 @@ bool MaterialLibraryParser::ProcessTagAmbientColour(
  *         within range.
  *         ParseResult::Incomplete if values were parsed but at least one is
  *         out of range.
- *         ParseResult::Failure if parsing failed due to format or conversion
+ *         False if parsing failed due to format or conversion
  *         issues.
  */
 bool MaterialLibraryParser::ProcessTagDiffuseColour(
                           std::string_view line, RGB *colour) {
-    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -608,13 +596,12 @@ bool MaterialLibraryParser::ProcessTagDiffuseColour(
  *                              range.
  *         ParseResult::Incomplete if values were parsed but one or more were
  *                                 out of range.
- *         ParseResult::Failure if parsing failed due to format or conversion
+ *         False if parsing failed due to format or conversion
  *                              issues.
  */
 bool MaterialLibraryParser::ProcessTagEmissiveColour(
                 std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
-    bool invalidValue = false;
 
     if (words.size() != 4) {
         LOG(Logger::LogLevel::Critical,
@@ -673,12 +660,11 @@ bool MaterialLibraryParser::ProcessTagEmissiveColour(
  *         within range.
  *         ParseResult::Incomplete if values were parsed but at least one is
  *         out of range.
- *         ParseResult::Failure if parsing failed due to format or conversion
+ *         False if parsing failed due to format or conversion
  *         issues.
  */
 bool MaterialLibraryParser::ProcessTagSpecularColour(
                 std::string_view line, RGB *colour) {
-    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -736,11 +722,10 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(
  *
  * @return ParseResult::Success if parsed and within range.  
  *         ParseResult::Incomplete if parsed but out of range.  
- *         ParseResult::Failure on format or conversion errors.
+ *         False on format or conversion errors.
  */
 bool MaterialLibraryParser::ProcessTagSpecularExponent(
     std::string_view line, float *shininess) {
-    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -779,11 +764,10 @@ bool MaterialLibraryParser::ProcessTagSpecularExponent(
  *
  * @return ParseResult::Success if parsed and within range.
  *         ParseResult::Incomplete if parsed but out of range.
- *         ParseResult::Failure on format or conversion errors.
+ *         False on format or conversion errors.
  */
 bool MaterialLibraryParser::ProcessTagTransparentDissolve(
     std::string_view line, float *transparency) {
-    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -820,31 +804,22 @@ bool MaterialLibraryParser::ProcessTagTransparentDissolve(
  * @param density Pointer to a float where the parsed value will be stored.
  * @return true if parsing and validation succeed, false otherwise.
  */
-ParseResult MaterialLibraryParser::ProcessTagOpticalDensity(
+bool MaterialLibraryParser::ProcessTagOpticalDensity(
     std::string_view line, float *density) {
     auto words = SplitElementString(std::string(line));
-    bool invalidValue = false;
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical, "Material optical density invalid");
-        return ParseResult::Failure;
+        return false;
     }
 
     if (!ParseFloat(words[1].c_str(), density)) {
         LOG(Logger::LogLevel::Critical,
             "Optical density value invalid");
-        return ParseResult::Failure;
+        return false;
     }
 
-    if (!FloatInRange(*density,
-                      OPTICAL_DENSITY_MIN,
-                      OPTICAL_DENSITY_MAX)) {
-        LOG(Logger::LogLevel::Warning,
-            "Material optical density value out of range");
-        invalidValue = true;
-    }
-
-    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
+    return true;
 }
 
 /*
@@ -873,31 +848,22 @@ ParseResult MaterialLibraryParser::ProcessTagOpticalDensity(
  * Returns:
  *   true if the illumination model is parsed and valid; false otherwise.
  */
-ParseResult MaterialLibraryParser::ProcessTagIlluminationModel(
+bool MaterialLibraryParser::ProcessTagIlluminationModel(
     std::string_view line, int *model) {
     auto words = SplitElementString(std::string(line));
-    bool invalidValue = false;
 
     if (words.size() != 2) {
         LOG(Logger::LogLevel::Critical, "Material illumination model invalid");
-        return ParseResult::Failure;
+        return false;
     }
 
     if (!ParseInt(words[1].c_str(), model)) {
         LOG(Logger::LogLevel::Critical,
             "Material illumination model value invalid");
-        return ParseResult::Failure;
+        return false;
     }
 
-    if (!IntInRange(*model,
-                    ILLUMINATION_MODEL_MIN,
-                    ILLUMINATION_MODEL_MAX)) {
-        LOG(Logger::LogLevel::Warning,
-            "Material illumination model invalid value (range 0-10)");
-        invalidValue = true;
-    }
-
-    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
+    return true;
 }
 
 /**
