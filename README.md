@@ -58,14 +58,13 @@ The following Wavefront material tags are currently supported:
 ### Functionality implemented 
 The following functionality is currently supported:
 
-| Functionality           | Status             | Notes                                  |
-|:------------------------|:-------------------|:---------------------------------------|
-| Basic object Read       | :construction:     | Line (L) not implemented               |
-| Basic material read     | :white_check_mark: |                                        |
-| Logging                 | :white_check_mark: |                                        |
-| Materials class         | :white_check_mark: |                                        |
-| Validate material values| :x:                |                                        |
-| Mesh class              | :white_check_mark: |                                        |
-| Validate object values  | :construction:     | Work in progress                       |
-| Model class             | :white_check_mark: |                                        |
-| Unit tests              | :x:                | To be started once main core is stable |
+| Functionality          | Status             | Notes                                  |
+|:-----------------------|:-------------------|:---------------------------------------|
+| Basic object Read      | :construction:     | Line (L) not implemented               |
+| Basic material read    | :white_check_mark: |                                        |
+| Logging                | :white_check_mark: |                                        |
+| Materials class        | :white_check_mark: |                                        |
+| Mesh class             | :white_check_mark: |                                        |
+| Validate object values | :construction:     | Work in progress                       |
+| Model class            | :white_check_mark: |                                        |
+| Unit tests             | :x:                | To be started once main core is stable |
