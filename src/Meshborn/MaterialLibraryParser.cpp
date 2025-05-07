@@ -471,6 +471,8 @@ ParseResult MaterialLibraryParser::ProcessTagAmbientColour(
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material ambient colour invalid elements");
         return ParseResult::Failure;
     }
 
@@ -499,6 +501,8 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material diffuse colour invalid elements");
         return ParseResult::Failure;
     }
 
@@ -527,6 +531,8 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid elements");
         return ParseResult::Failure;
     }
 
@@ -555,6 +561,8 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid elements");
         return ParseResult::Failure;
     }
 
