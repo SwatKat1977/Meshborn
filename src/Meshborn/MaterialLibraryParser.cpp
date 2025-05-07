@@ -527,11 +527,33 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
 }
 
 /**
- * @brief Parses an emissive colour tag line and extracts the RGB values.
+ * @brief Parses and validates the emissive colour tag from a material
+ *        definition line.
  *
- * @param line The input line containing the emissive colour definition.
- * @param colour Pointer to glm::vec3 to store the parsed RGB values.
- * @return true if parsing was successful, false otherwise.
+ * This function extracts and validates RGB components from the given input
+ * line, ensuring the values are parsable floats and within the valid emissive
+ * colour range defined by `EMISSSIVE_COLOUR_MIN` and `EMISSSIVE_COLOUR_MAX`.
+ *
+ * The input line is expected to have exactly four elements:
+ *   - The first word is ignored (typically the tag name, e.g. "Ke")
+ *   - The remaining three are the red, green, and blue float values
+ *
+ * If any component fails to parse or the number of elements is incorrect, 
+ * parsing fails.
+ * If the RGB values parse correctly but one or more are out of range, the
+ * result is marked as incomplete.
+ *
+ * @param line   A string_view representing the material line containing the
+ *               emissive colour definition.
+ * @param colour A pointer to an RGB object where the parsed colour will be
+ *               stored if valid.
+ *
+ * @return ParseResult::Success if parsing succeeded and all values are within
+ *                              range.
+ *         ParseResult::Incomplete if values were parsed but one or more were
+ *                                 out of range.
+ *         ParseResult::Failure if parsing failed due to format or conversion
+ *                              issues.
  */
 ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
                 std::string_view line, RGB *colour) {
@@ -591,11 +613,31 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
 }
 
 /**
- * @brief Parses a specular colour tag line and extracts the RGB values.
+ * @brief Parses and validates the specular colour tag from a material line.
  *
- * @param line The input line containing the specular colour definition.
- * @param colour Pointer to glm::vec3 to store the parsed RGB values.
- * @return true if parsing was successful, false otherwise.
+ * This function extracts and validates RGB components from the input line,
+ * ensuring the values are valid floats and fall within the accepted range
+ * defined by SPECULAR_COLOUR_MIN and SPECULAR_COLOUR_MAX.
+ *
+ * The input line must contain exactly four elements:
+ *   - The first word is the tag name (e.g. "Ks") and is ignored
+ *   - The remaining three are the red, green, and blue float values
+ *
+ * If float parsing fails or the number of elements is incorrect, the
+ * function returns failure. If all floats are parsed but at least one
+ * value is out of range, the result is incomplete.
+ *
+ * @param line   A string_view representing the material line containing the
+ *               specular colour definition.
+ * @param colour A pointer to an RGB object that will be populated with the
+ *               parsed values if successful.
+ *
+ * @return ParseResult::Success if parsing succeeded and all values are
+ *         within range.
+ *         ParseResult::Incomplete if values were parsed but at least one is
+ *         out of range.
+ *         ParseResult::Failure if parsing failed due to format or conversion
+ *         issues.
  */
 ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
                 std::string_view line, RGB *colour) {
