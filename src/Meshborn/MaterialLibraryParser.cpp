@@ -700,8 +700,8 @@ bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
  * @param density Pointer to a float where the parsed value will be stored.
  * @return true if parsing and validation succeed, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagOpticalDensity(
-    std::string_view line, float *density) {
+bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
+                                                     float *density) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -744,8 +744,8 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(
  * Returns:
  *   true if the illumination model is parsed and valid; false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagIlluminationModel(
-    std::string_view line, int *model) {
+bool MaterialLibraryParser::ProcessTagIlluminationModel(std::string_view line,
+                                                        int *model) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
