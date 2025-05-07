@@ -613,31 +613,22 @@ bool MaterialLibraryParser::ProcessTagSpecularColour(std::string_view line,
 }
 
 /**
- * @brief Parses and validates the specular exponent (shininess) value from a
- *        material line.
+ * Parses an 'Ns' (specular exponent) line from a material library (.mtl) file
+ * and extracts the shininess value.
  *
- * This function extracts a single floating-point value representing the
- * specular exponent (shininess) from the material definition line. The line
- * must contain exactly two elements:
- *   - The first word is the tag name (e.g. "Ns") and is ignored.
- *   - The second word is a float in the valid shininess range.
+ * The specular exponent controls the focus of specular highlights on the
+ * material. Higher values result in smaller, sharper highlights, simulating
+ * glossier surfaces. The line must contain exactly two tokens: the keyword
+ * 'Ns' and a float value.
  *
- * If parsing fails or the number of elements is incorrect, the function
- * returns failure. If the value is parsed but outside the valid range
- * (SPECULAR_EXPONENT_MIN to SPECULAR_EXPONENT_MAX), the function returns
- * incomplete.
- *
- * @param line       The line from the material file containing the shininess
- *                   definition.
- * @param shininess  Pointer to a float that will be populated with the parsed
- *                   value on success.
- *
- * @return ParseResult::Success if parsed and within range.  
- *         ParseResult::Incomplete if parsed but out of range.  
- *         False on format or conversion errors.
+ * @param line The input line from the .mtl file (e.g., "Ns 96.078431").
+ * @param shininess Pointer to a float where the extracted shininess value will
+ *                   be stored.
+ * @return true if the line is well-formed and the value was successfully parsed;
+ *         false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagSpecularExponent(
-    std::string_view line, float *shininess) {
+bool MaterialLibraryParser::ProcessTagSpecularExponent(std::string_view line,
+                                                       float *shininess) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
@@ -655,31 +646,24 @@ bool MaterialLibraryParser::ProcessTagSpecularExponent(
 }
 
 /**
- * @brief Parses and validates the transparent dissolve value from a material
- *        line.
+ * @brief Parses the transparency (dissolve) value from a material tag.
  *
- * This function extracts a single floating-point value representing
- * transparency (dissolve) from the material definition line. The line must
- * contain exactly two elements:
- *   - The first word is the tag name (e.g. "d") and is ignored.
- *   - The second word is a float in the allowed transparency range.
+ * This function reads a dissolve value from the input line and stores it in
+ * the provided `transparency` pointer. The dissolve value defines the
+ * material's transparency:
  *
- * If parsing fails or the number of elements is incorrect, the function
- * returns failure. If the value is parsed but outside the valid range
- * (TRANSPARENT_DISSOLVE_MIN to TRANSPARENT_DISSOLVE_MAX), the function
- * returns incomplete.
+ *   - 1.0 means fully opaque
+ *   - 0.0 means fully transparent
  *
- * @param line         The line from the material file containing the dissolve
- *                     definition.
- * @param transparency Pointer to a float that will be populated with the
- *                     parsed value on success.
+ * Valid values range from 0.0 to 1.0.
  *
- * @return ParseResult::Success if parsed and within range.
- *         ParseResult::Incomplete if parsed but out of range.
- *         False on format or conversion errors.
+ * @param line The input line containing the transparency value.
+ * @param transparency Pointer to a float where the parsed value will be
+ *                     stored.
+ * @return true if parsing and validation succeed, false otherwise.
  */
-bool MaterialLibraryParser::ProcessTagTransparentDissolve(
-    std::string_view line, float *transparency) {
+bool MaterialLibraryParser::ProcessTagTransparentDissolve(std::string_view line,
+                                                          float *transparency) {
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 2) {
