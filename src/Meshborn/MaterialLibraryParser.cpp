@@ -273,9 +273,6 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                 /* code */
 
             } else {
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|OPTICAL DENSITY => {}", opticalDensity));
-
                 currentMaterial->SetOpticalDensity(opticalDensity);
                 float density;
                 currentMaterial->GetOpticalDensity(&density);
