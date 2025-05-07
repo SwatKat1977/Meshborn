@@ -28,27 +28,27 @@ class MaterialLibraryParser : public BaseWavefrontParser {
  public:
     MaterialLibraryParser();
 
-    ParseResult ParseLibrary(std::string materialFile, MaterialMap *materials);
+    bool ParseLibrary(std::string materialFile, MaterialMap *materials);
 
  private:
     bool ProcessTagNewMaterial(std::string_view line, std::string *material);
 
-    ParseResult ProcessTagAmbientColour(std::string_view line, RGB *colour);
-    ParseResult ProcessTagDiffuseColour(std::string_view line, RGB *colour);
-    ParseResult ProcessTagEmissiveColour(std::string_view line, RGB *colour);
-    ParseResult ProcessTagSpecularColour(std::string_view line, RGB *colour);
+    bool ProcessTagAmbientColour(std::string_view line, RGB *colour);
+    bool ProcessTagDiffuseColour(std::string_view line, RGB *colour);
+    bool ProcessTagEmissiveColour(std::string_view line, RGB *colour);
+    bool ProcessTagSpecularColour(std::string_view line, RGB *colour);
 
-    ParseResult ProcessTagSpecularExponent(std::string_view line,
-                                           float *shininess);
+    bool ProcessTagSpecularExponent(std::string_view line,
+                                    float *shininess);
 
-    ParseResult ProcessTagTransparentDissolve(std::string_view line,
-                                              float *transparency);
+    bool ProcessTagTransparentDissolve(std::string_view line,
+                                       float *transparency);
 
-    ParseResult ProcessTagOpticalDensity(std::string_view line,
-                                         float *density);
+    bool ProcessTagOpticalDensity(std::string_view line,
+                                  float *density);
 
-    ParseResult ProcessTagIlluminationModel(std::string_view line,
-                                            int *density);
+    bool ProcessTagIlluminationModel(std::string_view line,
+                                     int *density);
 
     bool ProcessTagAmbientTextureMap(std::string_view line, std::string *map);
 
