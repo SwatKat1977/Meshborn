@@ -39,6 +39,10 @@ class BaseWavefrontParser {
     bool ParseFloat(const char* str, float *out);
 
     bool ParseInt(const char* str, int *out);
+
+    inline bool FloatInRange(float value, float min, float max) {
+        return value >= min && value <= max;
+    }
 };
 
 }   // namespace Meshborn

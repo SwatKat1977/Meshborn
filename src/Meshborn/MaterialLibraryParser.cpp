@@ -49,6 +49,13 @@ const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
 // defaults to 'matte' channel of the image)
 const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
 
+const float AMBIENT_COLOUR_MIN = 0.0f;
+const float AMBIENT_COLOUR_MAX = 1.0f;
+const float EMISSSIVE_COLOUR_MIN = 0.0f;
+const float EMISSSIVE_COLOUR_MAX = 1.0f;
+const float SPECULAR_COLOUR_MIN = 0.0f;
+const float SPECULAR_COLOUR_MAX = 1.0f;
+
 MaterialLibraryParser::MaterialLibraryParser() {
 }
 
@@ -529,6 +536,7 @@ ParseResult MaterialLibraryParser::ProcessTagDiffuseColour(
 ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
                 std::string_view line, RGB *colour) {
     auto words = SplitElementString(std::string(line));
+    bool invalidValue = false;
 
     if (words.size() != 4) {
         LOG(Logger::LogLevel::Critical,
@@ -546,10 +554,23 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
         return ParseResult::Failure;
     }
 
+    if (!FloatInRange(red, EMISSSIVE_COLOUR_MIN, EMISSSIVE_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour red value out of range");
+        invalidValue = true;
+
+    }
+
     if (!ParseFloat(words[2].c_str(), &green)) {
         LOG(Logger::LogLevel::Critical,
             "Material emissive colour invalid green elements");
         return ParseResult::Failure;
+    }
+
+    if (!FloatInRange(green, EMISSSIVE_COLOUR_MIN, EMISSSIVE_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour green value out of range");
+        invalidValue = true;
     }
 
     if (!ParseFloat(words[3].c_str(), &blue)) {
@@ -558,9 +579,15 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
         return ParseResult::Failure;
     }
 
+    if (!FloatInRange(blue, EMISSSIVE_COLOUR_MIN, EMISSSIVE_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour blue value out of range");
+        invalidValue = true;
+    }
+
     *colour = RGB(red, green, blue);
 
-    return ParseResult::Success;
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /**
@@ -572,6 +599,7 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
  */
 ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
                 std::string_view line, RGB *colour) {
+    bool invalidValue = false;
     auto words = SplitElementString(std::string(line));
 
     if (words.size() != 4) {
@@ -590,10 +618,22 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
         return ParseResult::Failure;
     }
 
+    if (!FloatInRange(red, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour red value out of range");
+        invalidValue = true;
+    }
+
     if (!ParseFloat(words[2].c_str(), &green)) {
         LOG(Logger::LogLevel::Critical,
             "Material specular colour invalid green elements");
         return ParseResult::Failure;
+    }
+
+    if (!FloatInRange(green, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour green value out of range");
+        invalidValue = true;
     }
 
     if (!ParseFloat(words[3].c_str(), &blue)) {
@@ -602,9 +642,15 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
         return ParseResult::Failure;
     }
 
+    if (!FloatInRange(blue, SPECULAR_COLOUR_MIN, SPECULAR_COLOUR_MAX)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour blue value out of range");
+        invalidValue = true;
+    }
+
     *colour = RGB(red, green, blue);
 
-    return ParseResult::Success;
+    return invalidValue ? ParseResult::Incomplete : ParseResult::Success;
 }
 
 /**
