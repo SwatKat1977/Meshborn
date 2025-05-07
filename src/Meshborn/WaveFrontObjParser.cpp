@@ -251,10 +251,19 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
                 return nullptr;
             }
 
-            currentMaterial = useMaterialName;
+            // Check if the material exists
+            auto it = model->materials.find("MyMaterialName");
+            if (it != model->materials.end()) {
+                currentMaterial = useMaterialName;
 
-            LOG(Logger::LogLevel::Debug, std::format(
-                "USE MATERIAL => {}", currentMaterial));
+                LOG(Logger::LogLevel::Debug, std::format(
+                    "USE MATERIAL => {}", currentMaterial));
+
+            } else {
+                LOG(Logger::LogLevel::Warning, std::format(
+                    "Attempting to use invalid material '{}', ignoring...",
+                    useMaterialName));
+            }
 
         // Smooth shading
         } else if (view.starts_with(KEYWORD_SMOOTH_SHADING)) {
