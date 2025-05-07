@@ -89,8 +89,8 @@ MaterialLibraryParser::MaterialLibraryParser() {
  *         false if an error occurred during parsing (e.g., invalid tags or
  *               misordered keywords).
  */
-bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
-                                         MaterialMap *materials) {
+ParseResult MaterialLibraryParser::ParseLibrary(std::string materialFile,
+                                                MaterialMap *materials) {
     std::vector<std::string> rawLines;
 
     try {
@@ -110,7 +110,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             std::string materialName;
 
             if (!ProcessTagNewMaterial(view, &materialName)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
@@ -128,13 +128,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ka' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             RGB ambientColour;
             auto status = ProcessTagAmbientColour(view, &ambientColour);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -152,13 +152,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Kd' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             RGB diffuseColour;
             auto status = ProcessTagDiffuseColour(view, &diffuseColour);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -176,13 +176,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_EMISSIVE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ke' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             RGB emissiveColour;
             auto status = ProcessTagEmissiveColour(view, &emissiveColour);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -200,13 +200,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             RGB specularColour;
             auto status = ProcessTagSpecularColour(view, &specularColour);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -226,7 +226,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
 
             auto status =  ProcessTagSpecularExponent(line, &specularExponent);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -243,7 +243,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             auto status = ProcessTagTransparentDissolve(line,
                                                         &transparentDissolve);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -261,13 +261,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             float opticalDensity;
             auto status = ProcessTagOpticalDensity(line, &opticalDensity);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -284,13 +284,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_ILLUMINATION_MODEL)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'illum' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             int illuminationModel;
             auto status = ProcessTagIlluminationModel(line, &illuminationModel);
             if (status == ParseResult::Failure) {
-                return false;
+                return ParseResult::Failure;
 
             } else if (status == ParseResult::Incomplete) {
                 /* code */
@@ -308,12 +308,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_AMBIENT_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ka' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string ambientTextureMap;
             if (!ProcessTagAmbientTextureMap(line, &ambientTextureMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetAmbientTextureMap(ambientTextureMap);
@@ -327,12 +327,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_DIFFUSE_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Kd' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string diffuseTextureMap;
             if (!ProcessTagDiffuseTextureMap(line, &diffuseTextureMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetDiffuseTextureMap(diffuseTextureMap);
@@ -346,12 +346,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_SPECULAR_COLOR_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ks' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string colourTextureMap;
             if (!ProcessTagSpecularColorTextureMap(line, &colourTextureMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetSpecularColourTextureMap(
@@ -366,13 +366,13 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_SPECULAR_HIGHLIGHT_COMPONENT)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_Ns' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string highlightComponent;
             if (!ProcessTagSpecularHighlightConponent(line,
                                                        &highlightComponent)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetSpecularHighlightComponent(
@@ -388,12 +388,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_ALPHA_TEXTURE_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'map_d' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string alphaTextureMap;
             if (!ProcessTagAlphaTextureMap(line, &alphaTextureMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetAlphaTextureMap(alphaTextureMap);
@@ -410,12 +410,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical,
                     "Mis-ordered 'bump/map_bump' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string bumpMap;
             if (!ProcessTagBumpMap(line, &bumpMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetBumpMap(bumpMap);
@@ -429,12 +429,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_DISPLACEMENT_MAP)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'disp' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string displacementMap;
             if (!ProcessTagDisplacementMap(line, &displacementMap)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetDisplacementMap(displacementMap);
@@ -448,12 +448,12 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
                               KEYWORD_STENCIL_DECAL_TEXTURE)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'decal' keyword");
-                return false;
+                return ParseResult::Failure;
             }
 
             std::string decalTexture;
             if (!ProcessTagStencilDecalTexture(line, &decalTexture)) {
-                return false;
+                return ParseResult::Failure;
             }
 
             currentMaterial->SetStencilDecalTexture(decalTexture);
@@ -470,7 +470,7 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         }
     }
 
-    return true;
+    return ParseResult::Success;
 }
 
 /**

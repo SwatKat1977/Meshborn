@@ -280,10 +280,13 @@ std::unique_ptr<Model> WaveFrontObjParser::ParseObj(std::string filename) {
             }
 
             if (!materialLibrary.empty()) {
-                if (!MaterialLibraryParser().ParseLibrary(materialLibrary,
-                                                          &model->materials)) {
-                    std::cout << "ERR parsing material library\n";
+                auto status = MaterialLibraryParser().ParseLibrary(
+                    materialLibrary, &model->materials);
+                if (status == ParseResult::Failure) {
                     return nullptr;
+
+                } else if (status == ParseResult::Incomplete) {
+                    /* code */
                 }
             }
 

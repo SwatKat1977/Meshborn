@@ -28,7 +28,7 @@ class MaterialLibraryParser : public BaseWavefrontParser {
  public:
     MaterialLibraryParser();
 
-    bool ParseLibrary(std::string materialFile, MaterialMap *materials);
+    ParseResult ParseLibrary(std::string materialFile, MaterialMap *materials);
 
  private:
     bool ProcessTagNewMaterial(std::string_view line, std::string *material);
