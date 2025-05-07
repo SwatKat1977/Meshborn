@@ -197,22 +197,16 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
             float transparentDissolve;
 
-            auto status = ProcessTagTransparentDissolve(line,
-                                                        &transparentDissolve);
-            if (status == False) {
-                return False;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetTransparentDissolve(
-                    transparentDissolve);
-                float transparency;
-                currentMaterial->GetTransparentDissolve(&transparency);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
+            if (!ProcessTagTransparentDissolve(line, &transparentDissolve)) {
+                return false;
             }
+
+            currentMaterial->SetTransparentDissolve(
+                transparentDissolve);
+            float transparency;
+            currentMaterial->GetTransparentDissolve(&transparency);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|TRANSPARENT DISSOLVE => {}", transparency));
 
         // Optical density
         } else if (StartsWith(std::string(view), KEYWORD_OPTICAL_DENSITY)) {
