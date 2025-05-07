@@ -89,8 +89,8 @@ MaterialLibraryParser::MaterialLibraryParser() {
  *         false if an error occurred during parsing (e.g., invalid tags or
  *               misordered keywords).
  */
-ParseResult MaterialLibraryParser::ParseLibrary(std::string materialFile,
-                                                MaterialMap *materials) {
+bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
+                                         MaterialMap *materials) {
     std::vector<std::string> rawLines;
 
     try {
@@ -110,7 +110,7 @@ ParseResult MaterialLibraryParser::ParseLibrary(std::string materialFile,
             std::string materialName;
 
             if (!ProcessTagNewMaterial(view, &materialName)) {
-                return ParseResult::Failure;
+                return false;
             }
 
             LOG(Logger::LogLevel::Debug, std::format(
@@ -128,25 +128,20 @@ ParseResult MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_AMBIENT)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ka' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             RGB ambientColour;
-            auto status = ProcessTagAmbientColour(view, &ambientColour);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetAmbientColour(ambientColour);
-                RGB colour;
-                currentMaterial->GetAmbientColour(&colour);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|AMBIENT COLOUR => R: {} G: {} B: {}",
-                    colour.red, colour.green, colour.blue));
+            if (!ProcessTagAmbientColour(view, &ambientColour)) {
+                return false;
             }
+
+            currentMaterial->SetAmbientColour(ambientColour);
+            RGB colour;
+            currentMaterial->GetAmbientColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|AMBIENT COLOUR => R: {} G: {} B: {}",
+                colour.red, colour.green, colour.blue));
 
         // Diffuse colour
         } else if (StartsWith(std::string(view), KEYWORD_DIFFUSE)) {
