@@ -711,7 +711,7 @@ bool MaterialLibraryParser::ProcessTagOpticalDensity(std::string_view line,
 
     if (!ParseFloat(words[1].c_str(), density)) {
         LOG(Logger::LogLevel::Critical,
-            "Optical density value invalid");
+            "Material optical density invalid value");
         return false;
     }
 
