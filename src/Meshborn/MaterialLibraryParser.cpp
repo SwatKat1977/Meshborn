@@ -540,9 +540,23 @@ ParseResult MaterialLibraryParser::ProcessTagEmissiveColour(
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
-    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
-    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid red elements");
+        return ParseResult::Failure;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid green elements");
+        return ParseResult::Failure;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material emissive colour invalid blue elements");
+        return ParseResult::Failure;
+    }
 
     *colour = RGB(red, green, blue);
 
@@ -570,9 +584,23 @@ ParseResult MaterialLibraryParser::ProcessTagSpecularColour(
     float green;
     float blue;
 
-    if (!ParseFloat(words[1].c_str(), &red)) return ParseResult::Failure;
-    if (!ParseFloat(words[2].c_str(), &green)) return ParseResult::Failure;
-    if (!ParseFloat(words[3].c_str(), &blue)) return ParseResult::Failure;
+    if (!ParseFloat(words[1].c_str(), &red)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid red elements");
+        return ParseResult::Failure;
+    }
+
+    if (!ParseFloat(words[2].c_str(), &green)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid green elements");
+        return ParseResult::Failure;
+    }
+
+    if (!ParseFloat(words[3].c_str(), &blue)) {
+        LOG(Logger::LogLevel::Critical,
+            "Material specular colour invalid blue elements");
+        return ParseResult::Failure;
+    }
 
     *colour = RGB(red, green, blue);
 
