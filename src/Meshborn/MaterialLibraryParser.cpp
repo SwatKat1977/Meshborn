@@ -49,23 +49,6 @@ const char KEYWORD_DISPLACEMENT_MAP[] = "disp ";
 // defaults to 'matte' channel of the image)
 const char KEYWORD_STENCIL_DECAL_TEXTURE[] = "decal ";
 
-const float AMBIENT_COLOUR_MIN = 0.0f;
-const float AMBIENT_COLOUR_MAX = 1.0f;
-const float DIFFUSE_COLOUR_MIN = 0.0f;
-const float DIFFUSE_COLOUR_MAX = 1.0f;
-const float EMISSSIVE_COLOUR_MIN = 0.0f;
-const float EMISSSIVE_COLOUR_MAX = 1.0f;
-const float SPECULAR_COLOUR_MIN = 0.0f;
-const float SPECULAR_COLOUR_MAX = 1.0f;
-const float TRANSPARENT_DISSOLVE_MIN = 0.0f;
-const float TRANSPARENT_DISSOLVE_MAX = 1.0f;
-const float SPECULAR_EXPONENT_MIN = 0.0f;
-const float SPECULAR_EXPONENT_MAX = 1000.0f;
-const float OPTICAL_DENSITY_MIN = 0.001f;
-const float OPTICAL_DENSITY_MAX = 10.0f;
-const int ILLUMINATION_MODEL_MIN = 0;
-const int ILLUMINATION_MODEL_MAX = 10;
-
 MaterialLibraryParser::MaterialLibraryParser() {
 }
 
@@ -185,41 +168,31 @@ bool MaterialLibraryParser::ParseLibrary(std::string materialFile,
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR)) {
             if (!currentMaterial) {
                 LOG(Logger::LogLevel::Critical, "Mis-ordered 'Ks' keyword");
-                return ParseResult::Failure;
+                return false;
             }
 
             RGB specularColour;
-            auto status = ProcessTagSpecularColour(view, &specularColour);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                currentMaterial->SetSpecularColour(specularColour);
-                RGB colour;
-                currentMaterial->GetSpecularColour(&colour);
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|SPECULAR COLOUR => R: {} G: {} B: {}",
-                    colour.red, colour.green, colour.blue));
+            if (!ProcessTagSpecularColour(view, &specularColour)) {
+                return false;
             }
+
+            currentMaterial->SetSpecularColour(specularColour);
+            RGB colour;
+            currentMaterial->GetSpecularColour(&colour);
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR COLOUR => R: {} G: {} B: {}",
+                colour.red, colour.green, colour.blue));
 
         // Specular exponent
         } else if (StartsWith(std::string(view), KEYWORD_SPECULAR_EXPONENT)) {
             float specularExponent;
 
-            auto status =  ProcessTagSpecularExponent(line, &specularExponent);
-            if (status == ParseResult::Failure) {
-                return ParseResult::Failure;
-
-            } else if (status == ParseResult::Incomplete) {
-                /* code */
-
-            } else {
-                LOG(Logger::LogLevel::Debug, std::format(
-                    "MATERIAL|SPECULAR EXPONENT => {}", specularExponent));
+            if (!ProcessTagSpecularExponent(line, &specularExponent)) {
+                return false;
             }
+
+            LOG(Logger::LogLevel::Debug, std::format(
+                "MATERIAL|SPECULAR EXPONENT => {}", specularExponent));
 
         // Transparent dissolve
         } else if (StartsWith(std::string(view), KEYWORD_TRANSPARENT_DISOLVE)) {
